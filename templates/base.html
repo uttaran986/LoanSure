@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}LoanBERT{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <div class="nav-brand-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2L18 7V13L10 18L2 13V7L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M10 6L14 8.5V13.5L10 16L6 13.5V8.5L10 6Z" fill="currentColor" opacity="0.3"/>
+      </svg>
+    </div>
+    <span>Loan<strong>BERT</strong></span>
+  </a>
+  <div class="nav-links">
+    <a href="/apply"      class="nav-link {% if request.endpoint == 'apply'      %}active{% endif %}">Apply</a>
+    <a href="/dashboard"  class="nav-link {% if request.endpoint == 'dashboard'  %}active{% endif %}">Dashboard</a>
+    <a href="/model-info" class="nav-link {% if request.endpoint == 'model_info' %}active{% endif %}">Model Info</a>
+  </div>
+</nav>
+
+<main>{% block content %}{% endblock %}</main>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

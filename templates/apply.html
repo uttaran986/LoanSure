@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block title %}Loan Application — LoanBERT{% endblock %}
+{% block content %}
+
+<div class="page-hero">
+  <div class="hero-label">BERT-Powered AI Decision Engine</div>
+  <h1 class="hero-title">Loan Application</h1>
+  <p class="hero-sub">Your application is analyzed by a fine-tuned DistilBERT model trained on thousands of loan profiles</p>
+</div>
+
+<div class="form-container">
+  <form method="POST" action="/apply" id="loanForm">
+
+    <!-- Personal -->
+    <div class="form-card">
+      <div class="form-card-header">
+        <span class="form-card-number">01</span>
+        <div>
+          <div class="form-card-title">Personal Information</div>
+          <div class="form-card-sub">Basic applicant details</div>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field-label">Full Name</label>
+          <input type="text" name="applicant_name" class="field-input" placeholder="John Smith" required>
+        </div>
+        <div class="field">
+          <label class="field-label">Age</label>
+          <input type="number" name="age" class="field-input" placeholder="35" min="18" max="80" required>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field-label">Employment Status</label>
+          <select name="employment_status" class="field-input">
+            <option value="Employed">Employed</option>
+            <option value="Self-Employed">Self-Employed</option>
+            <option value="Business Owner">Business Owner</option>
+            <option value="Retired">Retired</option>
+            <option value="Student">Student</option>
+            <option value="Unemployed">Unemployed</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Annual Income ($)</label>
+          <input type="number" name="annual_income" class="field-input" placeholder="75000" min="0" required>
+          <span class="field-hint">Gross annual income before taxes</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loan Details -->
+    <div class="form-card">
+      <div class="form-card-header">
+        <span class="form-card-number">02</span>
+        <div>
+          <div class="form-card-title">Loan Details</div>
+          <div class="form-card-sub">What you're requesting</div>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field-label">Loan Amount ($)</label>
+          <input type="number" name="loan_amount" class="field-input" placeholder="50000" min="1000" required id="loanAmountInput">
+        </div>
+        <div class="field">
+          <label class="field-label">Loan Term</label>
+          <select name="loan_term_months" class="field-input">
+            <option value="12">12 months (1 year)</option>
+            <option value="24">24 months (2 years)</option>
+            <option value="36">36 months (3 years)</option>
+            <option value="48">48 months (4 years)</option>
+            <option value="60" selected>60 months (5 years)</option>
+            <option value="84">84 months (7 years)</option>
+            <option value="120">120 months (10 years)</option>
+            <option value="180">180 months (15 years)</option>
+            <option value="240">240 months (20 years)</option>
+            <option value="360">360 months (30 years)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field">
+          <label class="field-label">Loan Purpose</label>
+          <select name="loan_purpose" class="field-input">
+            <option value="Home Purchase">Home Purchase</option>
+            <option value="Debt Consolidation">Debt Consolidation</option>
+            <option value="Business Expansion">Business Expansion</option>
+            <option value="Education">Education</option>
+            <option value="Medical">Medical</option>
+            <option value="Vehicle Purchase">Vehicle Purchase</option>
+            <option value="Home Improvement">Home Improvement</option>
+            <option value="Personal">Personal</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Collateral</label>
+          <select name="collateral" class="field-input">
+            <option value="None">None</option>
+            <option value="Property">Property</option>
+            <option value="Vehicle">Vehicle</option>
+            <option value="Investments">Investments</option>
+            <option value="Equipment">Equipment</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Profile -->
+    <div class="form-card">
+      <div class="form-card-header">
+        <span class="form-card-number">03</span>
+        <div>
+          <div class="form-card-title">Financial Profile</div>
+          <div class="form-card-sub">Credit & existing obligations</div>
+        </div>
+      </div>
+      <div class="form-grid-3">
+        <div class="field">
+          <label class="field-label">Credit Score</label>
+          <input type="number" name="credit_score" class="field-input" placeholder="700" min="300" max="850" required id="creditInput">
+          <div class="credit-indicator" id="creditIndicator"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Debt-to-Income Ratio</label>
+          <input type="number" name="debt_to_income" class="field-input" placeholder="0.35" min="0" max="2.5" step="0.01" required>
+          <span class="field-hint">Monthly debt ÷ monthly income</span>
+        </div>
+        <div class="field">
+          <label class="field-label">Existing Active Loans</label>
+          <input type="number" name="existing_loans" class="field-input" placeholder="0" min="0" max="20" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- NLP Preview -->
+    <div class="form-card nlp-card">
+      <div class="form-card-header">
+        <span class="form-card-number nlp-num">AI</span>
+        <div>
+          <div class="form-card-title">BERT Input Preview</div>
+          <div class="form-card-sub">Natural language text sent to the model</div>
+        </div>
+      </div>
+      <div class="nlp-preview" id="nlpPreview">
+        Fill in the form above to preview the text that will be analyzed by DistilBERT...
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <span class="submit-icon">⬡</span>
+      <span class="submit-text">Analyze with BERT</span>
+      <span class="submit-arrow">→</span>
+    </button>
+
+  </form>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script>
+// Live NLP preview
+function updatePreview() {
+  const name   = document.querySelector('[name=applicant_name]').value || 'applicant';
+  const age    = document.querySelector('[name=age]').value || '?';
+  const emp    = document.querySelector('[name=employment_status]').value.toLowerCase();
+  const income = parseInt(document.querySelector('[name=annual_income]').value || 0);
+  const amount = parseInt(document.querySelector('[name=loan_amount]').value || 0);
+  const term   = document.querySelector('[name=loan_term_months]').value;
+  const purpose= document.querySelector('[name=loan_purpose]').value.toLowerCase();
+  const coll   = document.querySelector('[name=collateral]').value;
+  const cs     = document.querySelector('[name=credit_score]').value || '?';
+  const dti    = document.querySelector('[name=debt_to_income]').value || '?';
+  const exist  = document.querySelector('[name=existing_loans]').value || '0';
+  const collText = coll !== 'None' ? ` with ${coll.toLowerCase()} as collateral` : ' with no collateral offered';
+  const existText = parseInt(exist) > 0 ? `The applicant has ${exist} existing loan(s).` : 'The applicant has no existing loans.';
+
+  const preview = `Applicant is a ${age}-year-old ${emp} individual requesting a $${amount.toLocaleString()} loan for ${purpose} over ${term} months${collText}. Annual income is $${income.toLocaleString()} with a credit score of ${cs}. Debt-to-income ratio is ${parseFloat(dti)||0}.${existText.replace('The applicant', ' ' + name.split(' ')[0] || 'The applicant')}`;
+
+  document.getElementById('nlpPreview').textContent = preview;
+}
+
+// Credit score indicator
+document.getElementById('creditInput').addEventListener('input', function() {
+  const v = parseInt(this.value);
+  const el = document.getElementById('creditIndicator');
+  if (!v) return;
+  if (v >= 750)      el.textContent = '⬡ Excellent';
+  else if (v >= 700) el.textContent = '◈ Good';
+  else if (v >= 650) el.textContent = '◇ Fair';
+  else if (v >= 600) el.textContent = '▽ Below Average';
+  else               el.textContent = '✕ Poor';
+  el.className = 'credit-indicator ' + (v >= 750 ? 'ci-excellent' : v >= 700 ? 'ci-good' : v >= 650 ? 'ci-fair' : v >= 600 ? 'ci-below' : 'ci-poor');
+});
+
+document.querySelectorAll('.field-input').forEach(el => el.addEventListener('input', updatePreview));
+document.querySelectorAll('select').forEach(el => el.addEventListener('change', updatePreview));
+
+document.getElementById('loanForm').addEventListener('submit', function() {
+  const btn = document.getElementById('submitBtn');
+  btn.querySelector('.submit-text').textContent = 'Analyzing...';
+  btn.disabled = true;
+  btn.classList.add('loading');
+});
+</script>
+{% endblock %}

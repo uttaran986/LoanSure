@@ -1,0 +1,12 @@
+{
+  "model_name": "distilbert-base-uncased",
+  "max_len": 128,
+  "epochs": 3,
+  "best_val_auc": 0.9735,
+  "test_accuracy": 0.9,
+  "test_auc": 0.964,
+  "labels": [
+    "Rejected",
+    "Approved"
+  ]
+}

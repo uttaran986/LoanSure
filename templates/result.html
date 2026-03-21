@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Decision — LoanBERT{% endblock %}
+{% block content %}
+
+{% set color = '#22c55e' if loan.approved else '#ef4444' %}
+{% set bg_color = 'rgba(34,197,94,0.08)' if loan.approved else 'rgba(239,68,68,0.08)' %}
+{% set verdict = 'APPROVED' if loan.approved else 'REJECTED' %}
+{% set verdict_icon = '✓' if loan.approved else '✕' %}
+
+<div class="result-hero" style="--verdict-color: {{ color }}; --verdict-bg: {{ bg_color }};">
+  <div class="result-verdict-icon">{{ verdict_icon }}</div>
+  <div class="result-verdict">{{ verdict }}</div>
+  <div class="result-name">{{ loan.applicant_name }}'s Application</div>
+  <div class="result-meta">{{ loan.loan_purpose }} · ${{ '{:,}'.format(loan.loan_amount) }} · {{ loan.loan_term_months }} months</div>
+</div>
+
+<div class="result-layout">
+
+  <!-- Left column -->
+  <div class="result-col">
+
+    <!-- Confidence -->
+    <div class="result-card">
+      <div class="result-card-title">Model Confidence</div>
+      <div class="confidence-display">
+        <div class="conf-ring">
+          <svg viewBox="0 0 120 120" width="120" height="120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--s2)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="50" fill="none"
+              stroke="{{ color }}" stroke-width="10"
+              stroke-linecap="round"
+              stroke-dasharray="{{ (loan.confidence / 100 * 314.16)|round(1) }} 314.16"
+              transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="conf-ring-inner">
+            <div class="conf-pct" style="color:{{ color }}">{{ loan.confidence|int }}%</div>
+            <div class="conf-label">confident</div>
+          </div>
+        </div>
+        <div class="conf-bars">
+          <div class="conf-bar-row">
+            <span class="conf-bar-label">Approve</span>
+            <div class="conf-bar-track">
+              <div class="conf-bar-fill approve-fill" style="width:{{ loan.prob_approve }}%"></div>
+            </div>
+            <span class="conf-bar-pct">{{ loan.prob_approve }}%</span>
+          </div>
+          <div class="conf-bar-row">
+            <span class="conf-bar-label">Reject</span>
+            <div class="conf-bar-track">
+              <div class="conf-bar-fill reject-fill" style="width:{{ loan.prob_reject }}%"></div>
+            </div>
+            <span class="conf-bar-pct">{{ loan.prob_reject }}%</span>
+          </div>
+        </div>
+      </div>
+      <div class="model-badge">{{ loan.model_used }}</div>
+    </div>
+
+    <!-- Application Summary -->
+    <div class="result-card">
+      <div class="result-card-title">Application Summary</div>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="si-label">Credit Score</div>
+          <div class="si-value">{{ loan.credit_score }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="si-label">Annual Income</div>
+          <div class="si-value">${{ '{:,}'.format(loan.annual_income) }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="si-label">Loan Amount</div>
+          <div class="si-value">${{ '{:,}'.format(loan.loan_amount) }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="si-label">DTI Ratio</div>
+          <div class="si-value">{{ loan.debt_to_income }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="si-label">Employment</div>
+          <div class="si-value">{{ loan.employment_status }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="si-label">Collateral</div>
+          <div class="si-value">{{ loan.collateral }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right column -->
+  <div class="result-col">
+
+    <!-- Positive factors -->
+    {% if loan.get_reasons() %}
+    <div class="result-card factors-card positive-card">
+      <div class="result-card-title">✓ Positive Factors</div>
+      <ul class="factors-list">
+        {% for r in loan.get_reasons() %}
+          <li class="factor-item positive">{{ r }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Risk flags -->
+    {% if loan.get_flags() %}
+    <div class="result-card factors-card negative-card">
+      <div class="result-card-title">⚠ Risk Flags</div>
+      <ul class="factors-list">
+        {% for f in loan.get_flags() %}
+          <li class="factor-item negative">{{ f }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- BERT Input -->
+    <div class="result-card">
+      <div class="result-card-title">BERT Input Text</div>
+      <div class="bert-text">{{ loan.description }}</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="result-actions">
+  <a href="/apply" class="btn-outline">← New Application</a>
+  <a href="/dashboard" class="btn-solid">View Dashboard →</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — LoanBERT{% endblock %}
+{% block content %}
+
+<div class="page-hero">
+  <div class="hero-label">Analytics Overview</div>
+  <h1 class="hero-title">Loan Dashboard</h1>
+  <p class="hero-sub">All applications processed by the BERT model</p>
+</div>
+
+<div class="dash-stats">
+  <div class="dstat">
+    <div class="dstat-val">{{ stats.total }}</div>
+    <div class="dstat-lbl">Total Applications</div>
+  </div>
+  <div class="dstat approved-stat">
+    <div class="dstat-val">{{ stats.approved }}</div>
+    <div class="dstat-lbl">Approved</div>
+  </div>
+  <div class="dstat rejected-stat">
+    <div class="dstat-val">{{ stats.rejected }}</div>
+    <div class="dstat-lbl">Rejected</div>
+  </div>
+  <div class="dstat">
+    <div class="dstat-val">{{ stats.approval_rate }}%</div>
+    <div class="dstat-lbl">Approval Rate</div>
+  </div>
+  <div class="dstat">
+    <div class="dstat-val">{{ stats.avg_credit_score|int }}</div>
+    <div class="dstat-lbl">Avg Credit Score</div>
+  </div>
+  <div class="dstat">
+    <div class="dstat-val">{{ stats.avg_confidence }}%</div>
+    <div class="dstat-lbl">Avg Confidence</div>
+  </div>
+</div>
+
+{% if loans %}
+<div class="table-card">
+  <div class="table-header">
+    <span class="table-title">Recent Applications</span>
+    <a href="/apply" class="btn-solid btn-sm">+ New Application</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Applicant</th>
+          <th>Purpose</th>
+          <th>Amount</th>
+          <th>Credit</th>
+          <th>Income</th>
+          <th>DTI</th>
+          <th>Decision</th>
+          <th>Confidence</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loans %}
+        <tr>
+          <td>
+            <div class="td-name">{{ loan.applicant_name }}</div>
+            <div class="td-sub">{{ loan.employment_status }}</div>
+          </td>
+          <td><span class="purpose-tag">{{ loan.loan_purpose }}</span></td>
+          <td class="mono">${{ '{:,}'.format(loan.loan_amount) }}</td>
+          <td>
+            <span class="cs-badge {% if loan.credit_score >= 750 %}cs-ex{% elif loan.credit_score >= 700 %}cs-good{% elif loan.credit_score >= 650 %}cs-fair{% else %}cs-poor{% endif %}">
+              {{ loan.credit_score }}
+            </span>
+          </td>
+          <td class="mono">${{ '{:,}'.format(loan.annual_income) }}</td>
+          <td class="mono">{{ loan.debt_to_income }}</td>
+          <td>
+            <span class="decision-badge {% if loan.approved %}approved{% else %}rejected{% endif %}">
+              {% if loan.approved %}✓ Approved{% else %}✕ Rejected{% endif %}
+            </span>
+          </td>
+          <td>
+            <div class="conf-mini">
+              <div class="conf-mini-bar">
+                <div class="conf-mini-fill {% if loan.approved %}fill-green{% else %}fill-red{% endif %}"
+                     style="width:{{ loan.confidence }}%"></div>
+              </div>
+              <span class="mono">{{ loan.confidence }}%</span>
+            </div>
+          </td>
+          <td class="mono td-date">{{ loan.created_at.strftime('%b %d') }}</td>
+          <td><a href="/result/{{ loan.id }}" class="btn-ghost">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="empty-dash">
+  <div class="empty-icon">◈</div>
+  <div class="empty-title">No applications yet</div>
+  <p>Submit your first loan application to see results here.</p>
+  <a href="/apply" class="btn-solid" style="margin-top:20px;">Start Application →</a>
+</div>
+{% endif %}
+
+{% endblock %}

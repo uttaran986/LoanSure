@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Model Info — LoanBERT{% endblock %}
+{% block content %}
+
+<div class="page-hero">
+  <div class="hero-label">Architecture & Performance</div>
+  <h1 class="hero-title">Model Information</h1>
+  <p class="hero-sub">DistilBERT fine-tuned for binary loan approval classification</p>
+</div>
+
+<div class="model-layout">
+
+  <!-- Architecture card -->
+  <div class="model-card">
+    <div class="mc-title">Architecture</div>
+    <div class="arch-diagram">
+      <div class="arch-step">
+        <div class="arch-box input-box">Raw Application Data</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-box nlp-box">Natural Language Description</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-box tok-box">DistilBERT Tokenizer<br><span class="arch-detail">128 max tokens · WordPiece</span></div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-box bert-box">DistilBERT Encoder<br><span class="arch-detail">6 layers · 768 hidden · 12 heads</span></div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-box cls-box">[CLS] Token Representation</div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-box head-box">Classification Head<br><span class="arch-detail">Dropout(0.1) → Linear(768→2)</span></div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-split">
+          <div class="arch-box out-box reject-out">Rejected</div>
+          <div class="arch-box out-box approve-out">Approved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Training config -->
+  <div>
+    <div class="model-card" style="margin-bottom:20px;">
+      <div class="mc-title">Training Configuration</div>
+      <div class="config-grid">
+        <div class="config-item"><span class="ci-key">Base Model</span><span class="ci-val">distilbert-base-uncased</span></div>
+        <div class="config-item"><span class="ci-key">Max Length</span><span class="ci-val">128 tokens</span></div>
+        <div class="config-item"><span class="ci-key">Batch Size</span><span class="ci-val">16</span></div>
+        <div class="config-item"><span class="ci-key">Epochs</span><span class="ci-val">3</span></div>
+        <div class="config-item"><span class="ci-key">Learning Rate</span><span class="ci-val">2e-5</span></div>
+        <div class="config-item"><span class="ci-key">Warmup</span><span class="ci-val">10% of steps</span></div>
+        <div class="config-item"><span class="ci-key">Optimizer</span><span class="ci-val">AdamW</span></div>
+        <div class="config-item"><span class="ci-key">Weight Decay</span><span class="ci-val">0.01</span></div>
+        <div class="config-item"><span class="ci-key">Dataset Size</span><span class="ci-val">5,000 records</span></div>
+        <div class="config-item"><span class="ci-key">Train/Val/Test</span><span class="ci-val">80 / 10 / 10</span></div>
+      </div>
+    </div>
+
+    {% if has_model and meta %}
+    <div class="model-card perf-card">
+      <div class="mc-title">Model Performance</div>
+      <div class="perf-metrics">
+        <div class="perf-metric">
+          <div class="pm-val">{{ (meta.test_accuracy * 100)|round(1) }}%</div>
+          <div class="pm-lbl">Test Accuracy</div>
+        </div>
+        <div class="perf-metric">
+          <div class="pm-val">{{ meta.test_auc }}</div>
+          <div class="pm-lbl">ROC-AUC</div>
+        </div>
+        <div class="perf-metric">
+          <div class="pm-val">{{ meta.best_val_auc }}</div>
+          <div class="pm-lbl">Best Val AUC</div>
+        </div>
+        <div class="perf-metric">
+          <div class="pm-val">{{ meta.epochs }}</div>
+          <div class="pm-lbl">Epochs Trained</div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="model-card not-trained-card">
+      <div class="mc-title">Model Status</div>
+      <div class="not-trained">
+        <div class="nt-icon">◇</div>
+        <div class="nt-title">Model Not Yet Trained</div>
+        <p class="nt-sub">Currently using rule-based fallback scoring. Train the BERT model to unlock AI-powered decisions.</p>
+        <div class="train-steps">
+          <div class="ts-step"><span class="ts-num">1</span><code>python generate_data.py</code></div>
+          <div class="ts-step"><span class="ts-num">2</span><code>python train.py</code></div>
+          <div class="ts-step"><span class="ts-num">3</span>Restart Flask app</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- How it works -->
+<div class="how-it-works">
+  <div class="hiw-title">How the NLP Pipeline Works</div>
+  <div class="hiw-steps">
+    <div class="hiw-step">
+      <div class="hiw-num">1</div>
+      <div class="hiw-content">
+        <div class="hiw-step-title">Form → Text</div>
+        <p>Structured form data is converted to a natural language sentence describing the applicant's profile</p>
+      </div>
+    </div>
+    <div class="hiw-arrow">→</div>
+    <div class="hiw-step">
+      <div class="hiw-num">2</div>
+      <div class="hiw-content">
+        <div class="hiw-step-title">Tokenization</div>
+        <p>Text is tokenized using BERT's WordPiece tokenizer into up to 128 subword tokens</p>
+      </div>
+    </div>
+    <div class="hiw-arrow">→</div>
+    <div class="hiw-step">
+      <div class="hiw-num">3</div>
+      <div class="hiw-content">
+        <div class="hiw-step-title">BERT Encoding</div>
+        <p>DistilBERT processes all tokens simultaneously with self-attention across 6 transformer layers</p>
+      </div>
+    </div>
+    <div class="hiw-arrow">→</div>
+    <div class="hiw-step">
+      <div class="hiw-num">4</div>
+      <div class="hiw-content">
+        <div class="hiw-step-title">Classification</div>
+        <p>The [CLS] token embedding passes through a linear head → softmax → Approved/Rejected with probability</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

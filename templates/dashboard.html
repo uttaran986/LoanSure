@@ -1,45 +1,110 @@
 {% extends "base.html" %}
-{% block title %}Dashboard — LoanBERT{% endblock %}
+{% block title %}Dashboard — LoanIQ{% endblock %}
+
+{% block extra_css %}<style>
+.dash-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.dash-header h1 { font-size:28px; font-weight:800; color:var(--white); letter-spacing:-0.6px; }
+.dash-header p  { font-size:13px; color:var(--muted); margin-top:3px; }
+
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+
+.mini-chart { display:flex; align-items:flex-end; gap:3px; height:32px; margin-top:10px; }
+.mini-bar   { border-radius:3px 3px 0 0; opacity:0.75; animation:barGrow 0.8s ease both; }
+
+/* table */
+.table-card   { overflow:hidden; padding:0; }
+.table-header { display:flex; align-items:center; justify-content:space-between; padding:16px 22px; border-bottom:1px solid var(--border); position:relative; z-index:1; }
+.table-title  { font-size:14px; font-weight:700; color:var(--white); }
+.table-wrap   { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+thead th {
+  font-size:10px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:1.2px;
+  padding:11px 16px; text-align:left;
+  border-bottom:1px solid var(--border);
+  background:rgba(5,13,26,0.4);
+  white-space:nowrap;
+}
+tbody tr { border-bottom:1px solid rgba(59,143,255,0.07); transition:background 0.15s; }
+tbody tr:hover { background:rgba(26,111,232,0.05); }
+tbody tr:last-child { border-bottom:none; }
+td { padding:13px 16px; font-size:13px; color:var(--muted); vertical-align:middle; }
+.td-name { font-weight:600; color:var(--pale); font-size:13px; }
+.td-sub  { font-size:11px; color:var(--w30); margin-top:2px; }
+.purpose-pill {
+  font-size:11px; font-weight:600; color:var(--blue-lt);
+  background:rgba(26,111,232,0.1); border:1px solid var(--border);
+  padding:3px 9px; border-radius:20px; white-space:nowrap;
+}
+
+/* empty state */
+.empty-state { text-align:center; padding:80px 20px; position:relative; z-index:1; }
+.empty-icon  {
+  width:64px; height:64px; border-radius:18px;
+  background:rgba(26,111,232,0.1); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 20px;
+}
+.empty-title { font-size:18px; font-weight:700; color:var(--pale); margin-bottom:8px; }
+.empty-sub   { font-size:13px; color:var(--muted); margin-bottom:28px; }
+</style>{% endblock %}
+
 {% block content %}
-
-<div class="page-hero">
-  <div class="hero-label">Analytics Overview</div>
-  <h1 class="hero-title">Loan Dashboard</h1>
-  <p class="hero-sub">All applications processed by the BERT model</p>
+<div class="dash-header fade-up">
+  <div>
+    <h1>Loan Dashboard</h1>
+    <p>All applications processed by the BERT model</p>
+  </div>
+  <a href="/apply" class="btn-primary" style="padding:11px 22px;font-size:13px">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M7 1v12M1 7h12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    New application
+  </a>
 </div>
 
-<div class="dash-stats">
-  <div class="dstat">
-    <div class="dstat-val">{{ stats.total }}</div>
-    <div class="dstat-lbl">Total Applications</div>
+<!-- Stats -->
+<div class="stats-row">
+  <div class="card3d fade-up-1">
+    <div class="stat-card">
+      <div class="stat-val">{{ stats.total }}</div>
+      <div class="stat-lbl">Total applications</div>
+      <div class="mini-chart">
+        {% for h in [38,52,34,68,58,79,63] %}
+        <div class="mini-bar" style="height:{{ h }}%;flex:1;background:#1A6FE8;animation-delay:{{ loop.index0 * 0.07 }}s"></div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
-  <div class="dstat approved-stat">
-    <div class="dstat-val">{{ stats.approved }}</div>
-    <div class="dstat-lbl">Approved</div>
+  <div class="card3d fade-up-2">
+    <div class="stat-card">
+      <div class="stat-val" style="color:#22D3A5">{{ stats.approved }}</div>
+      <div class="stat-lbl">Approved</div>
+      <div class="stat-delta delta-up" style="margin-top:16px">{{ stats.approval_rate }}% approval rate</div>
+    </div>
   </div>
-  <div class="dstat rejected-stat">
-    <div class="dstat-val">{{ stats.rejected }}</div>
-    <div class="dstat-lbl">Rejected</div>
+  <div class="card3d fade-up-3">
+    <div class="stat-card">
+      <div class="stat-val" style="color:#F87171">{{ stats.rejected }}</div>
+      <div class="stat-lbl">Rejected</div>
+      <div class="stat-delta" style="color:var(--muted);margin-top:16px">{{ 100 - stats.approval_rate }}% rejection rate</div>
+    </div>
   </div>
-  <div class="dstat">
-    <div class="dstat-val">{{ stats.approval_rate }}%</div>
-    <div class="dstat-lbl">Approval Rate</div>
-  </div>
-  <div class="dstat">
-    <div class="dstat-val">{{ stats.avg_credit_score|int }}</div>
-    <div class="dstat-lbl">Avg Credit Score</div>
-  </div>
-  <div class="dstat">
-    <div class="dstat-val">{{ stats.avg_confidence }}%</div>
-    <div class="dstat-lbl">Avg Confidence</div>
+  <div class="card3d fade-up-4">
+    <div class="stat-card">
+      <div class="stat-val">{{ stats.avg_confidence }}%</div>
+      <div class="stat-lbl">Avg AI confidence</div>
+      <div class="stat-delta delta-up" style="margin-top:16px">Avg credit score: {{ stats.avg_credit_score|int }}</div>
+    </div>
   </div>
 </div>
 
+<!-- Table -->
 {% if loans %}
-<div class="table-card">
+<div class="card3d fade-up-5 table-card">
   <div class="table-header">
-    <span class="table-title">Recent Applications</span>
-    <a href="/apply" class="btn-solid btn-sm">+ New Application</a>
+    <span class="table-title">Recent applications</span>
+    <span style="font-size:12px;color:var(--muted)">{{ loans|length }} total records</span>
   </div>
   <div class="table-wrap">
     <table>
@@ -64,44 +129,62 @@
             <div class="td-name">{{ loan.applicant_name }}</div>
             <div class="td-sub">{{ loan.employment_status }}</div>
           </td>
-          <td><span class="purpose-tag">{{ loan.loan_purpose }}</span></td>
+          <td><span class="purpose-pill">{{ loan.loan_purpose }}</span></td>
           <td class="mono">${{ '{:,}'.format(loan.loan_amount) }}</td>
           <td>
-            <span class="cs-badge {% if loan.credit_score >= 750 %}cs-ex{% elif loan.credit_score >= 700 %}cs-good{% elif loan.credit_score >= 650 %}cs-fair{% else %}cs-poor{% endif %}">
+            <span class="cs-chip
+              {% if loan.credit_score >= 750 %}cs-ex
+              {% elif loan.credit_score >= 700 %}cs-good
+              {% elif loan.credit_score >= 650 %}cs-fair
+              {% else %}cs-poor{% endif %}">
               {{ loan.credit_score }}
             </span>
           </td>
           <td class="mono">${{ '{:,}'.format(loan.annual_income) }}</td>
           <td class="mono">{{ loan.debt_to_income }}</td>
           <td>
-            <span class="decision-badge {% if loan.approved %}approved{% else %}rejected{% endif %}">
-              {% if loan.approved %}✓ Approved{% else %}✕ Rejected{% endif %}
-            </span>
+            {% if loan.approved %}
+              <span class="badge-approved">✓ Approved</span>
+            {% else %}
+              <span class="badge-rejected">✕ Rejected</span>
+            {% endif %}
           </td>
           <td>
             <div class="conf-mini">
-              <div class="conf-mini-bar">
-                <div class="conf-mini-fill {% if loan.approved %}fill-green{% else %}fill-red{% endif %}"
+              <div class="conf-track">
+                <div class="{% if loan.approved %}conf-fill-g{% else %}conf-fill-r{% endif %}"
                      style="width:{{ loan.confidence }}%"></div>
               </div>
-              <span class="mono">{{ loan.confidence }}%</span>
+              <span class="conf-pct" style="color:{% if loan.approved %}#22D3A5{% else %}#F87171{% endif %}">
+                {{ loan.confidence }}%
+              </span>
             </div>
           </td>
-          <td class="mono td-date">{{ loan.created_at.strftime('%b %d') }}</td>
-          <td><a href="/result/{{ loan.id }}" class="btn-ghost">View</a></td>
+          <td class="mono" style="color:var(--w30)">{{ loan.created_at.strftime('%b %d') }}</td>
+          <td><a href="/result/{{ loan.id }}" class="btn-ghost">View →</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+
 {% else %}
-<div class="empty-dash">
-  <div class="empty-icon">◈</div>
-  <div class="empty-title">No applications yet</div>
-  <p>Submit your first loan application to see results here.</p>
-  <a href="/apply" class="btn-solid" style="margin-top:20px;">Start Application →</a>
+<div class="card3d fade-up-5">
+  <div class="empty-state">
+    <div class="empty-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="3" y="3" width="9" height="9" rx="2.5" fill="#3B8FFF" opacity="0.7"/>
+        <rect x="16" y="3" width="9" height="9" rx="2.5" fill="#3B8FFF" opacity="0.3"/>
+        <path d="M3 16h22M7 21H3M11 21H8.5M25 21h-8" stroke="#3B8FFF" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="empty-title">No applications yet</div>
+    <div class="empty-sub">Submit your first loan application to see AI-powered results here</div>
+    <a href="/apply" class="btn-primary" style="margin:0 auto">
+      Start first application →
+    </a>
+  </div>
 </div>
 {% endif %}
-
 {% endblock %}

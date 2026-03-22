@@ -3,27 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}LoanBERT{% endblock %}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>{% block title %}LoanIQ{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
 
 <nav class="nav">
   <a href="/" class="nav-brand">
-    <div class="nav-brand-icon">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 2L18 7V13L10 18L2 13V7L10 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        <path d="M10 6L14 8.5V13.5L10 16L6 13.5V8.5L10 6Z" fill="currentColor" opacity="0.3"/>
+    <!-- 3D Logo Mark — fully inline, no file needed -->
+    <div style="width:40px;height:40px;border-radius:11px;overflow:hidden;flex-shrink:0;box-shadow:0 0 22px rgba(45,212,255,0.35),0 4px 14px rgba(26,111,232,0.5);">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1A6FE8"/>
+            <stop offset="100%" stop-color="#2DD4FF"/>
+          </linearGradient>
+        </defs>
+        <!-- Background -->
+        <rect width="40" height="40" rx="10" fill="url(#lg1)"/>
+        <!-- Top shine -->
+        <rect width="40" height="20" rx="10" fill="rgba(255,255,255,0.18)"/>
+        <!-- Top-left block -->
+        <rect x="7" y="7" width="11" height="11" rx="2.5" fill="white" opacity="0.95"/>
+        <!-- Top-right block (dim) -->
+        <rect x="22" y="7" width="11" height="11" rx="2.5" fill="white" opacity="0.45"/>
+        <!-- Bottom lines -->
+        <rect x="7" y="22" width="26" height="3" rx="1.5" fill="white" opacity="0.85"/>
+        <rect x="7" y="28" width="16" height="3" rx="1.5" fill="white" opacity="0.55"/>
+        <rect x="7" y="34" width="20" height="3" rx="1.5" fill="white" opacity="0.35"/>
       </svg>
     </div>
-    <span>Loan<strong>BERT</strong></span>
+    <span class="nav-brand-name">Loan<strong>IQ</strong></span>
   </a>
+
   <div class="nav-links">
     <a href="/apply"      class="nav-link {% if request.endpoint == 'apply'      %}active{% endif %}">Apply</a>
     <a href="/dashboard"  class="nav-link {% if request.endpoint == 'dashboard'  %}active{% endif %}">Dashboard</a>
     <a href="/model-info" class="nav-link {% if request.endpoint == 'model_info' %}active{% endif %}">Model Info</a>
+  </div>
+
+  <div class="nav-right">
+    <span class="nav-badge">BERT · AI Powered</span>
+    <div class="nav-avatar">AO</div>
   </div>
 </nav>
 

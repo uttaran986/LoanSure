@@ -1,134 +1,202 @@
 {% extends "base.html" %}
-{% block title %}Model Info — LoanBERT{% endblock %}
-{% block content %}
+{% block title %}Model Info — LoanIQ{% endblock %}
 
-<div class="page-hero">
-  <div class="hero-label">Architecture & Performance</div>
-  <h1 class="hero-title">Model Information</h1>
-  <p class="hero-sub">DistilBERT fine-tuned for binary loan approval classification</p>
+{% block extra_css %}<style>
+.model-layout { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; margin-bottom:20px; }
+.m-card { padding:22px 24px; }
+.m-title { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.3px; margin-bottom:18px; }
+
+/* architecture pipeline */
+.pipe       { display:flex; flex-direction:column; align-items:center; }
+.pipe-box   { width:100%; border-radius:10px; padding:12px 16px; text-align:center; border:1px solid; position:relative; }
+.pipe-lbl   { font-size:13px; font-weight:700; margin-bottom:3px; }
+.pipe-sub   { font-size:11px; opacity:0.65; }
+.pipe-arrow { font-size:16px; color:var(--border-hi); padding:3px 0; line-height:1; text-align:center; }
+
+.pb-input  { background:rgba(26,111,232,0.08);  border-color:rgba(26,111,232,0.3); }
+.pb-nlp    { background:rgba(45,212,255,0.06);  border-color:rgba(45,212,255,0.25);}
+.pb-tok    { background:rgba(107,176,255,0.06); border-color:rgba(107,176,255,0.2);}
+.pb-bert   { background:linear-gradient(135deg,rgba(26,111,232,0.15),rgba(45,212,255,0.08)); border-color:rgba(45,212,255,0.42); }
+.pb-cls    { background:rgba(45,212,255,0.06);  border-color:rgba(45,212,255,0.2); }
+.pb-head   { background:rgba(107,176,255,0.06); border-color:rgba(107,176,255,0.2);}
+.pipe-split { display:flex; gap:10px; width:100%; }
+.pb-approve { flex:1; background:rgba(34,211,165,0.08); border:1px solid rgba(34,211,165,0.3); border-radius:10px; padding:12px; text-align:center; }
+.pb-reject  { flex:1; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.3); border-radius:10px; padding:12px; text-align:center; }
+
+/* config table */
+.cfg-list  { display:flex; flex-direction:column; }
+.cfg-row   { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(59,143,255,0.08); font-size:13px; }
+.cfg-row:last-child { border-bottom:none; }
+.cfg-key   { color:var(--muted); font-weight:500; }
+.cfg-val   { color:var(--pale); font-weight:600; font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+/* performance */
+.perf-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.perf-box  { background:rgba(5,13,26,0.7); border:1px solid var(--border); border-radius:12px; padding:18px; text-align:center; }
+.perf-val  { font-size:28px; font-weight:800; color:var(--cyan); letter-spacing:-1px; }
+.perf-lbl  { font-size:11px; color:var(--muted); margin-top:6px; }
+
+/* not trained */
+.not-trained { text-align:center; padding:32px 16px; }
+.nt-icon     { width:56px; height:56px; border-radius:16px; background:rgba(26,111,232,0.1); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
+.nt-title    { font-size:16px; font-weight:700; color:var(--pale); margin-bottom:8px; }
+.nt-sub      { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
+.train-steps { display:flex; flex-direction:column; gap:8px; text-align:left; }
+.ts-step     { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--muted); }
+.ts-num      { width:22px; height:22px; border-radius:6px; background:var(--cyan-dim); color:var(--cyan); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+.ts-step code { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); background:var(--cyan-dim); padding:2px 9px; border-radius:5px; }
+
+/* how it works */
+.hiw-title { font-size:17px; font-weight:700; color:var(--white); margin-bottom:16px; }
+.hiw-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.hiw-card  { padding:18px; }
+.hiw-num   { width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,var(--blue),var(--cyan)); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:var(--white); margin-bottom:14px; box-shadow:0 0 16px var(--cyan-glow), inset 0 1px 0 rgba(255,255,255,0.2); }
+.hiw-step-title { font-size:13px; font-weight:700; color:var(--pale); margin-bottom:7px; }
+.hiw-card p     { font-size:12px; color:var(--muted); line-height:1.65; }
+</style>{% endblock %}
+
+{% block content %}
+<div class="page-header fade-up">
+  <div class="page-label">Architecture &amp; Performance</div>
+  <h1>Model Information</h1>
+  <p>DistilBERT fine-tuned for binary loan approval classification</p>
 </div>
 
 <div class="model-layout">
 
-  <!-- Architecture card -->
-  <div class="model-card">
-    <div class="mc-title">Architecture</div>
-    <div class="arch-diagram">
-      <div class="arch-step">
-        <div class="arch-box input-box">Raw Application Data</div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-box nlp-box">Natural Language Description</div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-box tok-box">DistilBERT Tokenizer<br><span class="arch-detail">128 max tokens · WordPiece</span></div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-box bert-box">DistilBERT Encoder<br><span class="arch-detail">6 layers · 768 hidden · 12 heads</span></div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-box cls-box">[CLS] Token Representation</div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-box head-box">Classification Head<br><span class="arch-detail">Dropout(0.1) → Linear(768→2)</span></div>
-        <div class="arch-arrow">↓</div>
-        <div class="arch-split">
-          <div class="arch-box out-box reject-out">Rejected</div>
-          <div class="arch-box out-box approve-out">Approved</div>
+  <!-- Architecture -->
+  <div class="card3d fade-up-1">
+    <div class="m-card">
+      <div class="m-title">Model architecture</div>
+      <div class="pipe">
+        <div class="pipe-box pb-input">
+          <div class="pipe-lbl" style="color:#3B8FFF">Raw application data</div>
+          <div class="pipe-sub" style="color:#3B8FFF">Form fields &amp; financial inputs</div>
+        </div>
+        <div class="pipe-arrow">↓</div>
+        <div class="pipe-box pb-nlp">
+          <div class="pipe-lbl" style="color:#2DD4FF">Natural language description</div>
+          <div class="pipe-sub" style="color:#2DD4FF">Structured → sentence conversion</div>
+        </div>
+        <div class="pipe-arrow">↓</div>
+        <div class="pipe-box pb-tok">
+          <div class="pipe-lbl" style="color:#B8D8FF">DistilBERT tokenizer</div>
+          <div class="pipe-sub" style="color:#B8D8FF">128 max tokens &middot; WordPiece</div>
+        </div>
+        <div class="pipe-arrow">↓</div>
+        <div class="pipe-box pb-bert">
+          <div class="pipe-lbl" style="color:#2DD4FF">DistilBERT encoder</div>
+          <div class="pipe-sub" style="color:#2DD4FF">6 layers &middot; 768 hidden &middot; 12 attention heads</div>
+        </div>
+        <div class="pipe-arrow">↓</div>
+        <div class="pipe-box pb-cls">
+          <div class="pipe-lbl" style="color:#B8D8FF">[CLS] token representation</div>
+          <div class="pipe-sub" style="color:#B8D8FF">768-dim contextual embedding</div>
+        </div>
+        <div class="pipe-arrow">↓</div>
+        <div class="pipe-box pb-head">
+          <div class="pipe-lbl" style="color:#B8D8FF">Classification head</div>
+          <div class="pipe-sub" style="color:#B8D8FF">Dropout(0.1) → Linear(768→2) → Softmax</div>
+        </div>
+        <div class="pipe-arrow">↓</div>
+        <div class="pipe-split">
+          <div class="pb-approve">
+            <div class="pipe-lbl" style="color:#22D3A5">Approved</div>
+            <div class="pipe-sub" style="color:#22D3A5">prob_approve</div>
+          </div>
+          <div class="pb-reject">
+            <div class="pipe-lbl" style="color:#F87171">Rejected</div>
+            <div class="pipe-sub" style="color:#F87171">prob_reject</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Training config -->
-  <div>
-    <div class="model-card" style="margin-bottom:20px;">
-      <div class="mc-title">Training Configuration</div>
-      <div class="config-grid">
-        <div class="config-item"><span class="ci-key">Base Model</span><span class="ci-val">distilbert-base-uncased</span></div>
-        <div class="config-item"><span class="ci-key">Max Length</span><span class="ci-val">128 tokens</span></div>
-        <div class="config-item"><span class="ci-key">Batch Size</span><span class="ci-val">16</span></div>
-        <div class="config-item"><span class="ci-key">Epochs</span><span class="ci-val">3</span></div>
-        <div class="config-item"><span class="ci-key">Learning Rate</span><span class="ci-val">2e-5</span></div>
-        <div class="config-item"><span class="ci-key">Warmup</span><span class="ci-val">10% of steps</span></div>
-        <div class="config-item"><span class="ci-key">Optimizer</span><span class="ci-val">AdamW</span></div>
-        <div class="config-item"><span class="ci-key">Weight Decay</span><span class="ci-val">0.01</span></div>
-        <div class="config-item"><span class="ci-key">Dataset Size</span><span class="ci-val">5,000 records</span></div>
-        <div class="config-item"><span class="ci-key">Train/Val/Test</span><span class="ci-val">80 / 10 / 10</span></div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+
+    <!-- Training config -->
+    <div class="card3d fade-up-2">
+      <div class="m-card">
+        <div class="m-title">Training configuration</div>
+        <div class="cfg-list">
+          <div class="cfg-row"><span class="cfg-key">Base model</span><span class="cfg-val">distilbert-base-uncased</span></div>
+          <div class="cfg-row"><span class="cfg-key">Max token length</span><span class="cfg-val">128</span></div>
+          <div class="cfg-row"><span class="cfg-key">Batch size</span><span class="cfg-val">16</span></div>
+          <div class="cfg-row"><span class="cfg-key">Epochs</span><span class="cfg-val">3</span></div>
+          <div class="cfg-row"><span class="cfg-key">Learning rate</span><span class="cfg-val">2e-5</span></div>
+          <div class="cfg-row"><span class="cfg-key">Warmup steps</span><span class="cfg-val">10% of total</span></div>
+          <div class="cfg-row"><span class="cfg-key">Optimizer</span><span class="cfg-val">AdamW</span></div>
+          <div class="cfg-row"><span class="cfg-key">Weight decay</span><span class="cfg-val">0.01</span></div>
+          <div class="cfg-row"><span class="cfg-key">Dataset size</span><span class="cfg-val">5,000 records</span></div>
+          <div class="cfg-row"><span class="cfg-key">Train / Val / Test</span><span class="cfg-val">80 / 10 / 10</span></div>
+        </div>
       </div>
     </div>
 
+    <!-- Performance -->
     {% if has_model and meta %}
-    <div class="model-card perf-card">
-      <div class="mc-title">Model Performance</div>
-      <div class="perf-metrics">
-        <div class="perf-metric">
-          <div class="pm-val">{{ (meta.test_accuracy * 100)|round(1) }}%</div>
-          <div class="pm-lbl">Test Accuracy</div>
-        </div>
-        <div class="perf-metric">
-          <div class="pm-val">{{ meta.test_auc }}</div>
-          <div class="pm-lbl">ROC-AUC</div>
-        </div>
-        <div class="perf-metric">
-          <div class="pm-val">{{ meta.best_val_auc }}</div>
-          <div class="pm-lbl">Best Val AUC</div>
-        </div>
-        <div class="perf-metric">
-          <div class="pm-val">{{ meta.epochs }}</div>
-          <div class="pm-lbl">Epochs Trained</div>
+    <div class="card3d fade-up-3">
+      <div class="m-card">
+        <div class="m-title">Model performance</div>
+        <div class="perf-grid">
+          <div class="perf-box"><div class="perf-val">{{ (meta.test_accuracy * 100)|round(1) }}%</div><div class="perf-lbl">Test accuracy</div></div>
+          <div class="perf-box"><div class="perf-val">{{ meta.test_auc }}</div><div class="perf-lbl">ROC-AUC</div></div>
+          <div class="perf-box"><div class="perf-val">{{ meta.best_val_auc }}</div><div class="perf-lbl">Best val AUC</div></div>
+          <div class="perf-box"><div class="perf-val">{{ meta.epochs }}</div><div class="perf-lbl">Epochs trained</div></div>
         </div>
       </div>
     </div>
     {% else %}
-    <div class="model-card not-trained-card">
-      <div class="mc-title">Model Status</div>
-      <div class="not-trained">
-        <div class="nt-icon">◇</div>
-        <div class="nt-title">Model Not Yet Trained</div>
-        <p class="nt-sub">Currently using rule-based fallback scoring. Train the BERT model to unlock AI-powered decisions.</p>
-        <div class="train-steps">
-          <div class="ts-step"><span class="ts-num">1</span><code>python generate_data.py</code></div>
-          <div class="ts-step"><span class="ts-num">2</span><code>python train.py</code></div>
-          <div class="ts-step"><span class="ts-num">3</span>Restart Flask app</div>
+    <div class="card3d fade-up-3">
+      <div class="m-card">
+        <div class="m-title">Model status</div>
+        <div class="not-trained">
+          <div class="nt-icon">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+              <circle cx="13" cy="13" r="11" stroke="#3B8FFF" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <path d="M13 8v5l3 3" stroke="#3B8FFF" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="nt-title">Model not yet trained</div>
+          <div class="nt-sub">Currently using rule-based fallback scoring. Train the BERT model to unlock full AI-powered decisions.</div>
+          <div class="train-steps">
+            <div class="ts-step"><span class="ts-num">1</span><code>python generate_data.py</code></div>
+            <div class="ts-step"><span class="ts-num">2</span><code>python train.py</code></div>
+            <div class="ts-step"><span class="ts-num">3</span>Restart the Flask app</div>
+          </div>
         </div>
       </div>
     </div>
     {% endif %}
+
   </div>
 </div>
 
 <!-- How it works -->
-<div class="how-it-works">
-  <div class="hiw-title">How the NLP Pipeline Works</div>
-  <div class="hiw-steps">
-    <div class="hiw-step">
+<div class="fade-up-5">
+  <div class="hiw-title">How the NLP pipeline works</div>
+  <div class="hiw-grid">
+    <div class="card3d hiw-card">
       <div class="hiw-num">1</div>
-      <div class="hiw-content">
-        <div class="hiw-step-title">Form → Text</div>
-        <p>Structured form data is converted to a natural language sentence describing the applicant's profile</p>
-      </div>
+      <div class="hiw-step-title">Form → text</div>
+      <p>Structured form data is converted to a natural language sentence describing the applicant's full financial profile</p>
     </div>
-    <div class="hiw-arrow">→</div>
-    <div class="hiw-step">
+    <div class="card3d hiw-card">
       <div class="hiw-num">2</div>
-      <div class="hiw-content">
-        <div class="hiw-step-title">Tokenization</div>
-        <p>Text is tokenized using BERT's WordPiece tokenizer into up to 128 subword tokens</p>
-      </div>
+      <div class="hiw-step-title">Tokenization</div>
+      <p>Text is tokenized using BERT's WordPiece tokenizer into up to 128 subword tokens with [CLS] and [SEP] markers</p>
     </div>
-    <div class="hiw-arrow">→</div>
-    <div class="hiw-step">
+    <div class="card3d hiw-card">
       <div class="hiw-num">3</div>
-      <div class="hiw-content">
-        <div class="hiw-step-title">BERT Encoding</div>
-        <p>DistilBERT processes all tokens simultaneously with self-attention across 6 transformer layers</p>
-      </div>
+      <div class="hiw-step-title">BERT encoding</div>
+      <p>DistilBERT processes all tokens simultaneously with multi-head self-attention across 6 transformer layers</p>
     </div>
-    <div class="hiw-arrow">→</div>
-    <div class="hiw-step">
+    <div class="card3d hiw-card">
       <div class="hiw-num">4</div>
-      <div class="hiw-content">
-        <div class="hiw-step-title">Classification</div>
-        <p>The [CLS] token embedding passes through a linear head → softmax → Approved/Rejected with probability</p>
-      </div>
+      <div class="hiw-step-title">Classification</div>
+      <p>The [CLS] embedding passes through a linear head → softmax → Approved/Rejected with probability scores</p>
     </div>
   </div>
 </div>
-
 {% endblock %}

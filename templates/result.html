@@ -1,134 +1,241 @@
 {% extends "base.html" %}
-{% block title %}Decision — LoanBERT{% endblock %}
+{% block title %}Decision — LoanIQ{% endblock %}
+
+{% block extra_css %}
+{% set is_app = loan.approved %}
+{% set ac  = '#22D3A5' if is_app else '#F87171' %}
+{% set adim = 'rgba(34,211,165,0.1)' if is_app else 'rgba(248,113,113,0.1)' %}
+{% set abor = 'rgba(34,211,165,0.35)' if is_app else 'rgba(248,113,113,0.35)' %}
+<style>
+.verdict-banner {
+  background: linear-gradient(135deg,rgba(13,40,80,0.95),rgba(7,20,40,0.98));
+  border: 2px solid {{ abor }};
+  border-radius: 18px; padding: 28px 32px;
+  display: flex; align-items: center; gap: 22px;
+  margin-bottom: 20px; position: relative; overflow: hidden;
+  box-shadow: 0 0 60px {{ adim }}, 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07);
+}
+.verdict-banner::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg,transparent,{{ ac }},transparent);
+}
+.verdict-banner::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:40%;
+  background:rgba(255,255,255,0.018); pointer-events:none;
+}
+.vi-wrap {
+  width:70px; height:70px; border-radius:18px; flex-shrink:0;
+  background:{{ adim }}; border:2px solid {{ abor }};
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 30px {{ adim }}, inset 0 1px 0 rgba(255,255,255,0.1);
+  position:relative; z-index:1;
+}
+.vt { position:relative; z-index:1; }
+.vw { font-size:34px; font-weight:800; color:{{ ac }}; letter-spacing:-1px; line-height:1; }
+.vn { font-size:15px; color:var(--pale); font-weight:600; margin-top:5px; }
+.vm { font-size:12px; color:var(--muted); margin-top:3px; }
+.v-ring { margin-left:auto; position:relative; z-index:1; }
+
+.result-layout { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.result-col    { display:flex; flex-direction:column; gap:14px; }
+.r-card        { padding:20px 22px; }
+.r-title {
+  font-size:11px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:1.3px; margin-bottom:14px;
+}
+
+/* confidence */
+.conf-display { display:flex; align-items:center; gap:18px; }
+.prob-bars    { flex:1; display:flex; flex-direction:column; gap:10px; }
+.prob-row     { display:flex; align-items:center; gap:10px; }
+.prob-label   { font-size:12px; color:var(--muted); width:50px; }
+.prob-track   { flex:1; height:6px; background:var(--bg3); border-radius:3px; overflow:hidden; }
+.prob-fill-a  { height:100%; background:var(--green); border-radius:3px; }
+.prob-fill-r  { height:100%; background:var(--red); border-radius:3px; }
+.prob-pct     { font-size:12px; font-weight:700; font-family:'JetBrains Mono',monospace; min-width:34px; text-align:right; }
+.model-tag    { display:inline-block; font-size:11px; margin-top:14px; background:var(--cyan-dim); color:var(--cyan); border:1px solid rgba(45,212,255,0.25); padding:3px 10px; border-radius:20px; font-weight:600; }
+
+/* summary grid */
+.sum-grid  { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.sum-item  { background:rgba(5,13,26,0.7); border:1px solid var(--border); border-radius:10px; padding:12px 14px; }
+.sum-lbl   { font-size:11px; color:var(--muted); margin-bottom:4px; }
+.sum-val   { font-size:15px; font-weight:700; color:var(--pale); }
+
+/* factors */
+.factor-list { display:flex; flex-direction:column; gap:8px; }
+.factor-row  { display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--muted); line-height:1.55; }
+.factor-dot  { width:7px; height:7px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+.fd-green    { background:var(--green); box-shadow:0 0 8px rgba(34,211,165,0.5); }
+.fd-amber    { background:var(--amber); box-shadow:0 0 8px rgba(251,191,36,0.4); }
+.fd-red      { background:var(--red);   box-shadow:0 0 8px rgba(248,113,113,0.4); }
+
+/* bert box */
+.bert-box {
+  background:rgba(3,8,20,0.85); border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; font-family:'JetBrains Mono',monospace; font-size:12px;
+  color:var(--muted); line-height:1.75;
+}
+
+/* terms */
+.terms-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.term-box   { background:rgba(5,13,26,0.7); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:center; }
+.term-val   { font-size:18px; font-weight:800; color:var(--cyan); letter-spacing:-0.5px; }
+.term-lbl   { font-size:11px; color:var(--muted); margin-top:4px; }
+
+.result-actions { display:flex; gap:12px; margin-top:20px; }
+</style>
+{% endblock %}
+
 {% block content %}
+{% set is_app  = loan.approved %}
+{% set ac      = '#22D3A5' if is_app else '#F87171' %}
+{% set verdict = 'Approved'  if is_app else 'Rejected' %}
 
-{% set color = '#22c55e' if loan.approved else '#ef4444' %}
-{% set bg_color = 'rgba(34,197,94,0.08)' if loan.approved else 'rgba(239,68,68,0.08)' %}
-{% set verdict = 'APPROVED' if loan.approved else 'REJECTED' %}
-{% set verdict_icon = '✓' if loan.approved else '✕' %}
-
-<div class="result-hero" style="--verdict-color: {{ color }}; --verdict-bg: {{ bg_color }};">
-  <div class="result-verdict-icon">{{ verdict_icon }}</div>
-  <div class="result-verdict">{{ verdict }}</div>
-  <div class="result-name">{{ loan.applicant_name }}'s Application</div>
-  <div class="result-meta">{{ loan.loan_purpose }} · ${{ '{:,}'.format(loan.loan_amount) }} · {{ loan.loan_term_months }} months</div>
+<!-- Verdict banner -->
+<div class="verdict-banner fade-up">
+  <div class="vi-wrap">
+    {% if is_app %}
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+      <circle cx="17" cy="17" r="15" fill="rgba(34,211,165,0.15)"/>
+      <path d="M9 17l6 6 10-10" stroke="#22D3A5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    {% else %}
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+      <circle cx="17" cy="17" r="15" fill="rgba(248,113,113,0.15)"/>
+      <path d="M11 11l12 12M23 11L11 23" stroke="#F87171" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    {% endif %}
+  </div>
+  <div class="vt">
+    <div class="vw">{{ verdict }}</div>
+    <div class="vn">{{ loan.applicant_name }}'s application</div>
+    <div class="vm">{{ loan.loan_purpose }} &middot; ${{ '{:,}'.format(loan.loan_amount) }} &middot; {{ loan.loan_term_months }} months</div>
+  </div>
+  <div class="v-ring">
+    <svg width="88" height="88" viewBox="0 0 88 88">
+      <circle cx="44" cy="44" r="37" fill="none" stroke="rgba(59,143,255,0.12)" stroke-width="8"/>
+      <circle cx="44" cy="44" r="37" fill="none" stroke="{{ ac }}" stroke-width="8"
+        stroke-linecap="round"
+        stroke-dasharray="{{ (loan.confidence / 100 * 232.5)|round(1) }} 232.5"
+        transform="rotate(-90 44 44)"/>
+      <text x="44" y="40" text-anchor="middle" font-size="17" font-weight="800" fill="{{ ac }}" font-family="Plus Jakarta Sans,sans-serif">{{ loan.confidence|int }}%</text>
+      <text x="44" y="56" text-anchor="middle" font-size="9" fill="#6B9FD4" font-family="Plus Jakarta Sans,sans-serif">confidence</text>
+    </svg>
+  </div>
 </div>
 
 <div class="result-layout">
-
-  <!-- Left column -->
   <div class="result-col">
 
-    <!-- Confidence -->
-    <div class="result-card">
-      <div class="result-card-title">Model Confidence</div>
-      <div class="confidence-display">
-        <div class="conf-ring">
-          <svg viewBox="0 0 120 120" width="120" height="120">
-            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--s2)" stroke-width="10"/>
-            <circle cx="60" cy="60" r="50" fill="none"
-              stroke="{{ color }}" stroke-width="10"
-              stroke-linecap="round"
-              stroke-dasharray="{{ (loan.confidence / 100 * 314.16)|round(1) }} 314.16"
-              transform="rotate(-90 60 60)"/>
-          </svg>
-          <div class="conf-ring-inner">
-            <div class="conf-pct" style="color:{{ color }}">{{ loan.confidence|int }}%</div>
-            <div class="conf-label">confident</div>
+    <!-- Confidence detail -->
+    <div class="card3d fade-up-1">
+      <div class="r-card">
+        <div class="r-title">Model confidence</div>
+        <div class="conf-display">
+          <div>
+            <svg width="96" height="96" viewBox="0 0 96 96">
+              <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(59,143,255,0.12)" stroke-width="9"/>
+              <circle cx="48" cy="48" r="40" fill="none" stroke="{{ ac }}" stroke-width="9"
+                stroke-linecap="round"
+                stroke-dasharray="{{ (loan.confidence / 100 * 251.3)|round(1) }} 251.3"
+                transform="rotate(-90 48 48)"/>
+              <text x="48" y="44" text-anchor="middle" font-size="19" font-weight="800" fill="{{ ac }}" font-family="Plus Jakarta Sans,sans-serif">{{ loan.confidence|int }}%</text>
+              <text x="48" y="60" text-anchor="middle" font-size="9" fill="#6B9FD4" font-family="Plus Jakarta Sans,sans-serif">confident</text>
+            </svg>
+          </div>
+          <div class="prob-bars">
+            <div class="prob-row">
+              <span class="prob-label">Approve</span>
+              <div class="prob-track"><div class="prob-fill-a" style="width:{{ loan.prob_approve }}%"></div></div>
+              <span class="prob-pct" style="color:#22D3A5">{{ loan.prob_approve }}%</span>
+            </div>
+            <div class="prob-row">
+              <span class="prob-label">Reject</span>
+              <div class="prob-track"><div class="prob-fill-r" style="width:{{ loan.prob_reject }}%"></div></div>
+              <span class="prob-pct" style="color:#F87171">{{ loan.prob_reject }}%</span>
+            </div>
           </div>
         </div>
-        <div class="conf-bars">
-          <div class="conf-bar-row">
-            <span class="conf-bar-label">Approve</span>
-            <div class="conf-bar-track">
-              <div class="conf-bar-fill approve-fill" style="width:{{ loan.prob_approve }}%"></div>
-            </div>
-            <span class="conf-bar-pct">{{ loan.prob_approve }}%</span>
-          </div>
-          <div class="conf-bar-row">
-            <span class="conf-bar-label">Reject</span>
-            <div class="conf-bar-track">
-              <div class="conf-bar-fill reject-fill" style="width:{{ loan.prob_reject }}%"></div>
-            </div>
-            <span class="conf-bar-pct">{{ loan.prob_reject }}%</span>
-          </div>
-        </div>
+        <div class="model-tag">{{ loan.model_used }}</div>
       </div>
-      <div class="model-badge">{{ loan.model_used }}</div>
     </div>
 
-    <!-- Application Summary -->
-    <div class="result-card">
-      <div class="result-card-title">Application Summary</div>
-      <div class="summary-grid">
-        <div class="summary-item">
-          <div class="si-label">Credit Score</div>
-          <div class="si-value">{{ loan.credit_score }}</div>
-        </div>
-        <div class="summary-item">
-          <div class="si-label">Annual Income</div>
-          <div class="si-value">${{ '{:,}'.format(loan.annual_income) }}</div>
-        </div>
-        <div class="summary-item">
-          <div class="si-label">Loan Amount</div>
-          <div class="si-value">${{ '{:,}'.format(loan.loan_amount) }}</div>
-        </div>
-        <div class="summary-item">
-          <div class="si-label">DTI Ratio</div>
-          <div class="si-value">{{ loan.debt_to_income }}</div>
-        </div>
-        <div class="summary-item">
-          <div class="si-label">Employment</div>
-          <div class="si-value">{{ loan.employment_status }}</div>
-        </div>
-        <div class="summary-item">
-          <div class="si-label">Collateral</div>
-          <div class="si-value">{{ loan.collateral }}</div>
+    <!-- Summary -->
+    <div class="card3d fade-up-2">
+      <div class="r-card">
+        <div class="r-title">Application summary</div>
+        <div class="sum-grid">
+          <div class="sum-item"><div class="sum-lbl">Credit score</div><div class="sum-val">{{ loan.credit_score }}</div></div>
+          <div class="sum-item"><div class="sum-lbl">Annual income</div><div class="sum-val">${{ '{:,}'.format(loan.annual_income) }}</div></div>
+          <div class="sum-item"><div class="sum-lbl">Loan amount</div><div class="sum-val">${{ '{:,}'.format(loan.loan_amount) }}</div></div>
+          <div class="sum-item"><div class="sum-lbl">DTI ratio</div><div class="sum-val">{{ loan.debt_to_income }}</div></div>
+          <div class="sum-item"><div class="sum-lbl">Employment</div><div class="sum-val">{{ loan.employment_status }}</div></div>
+          <div class="sum-item"><div class="sum-lbl">Collateral</div><div class="sum-val">{{ loan.collateral }}</div></div>
         </div>
       </div>
     </div>
+
+    <!-- Loan terms if approved -->
+    {% if is_app %}
+    {% set rate = 0.075 if loan.credit_score >= 750 else 0.0875 if loan.credit_score >= 700 else 0.105 if loan.credit_score >= 650 else 0.12 %}
+    {% set mr = rate / 12 %}
+    {% set n  = loan.loan_term_months %}
+    {% set emi = loan.loan_amount * mr * (1 + mr)**n / ((1 + mr)**n - 1) %}
+    <div class="card3d fade-up-3">
+      <div class="r-card">
+        <div class="r-title">Proposed loan terms</div>
+        <div class="terms-grid">
+          <div class="term-box"><div class="term-val">${{ '{:,}'.format(loan.loan_amount) }}</div><div class="term-lbl">Loan amount</div></div>
+          <div class="term-box"><div class="term-val">{{ (rate * 100)|round(2) }}%</div><div class="term-lbl">Interest rate (est.)</div></div>
+          <div class="term-box"><div class="term-val">{{ loan.loan_term_months // 12 }} yrs</div><div class="term-lbl">Tenure</div></div>
+          <div class="term-box"><div class="term-val mono" style="font-size:16px">${{ '{:,.0f}'.format(emi) }}</div><div class="term-lbl">Monthly EMI</div></div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
 
   </div>
 
-  <!-- Right column -->
   <div class="result-col">
 
-    <!-- Positive factors -->
     {% if loan.get_reasons() %}
-    <div class="result-card factors-card positive-card">
-      <div class="result-card-title">✓ Positive Factors</div>
-      <ul class="factors-list">
-        {% for r in loan.get_reasons() %}
-          <li class="factor-item positive">{{ r }}</li>
-        {% endfor %}
-      </ul>
+    <div class="card3d fade-up-1">
+      <div class="r-card">
+        <div class="r-title" style="color:#22D3A5">Positive factors</div>
+        <div class="factor-list">
+          {% for r in loan.get_reasons() %}
+          <div class="factor-row"><div class="factor-dot fd-green"></div>{{ r }}</div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
     {% endif %}
 
-    <!-- Risk flags -->
     {% if loan.get_flags() %}
-    <div class="result-card factors-card negative-card">
-      <div class="result-card-title">⚠ Risk Flags</div>
-      <ul class="factors-list">
-        {% for f in loan.get_flags() %}
-          <li class="factor-item negative">{{ f }}</li>
-        {% endfor %}
-      </ul>
+    <div class="card3d fade-up-2">
+      <div class="r-card">
+        <div class="r-title" style="color:#FBBF24">Risk flags</div>
+        <div class="factor-list">
+          {% for f in loan.get_flags() %}
+          <div class="factor-row"><div class="factor-dot fd-amber"></div>{{ f }}</div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
     {% endif %}
 
-    <!-- BERT Input -->
-    <div class="result-card">
-      <div class="result-card-title">BERT Input Text</div>
-      <div class="bert-text">{{ loan.description }}</div>
+    <div class="card3d fade-up-3">
+      <div class="r-card">
+        <div class="r-title">BERT input text</div>
+        <div class="bert-box">{{ loan.description }}</div>
+      </div>
     </div>
 
   </div>
 </div>
 
-<div class="result-actions">
-  <a href="/apply" class="btn-outline">← New Application</a>
-  <a href="/dashboard" class="btn-solid">View Dashboard →</a>
+<div class="result-actions fade-up-5">
+  <a href="/apply"     class="btn-outline">← New application</a>
+  <a href="/dashboard" class="btn-primary" style="padding:11px 22px;font-size:13px">View dashboard →</a>
 </div>
-
 {% endblock %}

@@ -1,75 +1,58 @@
-﻿# 🏦 LoanSure — Enterprise Loan Management & NLP Underwriting Platform
+﻿# 🤖 LoanSure AI — Intelligent Conversational Loan Advisor & Enterprise Underwriting
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.0%2B-green.svg)](https://flask.palletsprojects.com/)
+[![Local LLM](https://img.shields.io/badge/AI-Ollama%20%7C%20Llama%203-purple.svg)](https://ollama.ai/)
 [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black.svg)](https://vercel.com)
-[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 
-> **LoanSure** is a production-grade **Loan Management Software & AI Underwriting Platform**. It unifies automated NLP loan decisioning, EMI collection schedules, real-time KYC stage-gate workflows, borrower risk speedometer analytics, fair lending bias audits, and instant credit memo exports.
-
----
-
-## 🌟 Key Modules & Features
-
-### 1. 💼 Enterprise Loan Management Console (`/console`)
-- **Executive KPIs**: Real-time tracking of Total Disbursed ($1.25M+), Total Repaid, Active Portfolios (158 loans), and NPA / Default Rate (< 2.5%).
-- **Interactive Loan Registry**: Searchable & filterable applications table with live credit scores, risk tiers, monthly EMI calculations, and automated approval decisions.
-- **Payment Approvals & Settlement Ledger**: Incoming EMI transactions, instant reconciliation, and pre-auth settlement queues.
-- **KYC & Stage-Gate Progression**: Multi-stage loan pipeline (*Ingestion → FinBERT Scoring → Biometric KYC & Anti-Fraud → Disbursement*).
-- **Borrower Risk Speedometer**: Semicircle dynamic gauge (Prime 720+, Moderate 640-719, Subprime <640) with real-time profile metrics.
-- **EMI Calendar & Overdue NPA Alerts**: Monthly repayment collection schedule with 1-click overdue reminders.
-
-### 2. 🤖 Multi-Task AI Underwriting Engine (`/apply`)
-- **Simultaneous Predictions**:
-  - Binary Approval Decision (`Approved` vs `Denied`)
-  - Continuous Calibrated Confidence (%)
-  - Risk Tier Classification (`Tier A+ Prime` through `Tier D Subprime`)
-  - Risk-Based Dynamic APR (`5.5%` to `24.0%`)
-  - Maximum Approved Credit Line
-  - Probability of Default (PD %)
-- **Live Counterfactual "What-If" Simulator**: Sliders to test credit score increases, income jumps, or debt reductions to view instant approval probability deltas.
-
-### 3. 🔍 Explainable AI (XAI) & Word Saliency
-- Token-level attention & keyword attribution highlighting positive credit signals (e.g. *promotions, liquid reserves, low DTI*) vs adverse risk flags.
-- Comprehensive 7-factor quantitative breakdown (Credit, DTI, Employment, Collateral, Utilization, Delinquencies, Loan-to-Income).
-
-### 4. ⚖️ Fair Lending & ECOA Compliance Audit (`/bias-audit`)
-- Real-time demographic parity and disparate impact ratio evaluations ensuring compliance with the **Equal Credit Opportunity Act (ECOA)** and **FCRA**.
-
-### 5. ⚡ Batch CSV Underwriting (`/batch`)
-- Drag-and-drop CSV batch processor to underwrite thousands of applications in seconds with downloadable decision results.
-
-### 6. 📄 Underwriting Credit Memo Export (`/memo/<id>`)
-- Institutional committee memorandum with printable layout, audit logs, model governance details, and e-signature blocks.
+> **LoanSure AI** is a production-ready **Conversational AI Loan Advisor, Financial Underwriting Engine, and Analytics Platform**. It combines step-by-step natural language borrower dialogue, dynamic FOIR eligibility calculations, reducing-balance EMI estimations, personalized loan recommendations, and an executive administration dashboard.
 
 ---
 
-## 🚀 Deployment on Vercel
+## 🌟 Core Capabilities & Architecture
 
-LoanSure includes full Vercel Serverless Function configuration (`vercel.json` and `api/index.py`):
+### 1. 💬 Conversational AI Loan Advisor (`/`)
+- **Step-by-Step Interactive Chat**: Guides borrowers one-by-one through:
+  1. Loan Type (*Personal, Home, Auto, Business, Education*)
+  2. Full Legal Name & Age
+  3. City & State of Residence
+  4. Monthly In-Hand Salary / Income
+  5. Active Monthly EMIs
+  6. Estimated Credit Score Tier
+  7. Desired Loan Amount & Preferred Tenure
+  8. Primary Purpose of Loan
+- **Local LLM Integration**: Connects seamlessly to local **Ollama** (`llama3`, `qwen2.5`, `mistral`) with an intelligent, zero-latency local NLP rule fallback for 100% offline uptime.
+- **Instant Pre-Approval Offer Cards**: Delivers 3 customized loan packages (*Optimal Balanced, Lower Monthly Burden, Fast Payoff Plan*) + credit health tips.
 
-### Option A: 1-Click via Vercel CLI
-```bash
-npm install -g vercel
-vercel
-```
+### 2. 🧮 Financial Calculation & Amortization Engine
+- **Exact Reducing Balance EMI**:
+  $$\text{EMI} = P \times r \times \frac{(1 + r)^n}{(1 + r)^n - 1}$$
+- **FOIR / DTI Maximum Sizing**: Evaluates disposable income and credit risk tiers to calculate safe credit limits.
+- **Full Repayment Schedule**: Month-by-month amortization table breaking down opening balance, principal paid, interest paid, and closing balance.
 
-### Option B: GitHub Integration
-1. Push this repository to GitHub (`main` branch).
-2. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New Project"**.
-3. Select your `loan_bert` / `LoanSure` repository.
-4. Click **Deploy**. Vercel will automatically detect `vercel.json` and build the Python serverless runtime.
+### 3. 📊 Admin Portal & Analytics (`/admin`)
+- **Real-Time Submissions Ledger**: Searchable & filterable table of all leads ingested via AI Advisor or Manual Underwriting.
+- **Interactive Visualizations**:
+  - Loan Category Distribution (Doughnut Chart)
+  - Top Metropolitan Areas (Bar Chart)
+  - Risk Tier & Pipeline Volume Tracking
+- **1-Click CSV Export**: Stream downloadable CSV data formatted for direct CRM ingestion.
+
+### 4. 🎨 Modern Dark / Light Mode Experience
+- Smooth CSS variables and theme toggle with `localStorage` state persistence.
+- High-converting landing page with interactive sliders, loan product cards, trust badges, and mobile-responsive layout.
 
 ---
 
-## 💻 Local Development Setup
+## 🚀 Quickstart & Local Setup
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/uttaran986/loan_bert.git
-cd loan_bert
+# 1. Clone the repository
+git clone https://github.com/uttaran986/LoanSure.git
+cd LoanSure
 
-# 2. Create and activate virtual environment
+# 2. Set up virtual environment
 python -m venv venv
 # On Windows:
 venv\Scripts\activate
@@ -79,23 +62,38 @@ source venv/bin/activate
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Run test suite
+# 4. Run automated test suite
 python test_suite.py
 
-# 5. Launch application
+# 5. Launch the application
 python app.py
 ```
 Open **`http://localhost:5000`** in your browser.
 
 ---
 
-## 🛡️ Architecture & Technology Stack
+## 🤖 (Optional) Connecting Local LLM with Ollama
 
-- **Backend**: Python 3.10+, Flask 3.0, Flask-SQLAlchemy, SQLite (with Serverless `/tmp` ephemeral support on Vercel).
-- **ML / NLP Engine**: Scikit-Learn, Joblib, BERT-aligned token saliency scoring, multi-task decision trees & linear calibrators.
-- **Frontend**: Responsive modern CSS3 design system, Lucide Icons, Chart.js.
+LoanSure AI works 100% out of the box with its built-in NLP engine. To optionally enable local Ollama LLM generation:
+```bash
+# 1. Start Ollama with Llama 3
+ollama run llama3
+
+# 2. Set environment variable in your terminal
+set USE_LOCAL_LLM=1
+python app.py
+```
+
+---
+
+## ☁️ Deploying to Vercel
+
+1. Push to your GitHub repository (`main` branch).
+2. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New Project"**.
+3. Select your **`LoanSure`** repository.
+4. Click **Deploy**. Vercel will automatically build the Python runtime!
 
 ---
 
 ## 📄 License
-MIT License &copy; 2026 LoanSure Enterprise Financial Technologies.
+MIT License &copy; 2026 LoanSure AI Financial Technologies.

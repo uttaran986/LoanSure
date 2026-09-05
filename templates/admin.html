@@ -1,0 +1,262 @@
+﻿{% extends "base.html" %}
+
+{% block title %}LoanSure AI — Admin Portal & Analytics{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+
+  <!-- Admin Header -->
+  <div class="admin-header">
+    <div>
+      <div class="badge-pill">
+        <i data-lucide="shield-alert"></i> Executive Administration & Pipeline
+      </div>
+      <h1 class="console-title">Admin & Analytics Portal</h1>
+      <p class="console-subtitle">Real-time borrower leads, conversational advisor submissions, and credit analytics</p>
+    </div>
+    <div class="header-actions">
+      <a href="/api/admin/export" class="btn-primary">
+        <i data-lucide="download"></i> Export Leads (CSV)
+      </a>
+      <a href="/console" class="btn-secondary">
+        <i data-lucide="layout-grid"></i> Loan Console
+      </a>
+    </div>
+  </div>
+
+  <!-- Admin Metrics Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-cyan">
+        <i data-lucide="inbox"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Submissions</span>
+        <h2 class="kpi-value">{{ stats.total_leads }} Leads</h2>
+        <span class="kpi-trend positive"><i data-lucide="bot"></i> AI Advisor & Web Ingestion</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-emerald">
+        <i data-lucide="dollar-sign"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Pipeline Volume</span>
+        <h2 class="kpi-value">${{ "{:,.0f}".format(stats.total_volume) }}</h2>
+        <span class="kpi-trend positive"><i data-lucide="trending-up"></i> In Process Volume</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-indigo">
+        <i data-lucide="award"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Avg Credit Score</span>
+        <h2 class="kpi-value">{{ stats.avg_credit_score }}</h2>
+        <span class="kpi-trend neutral"><i data-lucide="check"></i> Prime Average</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-amber">
+        <i data-lucide="percent"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Avg FOIR / DTI</span>
+        <h2 class="kpi-value">{{ stats.avg_foir }}%</h2>
+        <span class="kpi-trend positive"><i data-lucide="shield-check"></i> Healthy Debt Service</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Charts Section -->
+  <div class="admin-charts-grid">
+    <div class="console-panel">
+      <div class="panel-header">
+        <h3 class="panel-title"><i data-lucide="pie-chart"></i> Loan Category Distribution</h3>
+      </div>
+      <div class="chart-box-lg">
+        <canvas id="loanTypeChart"></canvas>
+      </div>
+    </div>
+
+    <div class="console-panel">
+      <div class="panel-header">
+        <h3 class="panel-title"><i data-lucide="bar-chart-3"></i> Top Metropolitan Areas</h3>
+      </div>
+      <div class="chart-box-lg">
+        <canvas id="cityChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leads Registry Table -->
+  <div class="console-panel">
+    <div class="panel-header">
+      <div>
+        <h3 class="panel-title"><i data-lucide="users"></i> Borrower Lead Submissions</h3>
+        <p class="panel-desc">All applications ingested via AI Loan Advisor and Manual Underwriting Portal</p>
+      </div>
+      <div class="panel-filters">
+        <input type="text" id="adminSearch" placeholder="Search applicant or city..." class="search-input" onkeyup="filterAdminTable()">
+        <select id="sourceFilter" class="select-filter" onchange="filterAdminTable()">
+          <option value="all">All Sources</option>
+          <option value="AI Advisor">AI Advisor</option>
+          <option value="Manual Apply">Manual Apply</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="loans-table" id="adminLeadsTable">
+        <thead>
+          <tr>
+            <th>Applicant / City</th>
+            <th>Monthly Salary</th>
+            <th>Credit Score</th>
+            <th>Requested Loan</th>
+            <th>Tenure / APR</th>
+            <th>Calculated EMI</th>
+            <th>Decision Status</th>
+            <th>Source</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for loan in loans %}
+          <tr class="lead-row" data-name="{{ loan.applicant_name | lower }} {{ loan.city | lower }}" data-source="{{ loan.source }}">
+            <td>
+              <div class="applicant-cell">
+                <div class="applicant-avatar">{{ loan.applicant_name[:2].upper() }}</div>
+                <div>
+                  <strong class="applicant-name">{{ loan.applicant_name }}</strong>
+                  <span class="applicant-sub">{{ loan.city }} &bull; {{ loan.loan_purpose }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <strong>${{ "{:,.0f}".format(loan.monthly_salary or loan.annual_income / 12) }}/mo</strong>
+            </td>
+            <td>
+              <span class="score-badge {% if loan.credit_score >= 720 %}score-high{% elif loan.credit_score >= 640 %}score-mid{% else %}score-low{% endif %}">
+                {{ loan.credit_score }}
+              </span>
+            </td>
+            <td>
+              <strong>${{ "{:,.0f}".format(loan.loan_amount) }}</strong>
+            </td>
+            <td>
+              <span>{{ loan.loan_term_months }} mos @ {{ loan.recommended_apr }}%</span>
+            </td>
+            <td>
+              <strong class="emi-text">${{ "{:,.2f}".format(loan.monthly_emi) }}</strong>
+            </td>
+            <td>
+              <span class="status-badge status-{{ loan.decision_status | lower | replace(' ', '-') }}">
+                {{ loan.decision_status }}
+              </span>
+            </td>
+            <td>
+              <span class="badge-mini"><i data-lucide="{% if loan.source == 'AI Advisor' %}bot{% else %}file-text{% endif %}"></i> {{ loan.source }}</span>
+            </td>
+            <td>
+              <a href="/memo/{{ loan.id }}" class="action-btn">
+                <i data-lucide="eye"></i> View
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterAdminTable() {
+  const search = document.getElementById('adminSearch').value.toLowerCase();
+  const source = document.getElementById('sourceFilter').value;
+  const rows = document.querySelectorAll('#adminLeadsTable tbody tr');
+
+  rows.forEach(row => {
+    const text = row.getAttribute('data-name') || '';
+    const rowSource = row.getAttribute('data-source') || '';
+    const matchSearch = text.includes(search);
+    const matchSource = (source === 'all') || (rowSource === source);
+
+    if (matchSearch && matchSource) row.style.display = '';
+    else row.style.display = 'none';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/admin/analytics')
+    .then(res => res.json())
+    .then(data => {
+      // 1. Doughnut Chart: Loan Purpose
+      const typeCtx = document.getElementById('loanTypeChart');
+      if (typeCtx) {
+        const labels = Object.keys(data.type_distribution);
+        const values = Object.values(data.type_distribution);
+        new Chart(typeCtx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: values,
+              backgroundColor: ['#38bdf8', '#10b981', '#6366f1', '#f59e0b', '#ec4899'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: { color: '#94a3b8', font: { family: 'Inter', size: 12 } }
+              }
+            },
+            cutout: '65%'
+          }
+        });
+      }
+
+      // 2. Bar Chart: City Distribution
+      const cityCtx = document.getElementById('cityChart');
+      if (cityCtx) {
+        const cityLabels = Object.keys(data.city_distribution);
+        const cityValues = Object.values(data.city_distribution);
+        new Chart(cityCtx, {
+          type: 'bar',
+          data: {
+            labels: cityLabels,
+            datasets: [{
+              label: 'Borrowers',
+              data: cityValues,
+              backgroundColor: '#0284c7',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+              y: { ticks: { color: '#94a3b8', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+    });
+});
+</script>
+{% endblock %}

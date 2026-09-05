@@ -1,0 +1,461 @@
+﻿{% extends "base.html" %}
+
+{% block title %}LoanSure AI — Intelligent Conversational Loan Advisor & Analytics{% endblock %}
+
+{% block content %}
+<div class="landing-wrapper">
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="badge-pill pulse-glow">
+        <i data-lucide="sparkles"></i> Next-Gen FinTech &bull; Conversational Underwriting
+      </div>
+      <h1 class="hero-title">
+        Intelligent Loans.<br>
+        <span class="gradient-text">Instant AI Decisioning.</span>
+      </h1>
+      <p class="hero-subtitle">
+        Meet your 24/7 AI Loan Advisor. Get instant eligibility evaluations, reducing-balance EMI calculations, personalized repayment schedules, and risk-calibrated rates in under 2 minutes.
+      </p>
+
+      <div class="hero-cta-group">
+        <button class="btn-hero-primary" onclick="openAdvisorModal()">
+          <i data-lucide="bot"></i> Chat with AI Loan Advisor
+        </button>
+        <a href="/console" class="btn-hero-secondary">
+          <i data-lucide="layout-grid"></i> Enterprise Console
+        </a>
+        <a href="/admin" class="btn-hero-secondary">
+          <i data-lucide="shield"></i> Admin Portal
+        </a>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="trust-row">
+        <div class="trust-item"><i data-lucide="lock"></i> 256-Bit Bank Encryption</div>
+        <div class="trust-item"><i data-lucide="zap"></i> Instant AI Sizing</div>
+        <div class="trust-item"><i data-lucide="scale"></i> Fair Lending Compliant</div>
+      </div>
+    </div>
+
+    <!-- Live Interactive Calculator Card -->
+    <div class="hero-calc-card">
+      <div class="calc-card-header">
+        <div class="calc-badge"><i data-lucide="calculator"></i> Quick EMI Estimator</div>
+        <span class="calc-live-tag">Live Engine</span>
+      </div>
+
+      <div class="calc-body">
+        <div class="input-slider-group">
+          <div class="slider-labels">
+            <span>Loan Amount</span>
+            <strong id="dispAmount">$45,000</strong>
+          </div>
+          <input type="range" id="sliderAmount" min="5000" max="200000" step="1000" value="45000" oninput="updateQuickCalc()">
+        </div>
+
+        <div class="input-slider-group">
+          <div class="slider-labels">
+            <span>Interest Rate (APR)</span>
+            <strong id="dispRate">10.5%</strong>
+          </div>
+          <input type="range" id="sliderRate" min="5.0" max="24.0" step="0.25" value="10.5" oninput="updateQuickCalc()">
+        </div>
+
+        <div class="input-slider-group">
+          <div class="slider-labels">
+            <span>Tenure (Months)</span>
+            <strong id="dispTenure">48 Mos (4 Yrs)</strong>
+          </div>
+          <input type="range" id="sliderTenure" min="12" max="120" step="6" value="48" oninput="updateQuickCalc()">
+        </div>
+
+        <!-- Result Metrics Box -->
+        <div class="calc-result-box">
+          <div class="calc-res-item">
+            <span class="calc-res-label">Monthly EMI</span>
+            <h3 class="calc-res-val text-cyan" id="dispEmi">$1,153.25</h3>
+          </div>
+          <div class="calc-res-item">
+            <span class="calc-res-label">Total Interest</span>
+            <h3 class="calc-res-val" id="dispInterest">$10,356.00</h3>
+          </div>
+        </div>
+
+        <button class="btn-calc-cta" onclick="openAdvisorModal()">
+          <i data-lucide="message-square-plus"></i> Pre-Qualify with AI Advisor
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loan Products Catalog -->
+  <section class="products-section">
+    <div class="section-heading text-center">
+      <span class="sub-badge">Tailored Financial Products</span>
+      <h2 class="section-title">Designed for Every Life Milestone</h2>
+      <p class="section-desc">Competitive interest rates, flexible repayment horizons, and zero hidden fees.</p>
+    </div>
+
+    <div class="products-grid">
+      <div class="product-card" onclick="openAdvisorWithProduct('Personal Loan')">
+        <div class="product-icon icon-cyan"><i data-lucide="user-check"></i></div>
+        <h3>Personal Loans</h3>
+        <p>Unsecured instant loans for travel, debt consolidation, and emergencies.</p>
+        <div class="product-meta">
+          <span>Rates from <strong>10.5% APR</strong></span>
+          <span>Up to <strong>$75,000</strong></span>
+        </div>
+        <button class="btn-product-apply">Apply with AI &rarr;</button>
+      </div>
+
+      <div class="product-card" onclick="openAdvisorWithProduct('Home Loan')">
+        <div class="product-icon icon-emerald"><i data-lucide="home"></i></div>
+        <h3>Home Loans</h3>
+        <p>Affordable financing for purchasing, constructing, or renovating your home.</p>
+        <div class="product-meta">
+          <span>Rates from <strong>6.5% APR</strong></span>
+          <span>Up to <strong>$750,000</strong></span>
+        </div>
+        <button class="btn-product-apply">Apply with AI &rarr;</button>
+      </div>
+
+      <div class="product-card" onclick="openAdvisorWithProduct('Auto / Vehicle')">
+        <div class="product-icon icon-indigo"><i data-lucide="car"></i></div>
+        <h3>Auto & Vehicle</h3>
+        <p>Flexible car and electric vehicle financing with accelerated approval cycles.</p>
+        <div class="product-meta">
+          <span>Rates from <strong>7.2% APR</strong></span>
+          <span>Up to <strong>$90,000</strong></span>
+        </div>
+        <button class="btn-product-apply">Apply with AI &rarr;</button>
+      </div>
+
+      <div class="product-card" onclick="openAdvisorWithProduct('Business Loan')">
+        <div class="product-icon icon-amber"><i data-lucide="briefcase"></i></div>
+        <h3>Business Expansion</h3>
+        <p>Working capital, equipment purchase, and merchant growth facilities.</p>
+        <div class="product-meta">
+          <span>Rates from <strong>11.0% APR</strong></span>
+          <span>Up to <strong>$250,000</strong></span>
+        </div>
+        <button class="btn-product-apply">Apply with AI &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Flow -->
+  <section class="how-section">
+    <div class="section-heading text-center">
+      <span class="sub-badge">Frictionless 3-Step Process</span>
+      <h2 class="section-title">From Conversation to Disbursal</h2>
+    </div>
+
+    <div class="steps-container">
+      <div class="step-box">
+        <div class="step-num">1</div>
+        <h4>Chat with AI Advisor</h4>
+        <p>Answer a few quick conversational questions about your financial needs.</p>
+      </div>
+      <div class="step-arrow"><i data-lucide="chevron-right"></i></div>
+
+      <div class="step-box">
+        <div class="step-num">2</div>
+        <h4>Get Instant Sizing & Offers</h4>
+        <p>View real-time eligibility, reducing EMI, and 3 personalized package options.</p>
+      </div>
+      <div class="step-arrow"><i data-lucide="chevron-right"></i></div>
+
+      <div class="step-box">
+        <div class="step-num">3</div>
+        <h4>Instant Decision & Payout</h4>
+        <p>Review institutional credit memo, complete digital KYC, and get funded.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────
+     CONVERSATIONAL AI LOAN ADVISOR MODAL
+     ───────────────────────────────────────────────────────────── -->
+<div id="advisorModal" class="advisor-modal-overlay">
+  <div class="advisor-modal-container">
+    
+    <!-- Modal Header -->
+    <div class="advisor-header">
+      <div class="advisor-brand">
+        <div class="advisor-avatar"><i data-lucide="bot"></i></div>
+        <div>
+          <h3>LoanSure AI Advisor</h3>
+          <span class="status-online"><span class="status-dot"></span> Active &bull; Local Engine</span>
+        </div>
+      </div>
+      <div class="advisor-controls">
+        <button class="btn-icon" onclick="resetAdvisorChat()" title="Restart Conversation"><i data-lucide="rotate-ccw"></i></button>
+        <button class="btn-icon" onclick="closeAdvisorModal()" title="Close"><i data-lucide="x"></i></button>
+      </div>
+    </div>
+
+    <!-- Progress Indicator Bar -->
+    <div class="advisor-progress-bar">
+      <div id="advisorProgressBarFill" class="progress-fill" style="width: 10%;"></div>
+    </div>
+
+    <!-- Chat Messages Stream Area -->
+    <div id="advisorChatMessages" class="advisor-messages-area">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <!-- Typing Indicator -->
+    <div id="advisorTyping" class="typing-indicator-row" style="display: none;">
+      <div class="typing-bubble">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- Quick-Reply Options Box -->
+    <div id="advisorOptionsArea" class="advisor-options-area"></div>
+
+    <!-- Message Input Bar -->
+    <div class="advisor-input-bar">
+      <input type="text" id="advisorUserInput" placeholder="Type your response..." onkeydown="if(event.key==='Enter') sendAdvisorMessage()">
+      <button class="btn-send" onclick="sendAdvisorMessage()"><i data-lucide="send"></i></button>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Quick EMI Calculator Logic
+function updateQuickCalc() {
+  const p = parseFloat(document.getElementById('sliderAmount').value);
+  const r = parseFloat(document.getElementById('sliderRate').value);
+  const n = parseInt(document.getElementById('sliderTenure').value);
+
+  document.getElementById('dispAmount').innerText = '$' + p.toLocaleString();
+  document.getElementById('dispRate').innerText = r.toFixed(2) + '%';
+  document.getElementById('dispTenure').innerText = n + ' Mos (' + (n/12).toFixed(1) + ' Yrs)';
+
+  const monthlyRate = (r / 100) / 12;
+  let emi = 0;
+  if (monthlyRate > 0) {
+    const factor = Math.pow(1 + monthlyRate, n);
+    emi = (p * monthlyRate * factor) / (factor - 1);
+  } else {
+    emi = p / n;
+  }
+  const totalPayable = emi * n;
+  const totalInterest = totalPayable - p;
+
+  document.getElementById('dispEmi').innerText = '$' + emi.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  document.getElementById('dispInterest').innerText = '$' + totalInterest.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+// ─────────────────────────────────────────────────────────────
+// CONVERSATIONAL AI ADVISOR JAVASCRIPT STATE MACHINE
+// ─────────────────────────────────────────────────────────────
+let chatState = {
+  step_index: 0,
+  answers: {},
+  completed: false
+};
+
+function openAdvisorModal() {
+  document.getElementById('advisorModal').classList.add('active');
+  if (chatState.step_index === 0 && Object.keys(chatState.answers).length === 0) {
+    startAdvisorChat();
+  }
+}
+
+function openAdvisorWithProduct(productName) {
+  openAdvisorModal();
+  setTimeout(() => {
+    selectQuickOption(productName);
+  }, 400);
+}
+
+function closeAdvisorModal() {
+  document.getElementById('advisorModal').classList.remove('active');
+}
+
+function resetAdvisorChat() {
+  chatState = { step_index: 0, answers: {}, completed: false };
+  document.getElementById('advisorChatMessages').innerHTML = '';
+  document.getElementById('advisorOptionsArea').innerHTML = '';
+  document.getElementById('advisorProgressBarFill').style.width = '10%';
+  startAdvisorChat();
+}
+
+function appendMessage(sender, text, isHtml = false) {
+  const container = document.getElementById('advisorChatMessages');
+  const msgDiv = document.createElement('div');
+  msgDiv.className = sender === 'user' ? 'msg-row msg-user' : 'msg-row msg-bot';
+
+  const bubble = document.createElement('div');
+  bubble.className = sender === 'user' ? 'msg-bubble bubble-user' : 'msg-bubble bubble-bot';
+  
+  if (isHtml) bubble.innerHTML = text;
+  else bubble.innerText = text;
+
+  msgDiv.appendChild(bubble);
+  container.appendChild(msgDiv);
+  container.scrollTop = container.scrollHeight;
+  if (window.lucide) lucide.createIcons();
+}
+
+function setTyping(visible) {
+  const typing = document.getElementById('advisorTyping');
+  typing.style.display = visible ? 'flex' : 'none';
+  const container = document.getElementById('advisorChatMessages');
+  container.scrollTop = container.scrollHeight;
+}
+
+function startAdvisorChat() {
+  setTyping(true);
+  fetch('/api/advisor/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ step_index: 0, answers: {}, message: '' })
+  })
+  .then(res => res.json())
+  .then(data => {
+    setTyping(false);
+    renderChatStep(data);
+  });
+}
+
+function renderChatStep(data) {
+  chatState.step_index = data.step_index;
+  chatState.answers = data.answers || {};
+  chatState.completed = data.completed;
+
+  // Progress Bar
+  const pct = Math.min(100, Math.round(((data.step_index + 1) / (data.total_steps || 10)) * 100));
+  document.getElementById('advisorProgressBarFill').style.width = pct + '%';
+
+  // Bot message
+  appendMessage('bot', data.bot_message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'), true);
+
+  // Render options / pills
+  const optArea = document.getElementById('advisorOptionsArea');
+  optArea.innerHTML = '';
+
+  if (data.completed) {
+    renderCompletionCard(data);
+    return;
+  }
+
+  if (data.options && data.options.length > 0) {
+    data.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quick-option-chip';
+      btn.innerText = opt;
+      btn.onclick = () => selectQuickOption(opt);
+      optArea.appendChild(btn);
+    });
+  }
+
+  if (data.hint) {
+    document.getElementById('advisorUserInput').placeholder = data.hint;
+  }
+}
+
+function selectQuickOption(optText) {
+  document.getElementById('advisorUserInput').value = optText;
+  sendAdvisorMessage();
+}
+
+function sendAdvisorMessage() {
+  const input = document.getElementById('advisorUserInput');
+  const userText = input.value.trim();
+  if (!userText) return;
+
+  appendMessage('user', userText);
+  input.value = '';
+  document.getElementById('advisorOptionsArea').innerHTML = '';
+  setTyping(true);
+
+  fetch('/api/advisor/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      step_index: chatState.step_index,
+      answers: chatState.answers,
+      message: userText
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    setTyping(false);
+    renderChatStep(data);
+  });
+}
+
+function renderCompletionCard(data) {
+  const container = document.getElementById('advisorChatMessages');
+  
+  let packagesHtml = '';
+  (data.packages || []).forEach(pkg => {
+    packagesHtml += `
+      <div class="rec-package-card ${pkg.tag === 'Recommended' ? 'package-highlight' : ''}">
+        <div class="pkg-header">
+          <span class="pkg-badge">${pkg.tag}</span>
+          <h4 class="pkg-name">${pkg.name}</h4>
+        </div>
+        <div class="pkg-stats">
+          <div class="pkg-stat-item">
+            <span>Monthly EMI</span>
+            <strong>$${pkg.monthly_emi.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+          </div>
+          <div class="pkg-stat-item">
+            <span>Interest Rate</span>
+            <strong>${pkg.rate_pct}% APR</strong>
+          </div>
+          <div class="pkg-stat-item">
+            <span>Tenure</span>
+            <strong>${pkg.tenure_months} Mos</strong>
+          </div>
+        </div>
+        <p class="pkg-desc">${pkg.highlight}</p>
+      </div>
+    `;
+  });
+
+  const summaryCard = `
+    <div class="advisor-result-card">
+      <div class="result-top-banner">
+        <div>
+          <span class="badge-mini">AI Sizing & Assessment</span>
+          <h3 class="result-title">Pre-Approved Eligibility: $${(data.eligibility.max_eligible_amount || 0).toLocaleString()}</h3>
+        </div>
+        <span class="tier-pill tier-tiera">${data.risk_tier}</span>
+      </div>
+
+      <div class="advisor-packages-grid">
+        ${packagesHtml}
+      </div>
+
+      <div class="advisor-actions-row">
+        <a href="/result/${data.lead_id}" class="btn-primary">
+          <i data-lucide="check-circle-2"></i> View Full Underwriting Memo
+        </a>
+        <a href="/console" class="btn-secondary">
+          <i data-lucide="layout-grid"></i> Open Management Console
+        </a>
+      </div>
+    </div>
+  `;
+
+  appendMessage('bot', summaryCard, true);
+  if (window.lucide) lucide.createIcons();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateQuickCalc();
+});
+</script>
+{% endblock %}

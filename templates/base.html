@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}LoanSure — AI Underwriting & Enterprise Loan Management{% endblock %}</title>
+  <title>{% block title %}LoanSure AI — Intelligent Conversational Loan Advisor{% endblock %}</title>
   <!-- Google Fonts: Inter & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
 <body>
 
 <nav class="nav">
-  <a href="/console" class="nav-brand">
+  <a href="/" class="nav-brand">
     <div class="brand-badge-icon">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="38" height="38">
         <defs>
@@ -31,52 +31,83 @@
             <stop offset="100%" stop-color="#020617"/>
           </linearGradient>
         </defs>
-        <!-- Outer Rounded Shield -->
         <rect width="40" height="40" rx="10" fill="url(#goldGrad)"/>
         <rect x="2" y="2" width="36" height="36" rx="8" fill="url(#shieldFill)"/>
-        <!-- Shield Icon Graphic -->
         <path d="M20 7 L31 12 V21 C31 27 26 32 20 34 C14 32 9 27 9 21 V12 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2.2" stroke-linejoin="round"/>
-        <!-- Inner Check & Node Motif -->
         <path d="M15 20 L18.5 23.5 L25 17" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <span class="nav-brand-name">Loan<strong>Sure</strong> <span class="version-tag">ENTERPRISE</span></span>
+    <span class="nav-brand-name">Loan<strong>Sure</strong> <span class="version-tag">AI</span></span>
   </a>
 
   <div class="nav-links">
-    <a href="/console" class="nav-link {% if request.endpoint == 'console' or request.endpoint == 'index' %}active{% endif %}">
+    <a href="/" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+      <i data-lucide="home"></i> Home
+    </a>
+    <a href="/console" class="nav-link {% if request.endpoint == 'console' %}active{% endif %}">
       <i data-lucide="layout-grid"></i> Loan Console
+    </a>
+    <a href="/admin" class="nav-link {% if request.endpoint == 'admin_panel' %}active{% endif %}">
+      <i data-lucide="shield"></i> Admin Portal
     </a>
     <a href="/apply" class="nav-link {% if request.endpoint == 'apply' %}active{% endif %}">
       <i data-lucide="file-plus-2"></i> Apply & Underwrite
     </a>
     <a href="/dashboard" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
-      <i data-lucide="line-chart"></i> Portfolio Risk
+      <i data-lucide="line-chart"></i> Portfolio
     </a>
     <a href="/batch" class="nav-link {% if request.endpoint == 'batch' %}active{% endif %}">
       <i data-lucide="layers"></i> Batch CSV
     </a>
     <a href="/bias-audit" class="nav-link {% if request.endpoint == 'bias_audit' %}active{% endif %}">
-      <i data-lucide="scale"></i> Fair Lending Audit
-    </a>
-    <a href="/model-info" class="nav-link {% if request.endpoint == 'model_info' %}active{% endif %}">
-      <i data-lucide="cpu"></i> Model & XAI
+      <i data-lucide="scale"></i> Fair Lending
     </a>
   </div>
 
   <div class="nav-right">
-    <span class="nav-badge"><span class="status-dot"></span> LoanSure FinBERT &bull; Live Engine</span>
+    <!-- Dark / Light Mode Toggle Button -->
+    <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark / Light Mode">
+      <i data-lucide="sun" id="themeSunIcon" style="display: none;"></i>
+      <i data-lucide="moon" id="themeMoonIcon"></i>
+    </button>
+    <span class="nav-badge"><span class="status-dot"></span> LoanSure AI &bull; Live Engine</span>
   </div>
 </nav>
 
 <main>{% block content %}{% endblock %}</main>
 
 <script>
+  // Dark/Light Theme Handler
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('loansure_theme', theme);
+    const sun = document.getElementById('themeSunIcon');
+    const moon = document.getElementById('themeMoonIcon');
+    if (sun && moon) {
+      if (theme === 'light') {
+        sun.style.display = 'inline-block';
+        moon.style.display = 'none';
+      } else {
+        sun.style.display = 'none';
+        moon.style.display = 'inline-block';
+      }
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  }
+
+  // Init Theme on Load
+  const savedTheme = localStorage.getItem('loansure_theme') || 'dark';
+  applyTheme(savedTheme);
+
   if (window.lucide) {
     lucide.createIcons();
   }
 </script>
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

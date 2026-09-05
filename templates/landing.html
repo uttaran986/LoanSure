@@ -1,29 +1,652 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
-{% block title %}LoanSure — Next-Gen Top Notch Financial Loan Solution{% endblock %}
+{% block title %}LoanSure — Next-Gen AI-Powered Loan Underwriting{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     LANDING TEMPLATE STYLES (MATCHING REFERENCE DESIGN)
+     ───────────────────────────────────────────────────────────── */
+
+  /* HERO SECTION */
+  .biz-hero-section {
+    background: var(--color-forest-dark);
+    padding: 70px 36px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .biz-hero-section::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(159, 232, 112, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .biz-hero-grid {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  /* Left Column */
+  .biz-hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rating-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 14px;
+    border-radius: 9999px;
+    margin-bottom: 24px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .rating-badge-pill .score-num {
+    font-weight: 800;
+    color: var(--color-lime);
+  }
+
+  .rating-badge-pill .stars {
+    color: #facc15;
+    letter-spacing: 2px;
+    font-size: 12px;
+  }
+
+  .rating-badge-pill .reviews-count {
+    color: var(--color-text-dim);
+  }
+
+  .biz-hero-title {
+    font-family: var(--font-heading);
+    font-size: 54px;
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    color: #ffffff;
+    margin-bottom: 22px;
+  }
+
+  .biz-hero-title .highlight-lime {
+    color: var(--color-lime);
+  }
+
+  .biz-hero-desc {
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 540px;
+    margin-bottom: 36px;
+  }
+
+  .biz-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+
+  .call-advisor-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .call-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-lime);
+    color: var(--color-forest-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(159, 232, 112, 0.3);
+  }
+
+  .call-icon-circle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .call-label {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--color-text-dim);
+    letter-spacing: 0.8px;
+  }
+
+  .call-number {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  /* Right Column: Interactive Real-Time Loan Sizing Card */
+  .biz-hero-visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  .visual-card-wrapper {
+    width: 100%;
+    max-width: 520px;
+    background: #0c2e26;
+    border: 1px solid rgba(159, 232, 112, 0.25);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    position: relative;
+  }
+
+  .visual-header-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-lime);
+    margin-bottom: 20px;
+  }
+
+  .pulsing-circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-lime);
+    box-shadow: 0 0 10px var(--color-lime);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.85); opacity: 0.6; }
+  }
+
+  .hero-calc-heading {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-calc-heading svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-lime);
+  }
+
+  .slider-field {
+    margin-bottom: 18px;
+  }
+
+  .slider-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .slider-info strong {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    outline: none;
+    accent-color: var(--color-lime);
+    cursor: pointer;
+  }
+
+  .hero-calc-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 22px 0 20px;
+  }
+
+  .calc-box-item {
+    background: #08231c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+
+  .highlight-box {
+    border-color: rgba(159, 232, 112, 0.35);
+    background: rgba(159, 232, 112, 0.06);
+  }
+
+  .box-lbl {
+    display: block;
+    font-size: 11px;
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .box-val {
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .text-lime {
+    color: var(--color-lime) !important;
+  }
+
+  .btn-calc-launch {
+    width: 100%;
+    background: var(--color-lime);
+    color: var(--color-forest-deep);
+    border: none;
+    padding: 13px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+  }
+
+  .btn-calc-launch:hover {
+    background: var(--color-lime-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(159, 232, 112, 0.4);
+  }
+
+  .btn-calc-launch svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     2. ESSENTIAL FEATURES SECTION (Cream Background)
+     ───────────────────────────────────────────────────────────── */
+  .features-block-section {
+    background: var(--color-cream-bg);
+    padding: 90px 36px;
+  }
+
+  .features-header-row {
+    max-width: 1320px;
+    margin: 0 auto 50px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: flex-end;
+  }
+
+  .features-main-title {
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: var(--color-text-dark);
+  }
+
+  .feat-heading-right p {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--color-text-muted);
+  }
+
+  .three-cards-grid {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .biz-feature-card {
+    border-radius: 24px;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 320px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  }
+
+  .biz-feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.09);
+  }
+
+  /* Card 1: White Card */
+  .card-style-white {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .card-style-white .card-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-text-dark);
+    margin: 20px 0 12px;
+  }
+
+  .card-style-white .card-description {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .card-style-white .card-footer-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--color-forest-dark);
+    margin-top: 28px;
+  }
+
+  /* Card 2: Lime Green Card */
+  .card-style-lime {
+    background: var(--color-lime);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .card-style-lime .card-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-forest-deep);
+    margin: 20px 0 12px;
+  }
+
+  .card-style-lime .card-description {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(5, 26, 21, 0.85);
+  }
+
+  .card-style-lime .card-footer-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--color-forest-deep);
+    margin-top: 28px;
+  }
+
+  /* Card 3: Deep Forest Dark Card */
+  .card-style-dark {
+    background: var(--color-forest-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .card-style-dark .card-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 20px 0 12px;
+  }
+
+  .card-style-dark .card-description {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .card-style-dark .card-footer-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--color-lime);
+    margin-top: 28px;
+  }
+
+  /* Icon Boxes */
+  .card-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon-box-gray {
+    background: #f1f5f9;
+    color: var(--color-forest-dark);
+  }
+
+  .icon-box-dark {
+    background: var(--color-forest-deep);
+    color: var(--color-lime);
+  }
+
+  .icon-box-lime {
+    background: rgba(159, 232, 112, 0.15);
+    color: var(--color-lime);
+  }
+
+  .card-icon-box svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     3. COMPREHENSIVE SOLUTION / VALUE SECTION (White Background)
+     ───────────────────────────────────────────────────────────── */
+  .solution-stats-section {
+    background: #ffffff;
+    padding: 90px 36px;
+  }
+
+  .solution-grid {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .stats-cards-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .stat-highlight-card {
+    border-radius: 20px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .lime-stat-box {
+    background: var(--color-lime);
+    color: var(--color-forest-deep);
+  }
+
+  .white-stat-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  .skills-stat-box {
+    grid-column: 1 / -1;
+    background: #08231c;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .stat-big-num {
+    font-family: var(--font-heading);
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 14px 0 6px;
+  }
+
+  .stat-denom {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  .stat-caption {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .stars-gold {
+    color: #f59e0b;
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .skills-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    color: var(--color-lime);
+  }
+
+  .skills-tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-tag {
+    font-size: 11px;
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    letter-spacing: 0.6px;
+  }
+
+  /* Right Content Column */
+  .solution-main-title {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: var(--color-text-dark);
+    margin: 12px 0 18px;
+  }
+
+  .solution-paragraph {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    margin-bottom: 32px;
+  }
+
+  .solution-author-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .executive-profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .exec-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-forest-dark);
+    color: var(--color-lime);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+  }
+
+  .exec-name {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-text-dark);
+  }
+
+  .exec-role {
+    display: block;
+    font-size: 12.5px;
+    color: var(--color-text-muted);
+  }
+
+  /* Responsive Rules */
+  @media (max-width: 1024px) {
+    .biz-hero-grid { grid-template-columns: 1fr; }
+    .features-header-row { grid-template-columns: 1fr; }
+    .three-cards-grid { grid-template-columns: 1fr; }
+    .solution-grid { grid-template-columns: 1fr; }
+    .biz-hero-title { font-size: 40px; }
+  }
+
+  @media (max-width: 640px) {
+    .biz-hero-section, .features-block-section, .solution-stats-section { padding: 50px 20px; }
+    .biz-hero-title { font-size: 32px; }
+    .stats-cards-matrix { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="template-wrapper">
 
-  <!-- Top Announcement Bar -->
-  <div class="top-announcement-bar">
-    <div class="announcement-inner">
-      <div class="announcement-left">
-        <span><i data-lucide="check-circle-2"></i> We're a top-rated AI loan underwriting & financial consulting agency</span>
-        <span class="sep">&bull;</span>
-        <span><i data-lucide="mail"></i> advisor@loansure.com</span>
-      </div>
-      <div class="announcement-right">
-        <span>Follow Us &mdash;</span>
-        <a href="#"><i data-lucide="facebook"></i></a>
-        <a href="#"><i data-lucide="twitter"></i></a>
-        <a href="#"><i data-lucide="linkedin"></i></a>
-        <a href="#"><i data-lucide="instagram"></i></a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hero Section (Forest Green Palette matching reference template) -->
+  <!-- 1. HERO SECTION (Dark Forest Green Background matching reference) -->
   <section class="biz-hero-section">
     <div class="biz-hero-grid">
       
@@ -36,28 +659,28 @@
         </div>
 
         <h1 class="biz-hero-title">
-          NEXT &mdash; GEN TOP<br>
-          NOTCH <span class="highlight-lime">FINANCIAL LOAN</span><br>
-          SOLUTION
+          NEXT &mdash; GEN<br>
+          AI-POWERED LOAN<br>
+          <span class="highlight-lime">UNDERWRITING</span>
         </h1>
 
         <p class="biz-hero-desc">
-          We provide expert AI loan underwriting & financial consulting services to help individuals and companies grow, optimize cash flow, and achieve sustainable credit.
+          AI-powered loan underwriting and financial intelligence designed to help lenders make faster, smarter and more responsible credit decisions.
         </p>
 
         <div class="biz-hero-actions">
-          <button class="btn-biz-primary" onclick="openAdvisorModal()">
-            <span>Chat with AI Advisor</span>
-            <i data-lucide="chevron-right" class="btn-arrow-icon"></i>
-          </button>
+          <a href="/apply" class="btn-biz-primary">
+            <span>Apply &amp; Underwrite</span>
+            <i data-lucide="chevron-right"></i>
+          </a>
 
           <div class="call-advisor-badge">
-            <div class="call-icon-circle">
+            <div class="call-icon-circle" onclick="openAdvisorModal()" style="cursor:pointer;" title="Click to chat with AI">
               <i data-lucide="phone-call"></i>
             </div>
             <div>
               <span class="call-label">CALL US 24/7</span>
-              <strong class="call-number">+1 (800) 590-0153</strong>
+              <strong class="call-number">+1 (800) 590-LOAN</strong>
             </div>
           </div>
         </div>
@@ -119,19 +742,19 @@
     </div>
   </section>
 
-  <!-- Essential Features 3-Card Section (Light Cream Background matching reference) -->
+  <!-- 2. ESSENTIAL FEATURES 3-CARD SECTION (Light Cream Background matching reference) -->
   <section class="features-block-section">
     <div class="features-header-row">
       <div class="feat-heading-left">
-        <span class="section-tag-asterisk">&#10038; Our Approach</span>
+        <span class="section-tag-asterisk tag-dark">&#10038; Our Approach</span>
         <h2 class="features-main-title">
           Essential features for<br>
-          modern financial<br>
+          modern lending<br>
           success
         </h2>
       </div>
       <div class="feat-heading-right">
-        <p>Explore integrated AI underwriting approaches that improve approval rates, minimize total interest payments, and support sustainable credit growth for individuals and enterprises.</p>
+        <p>Explore integrated AI underwriting approaches that improve risk assessment, increase portfolio profitability, and ensure responsible credit practices.</p>
       </div>
     </div>
 
@@ -139,12 +762,14 @@
     <div class="three-cards-grid">
       
       <!-- Card 1: Crisp Clean White Card -->
-      <div class="biz-feature-card card-style-white" onclick="openAdvisorWithProduct('Personal Loan')">
+      <div class="biz-feature-card card-style-white" onclick="window.location.href='/apply'">
         <div class="card-icon-box icon-box-gray">
           <i data-lucide="cpu"></i>
         </div>
-        <h3 class="card-title">Next-gen AI Underwriting</h3>
-        <p class="card-description">Instant natural language borrower risk sizing, multi-task scoring, and explainable decision transparency.</p>
+        <div>
+          <h3 class="card-title">AI Loan Underwriting</h3>
+          <p class="card-description">Evaluate borrower risk using intelligent underwriting workflows and multi-task machine learning scoring.</p>
+        </div>
         <div class="card-footer-action">
           <span>Explore More</span>
           <i data-lucide="arrow-right"></i>
@@ -152,26 +777,30 @@
       </div>
 
       <!-- Card 2: Vibrant Lime Green Card -->
-      <div class="biz-feature-card card-style-lime" onclick="openAdvisorWithProduct('Business Expansion')">
+      <div class="biz-feature-card card-style-lime" onclick="window.location.href='/console'">
         <div class="card-icon-box icon-box-dark">
           <i data-lucide="trending-up"></i>
         </div>
-        <h3 class="card-title text-dark">Market growth &amp; Sizing</h3>
-        <p class="card-description text-dark-dim">Identify disposable income headroom and accelerate sustainable loan capital allocation.</p>
-        <div class="card-footer-action text-dark">
+        <div>
+          <h3 class="card-title">Real-Time Loan Analysis</h3>
+          <p class="card-description">Estimate loan sizing, EMI, interest and repayment scenarios instantly across prime and subprime credit bands.</p>
+        </div>
+        <div class="card-footer-action">
           <span>Explore More</span>
           <i data-lucide="arrow-right"></i>
         </div>
       </div>
 
       <!-- Card 3: Deep Forest Green Card -->
-      <div class="biz-feature-card card-style-dark" onclick="openAdvisorWithProduct('Debt Consolidation')">
+      <div class="biz-feature-card card-style-dark" onclick="window.location.href='/bias-audit'">
         <div class="card-icon-box icon-box-lime">
-          <i data-lucide="handshake"></i>
+          <i data-lucide="scale"></i>
         </div>
-        <h3 class="card-title text-white">Financial process Improvement</h3>
-        <p class="card-description text-muted-light">Optimize repayment schedules to increase debt servicing efficiency and interest savings.</p>
-        <div class="card-footer-action text-lime">
+        <div>
+          <h3 class="card-title">Fair Lending Intelligence</h3>
+          <p class="card-description">Monitor lending decisions for consistency and responsible credit practices with automated demographic parity auditing.</p>
+        </div>
+        <div class="card-footer-action">
           <span>Explore More</span>
           <i data-lucide="arrow-right"></i>
         </div>
@@ -180,7 +809,7 @@
     </div>
   </section>
 
-  <!-- Comprehensive Solution Grid & Stats Section -->
+  <!-- 3. COMPREHENSIVE SOLUTION GRID & STATS SECTION (White Background) -->
   <section class="solution-stats-section">
     <div class="solution-grid">
       
@@ -205,9 +834,10 @@
             <div class="skills-tags-wrap">
               <span class="skill-tag">ADVISOR</span>
               <span class="skill-tag">UNDERWRITING</span>
+              <span class="skill-tag">FAIR LENDING</span>
+              <span class="skill-tag">PORTFOLIO</span>
               <span class="skill-tag">AMORTIZATION</span>
-              <span class="skill-tag">COMPLIANCE</span>
-              <span class="skill-tag">ANALYTICS</span>
+              <span class="skill-tag">RISK SCORING</span>
             </div>
           </div>
 
@@ -216,26 +846,26 @@
 
       <!-- Right Content Details -->
       <div class="solution-content-col">
-        <span class="section-tag-asterisk">&#10038; Who We Are?</span>
+        <span class="section-tag-asterisk tag-dark">&#10038; Who We Are?</span>
         <h2 class="solution-main-title">
-          Comprehensive solution for<br>
-          financial excellence
+          Smarter decisions for<br>
+          modern lending
         </h2>
         <p class="solution-paragraph">
-          Discover innovative AI underwriting algorithms that help borrowers optimize monthly commitments, increase borrowing power, and achieve fair credit rates across diverse lending markets.
+          Discover innovative underwriting strategies and AI decisioning that help institutions improve loan performance, maximize borrower satisfaction, and navigate competitive credit markets with confidence.
         </p>
 
         <div class="solution-author-row">
-          <button class="btn-biz-primary" onclick="openAdvisorModal()">
-            <span>More About Loans</span>
+          <a href="/apply" class="btn-biz-primary">
+            <span>Apply &amp; Underwrite</span>
             <i data-lucide="chevron-right"></i>
-          </button>
+          </a>
 
           <div class="executive-profile-badge">
             <div class="exec-avatar">EV</div>
             <div>
               <strong class="exec-name">Eleanor Vance</strong>
-              <span class="exec-role">Chief Underwriter &bull; LoanSure</span>
+              <span class="exec-role">Chief Underwriter &bull; LoanSure AI</span>
             </div>
           </div>
         </div>
@@ -257,7 +887,7 @@
       <div class="advisor-brand">
         <div class="advisor-avatar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="26" height="26">
-            <g fill="#4ade80">
+            <g fill="#9fe870">
               <path d="M 50 115 L 68 90 L 68 248 L 220 248 L 195 266 L 50 266 Z" />
               <path d="M 78 145 L 96 120 L 96 220 L 190 220 L 165 238 L 78 238 Z" />
               <path d="M 106 175 L 124 150 L 124 192 L 160 192 L 135 210 L 106 210 Z" />
@@ -310,7 +940,7 @@
 
 {% block extra_js %}
 <script>
-// Quick EMI Calculator Logic
+// 1. Quick EMI Calculator Logic
 function updateQuickCalc() {
   const p = parseFloat(document.getElementById('sliderAmount').value);
   const r = parseFloat(document.getElementById('sliderRate').value);
@@ -336,7 +966,7 @@ function updateQuickCalc() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// CONVERSATIONAL AI ADVISOR SCRIPT
+// 2. CONVERSATIONAL AI ADVISOR SCRIPT
 // ─────────────────────────────────────────────────────────────
 const QUESTIONS = [
   {
@@ -412,13 +1042,6 @@ function openAdvisorModal() {
   if (chatState.step_index === 0 && Object.keys(chatState.answers).length === 0) {
     startAdvisorChat();
   }
-}
-
-function openAdvisorWithProduct(productName) {
-  openAdvisorModal();
-  setTimeout(() => {
-    selectQuickOption(productName);
-  }, 300);
 }
 
 function closeAdvisorModal() {
@@ -662,10 +1285,10 @@ function renderCompletionCard(data) {
     <div class="advisor-result-card">
       <div class="result-top-banner">
         <div>
-          <span class="badge-mini">AI Sizing & Assessment</span>
-          <h3 class="result-title">Pre-Approved Eligibility: $${(data.eligibility.max_eligible_amount || 0).toLocaleString()}</h3>
+          <span class="section-tag-asterisk" style="margin-bottom:4px;">AI Sizing & Assessment</span>
+          <h3 class="result-title">Pre-Approved Eligibility: $${(data.eligibility ? data.eligibility.max_eligible_amount : 0).toLocaleString()}</h3>
         </div>
-        <span class="tier-pill tier-tiera">${data.risk_tier || 'Prime Approved'}</span>
+        <span class="pkg-badge">${data.risk_tier || 'Prime Approved'}</span>
       </div>
 
       <div class="advisor-packages-grid">
@@ -673,10 +1296,10 @@ function renderCompletionCard(data) {
       </div>
 
       <div class="advisor-actions-row">
-        <a href="/memo/${data.lead_id || 1}" class="btn-primary">
+        <a href="/memo/${data.lead_id || 1}" class="btn-biz-primary">
           <i data-lucide="file-text"></i> View Underwriting Memo
         </a>
-        <a href="/console" class="btn-secondary">
+        <a href="/console" class="btn-biz-secondary">
           <i data-lucide="layout-grid"></i> Open Loan Console
         </a>
       </div>

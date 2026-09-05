@@ -5,3 +5,5 @@ __pycache__/
 instance/*.db
 *.db
 models/bert_loan_model/model.safetensors
+.vercel
+.env*

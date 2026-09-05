@@ -1,4 +1,10 @@
-﻿from app import app
+﻿import sys
+import os
 
-# Expose WSGI handler for Vercel Serverless Functions
+# Add root directory to sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from app import app
+
+# Export WSGI application handler
 app = app

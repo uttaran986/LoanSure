@@ -188,7 +188,7 @@
       <div class="advisor-brand">
         <div class="advisor-avatar"><i data-lucide="bot"></i></div>
         <div>
-          <h3>LoanSure AI Advisor</h3>
+          <h3 class="modal-title-text">LoanSure AI Advisor</h3>
           <span class="status-online"><span class="status-dot"></span> Active &bull; Local Engine</span>
         </div>
       </div>
@@ -256,8 +256,71 @@ function updateQuickCalc() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// CONVERSATIONAL AI ADVISOR JAVASCRIPT STATE MACHINE
+// CLIENT-SIDE + SERVER SYNCED CONVERSATIONAL ENGINE
 // ─────────────────────────────────────────────────────────────
+const QUESTIONS = [
+  {
+    key: 'loan_type',
+    question: '👋 Hello! I am your <strong>LoanSure AI Advisor</strong>. Which type of loan are you looking for today?',
+    options: ['Personal Loan', 'Home Loan', 'Auto / Vehicle', 'Business Loan', 'Education Loan'],
+    hint: 'Select or type your loan category'
+  },
+  {
+    key: 'full_name',
+    question: 'Great! What is your full legal name?',
+    options: [],
+    hint: 'e.g. Eleanor Vance'
+  },
+  {
+    key: 'age',
+    question: 'Nice to meet you, {full_name}! How old are you?',
+    options: ['21 - 30', '31 - 45', '46 - 60', '60+'],
+    hint: 'e.g. 32'
+  },
+  {
+    key: 'city',
+    question: 'Which city and state do you currently reside in?',
+    options: ['New York, NY', 'San Francisco, CA', 'Austin, TX', 'Chicago, IL', 'Seattle, WA'],
+    hint: 'e.g. Austin, TX'
+  },
+  {
+    key: 'monthly_income',
+    question: 'What is your average monthly in-hand salary / income ($)?',
+    options: ['$3,500/mo', '$6,500/mo', '$10,000/mo', '$15,000+/mo'],
+    hint: 'e.g. 6500'
+  },
+  {
+    key: 'existing_emis',
+    question: 'How much do you currently pay monthly towards active EMIs ($)?',
+    options: ['$0 (No active loans)', '$250/mo', '$500/mo', '$1,200/mo'],
+    hint: 'e.g. 0'
+  },
+  {
+    key: 'credit_score',
+    question: 'What is your estimated credit score range?',
+    options: ['Excellent (750+)', 'Good (700 - 749)', 'Fair (640 - 699)', 'Needs Work (< 640)'],
+    hint: 'e.g. 740'
+  },
+  {
+    key: 'loan_amount_requested',
+    question: 'How much loan amount are you looking to borrow ($)?',
+    options: ['$15,000', '$35,000', '$50,000', '$100,000'],
+    hint: 'e.g. 45000'
+  },
+  {
+    key: 'tenure_months',
+    question: 'What is your preferred repayment duration?',
+    options: ['12 Months (1 Yr)', '24 Months (2 Yrs)', '36 Months (3 Yrs)', '60 Months (5 Yrs)', '84 Months (7 Yrs)'],
+    hint: 'e.g. 36'
+  },
+  {
+    key: 'loan_purpose',
+    question: 'Lastly, what is the primary purpose of this loan?',
+    options: ['Debt Consolidation', 'Home Renovation', 'Business Expansion', 'Medical / Emergency', 'Major Purchase'],
+    hint: 'e.g. Debt Consolidation'
+  }
+];
+
 let chatState = {
   step_index: 0,
   answers: {},
@@ -275,7 +338,7 @@ function openAdvisorWithProduct(productName) {
   openAdvisorModal();
   setTimeout(() => {
     selectQuickOption(productName);
-  }, 400);
+  }, 300);
 }
 
 function closeAdvisorModal() {
@@ -315,58 +378,88 @@ function setTyping(visible) {
 }
 
 function startAdvisorChat() {
-  setTyping(true);
-  fetch('/api/advisor/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ step_index: 0, answers: {}, message: '' })
-  })
-  .then(res => res.json())
-  .then(data => {
-    setTyping(false);
-    renderChatStep(data);
-  });
+  document.getElementById('advisorChatMessages').innerHTML = '';
+  chatState.step_index = 0;
+  chatState.answers = {};
+  chatState.completed = false;
+  renderLocalStep(0);
 }
 
-function renderChatStep(data) {
-  chatState.step_index = data.step_index;
-  chatState.answers = data.answers || {};
-  chatState.completed = data.completed;
-
-  // Progress Bar
-  const pct = Math.min(100, Math.round(((data.step_index + 1) / (data.total_steps || 10)) * 100));
-  document.getElementById('advisorProgressBarFill').style.width = pct + '%';
-
-  // Bot message
-  appendMessage('bot', data.bot_message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'), true);
-
-  // Render options / pills
-  const optArea = document.getElementById('advisorOptionsArea');
-  optArea.innerHTML = '';
-
-  if (data.completed) {
-    renderCompletionCard(data);
+function renderLocalStep(stepIdx) {
+  if (stepIdx >= QUESTIONS.length) {
+    calculateAndShowFinalOffer();
     return;
   }
 
-  if (data.options && data.options.length > 0) {
-    data.options.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.className = 'quick-option-chip';
-      btn.innerText = opt;
-      btn.onclick = () => selectQuickOption(opt);
-      optArea.appendChild(btn);
-    });
-  }
+  const qObj = QUESTIONS[stepIdx];
+  const name = chatState.answers['full_name'] || 'there';
+  const qText = qObj.question.replace('{full_name}', name);
 
-  if (data.hint) {
-    document.getElementById('advisorUserInput').placeholder = data.hint;
-  }
+  setTyping(true);
+  setTimeout(() => {
+    setTyping(false);
+    appendMessage('bot', qText, true);
+
+    const pct = Math.round(((stepIdx + 1) / QUESTIONS.length) * 100);
+    document.getElementById('advisorProgressBarFill').style.width = pct + '%';
+
+    const optArea = document.getElementById('advisorOptionsArea');
+    optArea.innerHTML = '';
+
+    if (qObj.options && qObj.options.length > 0) {
+      qObj.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quick-option-chip';
+        btn.innerText = opt;
+        btn.onclick = () => selectQuickOption(opt);
+        optArea.appendChild(btn);
+      });
+    }
+
+    document.getElementById('advisorUserInput').placeholder = qObj.hint || 'Type your answer...';
+    document.getElementById('advisorUserInput').focus();
+  }, 250);
 }
 
 function selectQuickOption(optText) {
   document.getElementById('advisorUserInput').value = optText;
   sendAdvisorMessage();
+}
+
+function parseUserResponse(key, text) {
+  text = text.trim();
+  if (key === 'age') {
+    const m = text.match(/\b(\d{2})\b/);
+    return m ? parseInt(m[1]) : 30;
+  }
+  if (key === 'monthly_income' || key === 'existing_emis' || key === 'loan_amount_requested') {
+    const nums = text.replace(/[\$,\/mo]/g, '').match(/[\d,]+/);
+    if (nums) return parseFloat(nums[0].replace(/,/g, ''));
+    return key === 'monthly_income' ? 6500 : (key === 'existing_emis' ? 0 : 35000);
+  }
+  if (key === 'credit_score') {
+    const m = text.match(/\b([3-8]\d{2})\b/);
+    if (m) return parseInt(m[1]);
+    if (text.toLowerCase().includes('excellent') || text.includes('750')) return 780;
+    if (text.toLowerCase().includes('good') || text.includes('700')) return 720;
+    if (text.toLowerCase().includes('fair') || text.includes('640')) return 670;
+    return 620;
+  }
+  if (key === 'tenure_months') {
+    const m = text.match(/(\d+)\s*(month|mo|year|yr)/i);
+    if (m) {
+      let v = parseInt(m[1]);
+      if (m[2].toLowerCase().startsWith('y')) v *= 12;
+      return v;
+    }
+    const n = text.match(/\b\d+\b/);
+    if (n) {
+      const val = parseInt(n[0]);
+      return val <= 10 ? val * 12 : val;
+    }
+    return 36;
+  }
+  return text;
 }
 
 function sendAdvisorMessage() {
@@ -377,26 +470,89 @@ function sendAdvisorMessage() {
   appendMessage('user', userText);
   input.value = '';
   document.getElementById('advisorOptionsArea').innerHTML = '';
+
+  const currentStep = QUESTIONS[chatState.step_index];
+  if (currentStep) {
+    chatState.answers[currentStep.key] = parseUserResponse(currentStep.key, userText);
+  }
+
+  chatState.step_index++;
+  
+  if (chatState.step_index < QUESTIONS.length) {
+    renderLocalStep(chatState.step_index);
+  } else {
+    calculateAndShowFinalOffer();
+  }
+}
+
+function calculateAndShowFinalOffer() {
   setTyping(true);
 
+  // Sync with Backend API to create database lead & fetch recommendations
   fetch('/api/advisor/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      step_index: chatState.step_index,
+      step_index: 9,
       answers: chatState.answers,
-      message: userText
+      message: chatState.answers['loan_purpose'] || 'Personal'
     })
   })
   .then(res => res.json())
   .then(data => {
     setTyping(false);
-    renderChatStep(data);
+    renderCompletionCard(data);
+  })
+  .catch(err => {
+    // Client-side instant calculation fallback
+    setTyping(false);
+    const amount = parseFloat(chatState.answers['loan_amount_requested'] || 35000);
+    const tenure = parseInt(chatState.answers['tenure_months'] || 48);
+    const score = parseInt(chatState.answers['credit_score'] || 720);
+    const rate = score >= 750 ? 9.5 : (score >= 680 ? 11.5 : 14.5);
+    
+    const r = (rate / 100) / 12;
+    const factor = Math.pow(1 + r, tenure);
+    const emi = (amount * r * factor) / (factor - 1);
+    const totalPayable = emi * tenure;
+
+    const fallbackData = {
+      lead_id: 1,
+      risk_tier: score >= 750 ? 'Tier A (Prime)' : 'Tier B (Near-Prime)',
+      eligibility: { max_eligible_amount: Math.round(amount * 1.35) },
+      packages: [
+        {
+          name: 'Optimal Balanced Choice',
+          tag: 'Recommended',
+          monthly_emi: Math.round(emi * 100) / 100,
+          rate_pct: rate,
+          tenure_months: tenure,
+          highlight: 'Best balance of monthly cashflow and low overall interest.'
+        },
+        {
+          name: 'Lower Monthly Burden',
+          tag: 'Budget Friendly',
+          monthly_emi: Math.round((emi * 0.78) * 100) / 100,
+          rate_pct: rate + 0.25,
+          tenure_months: Math.min(84, Math.round(tenure * 1.5)),
+          highlight: 'Reduces your monthly EMI commitment.'
+        },
+        {
+          name: 'Fast Payoff Plan',
+          tag: 'Max Savings',
+          monthly_emi: Math.round((emi * 1.32) * 100) / 100,
+          rate_pct: Math.max(7.5, rate - 0.5),
+          tenure_months: Math.max(12, Math.round(tenure * 0.65)),
+          highlight: 'Saves maximal lifetime interest.'
+        }
+      ]
+    };
+    renderCompletionCard(fallbackData);
   });
 }
 
 function renderCompletionCard(data) {
-  const container = document.getElementById('advisorChatMessages');
+  document.getElementById('advisorProgressBarFill').style.width = '100%';
   
   let packagesHtml = '';
   (data.packages || []).forEach(pkg => {
@@ -409,7 +565,7 @@ function renderCompletionCard(data) {
         <div class="pkg-stats">
           <div class="pkg-stat-item">
             <span>Monthly EMI</span>
-            <strong>$${pkg.monthly_emi.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+            <strong>$${(pkg.monthly_emi || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
           </div>
           <div class="pkg-stat-item">
             <span>Interest Rate</span>
@@ -420,7 +576,7 @@ function renderCompletionCard(data) {
             <strong>${pkg.tenure_months} Mos</strong>
           </div>
         </div>
-        <p class="pkg-desc">${pkg.highlight}</p>
+        <p class="pkg-desc">${pkg.highlight || ''}</p>
       </div>
     `;
   });
@@ -432,7 +588,7 @@ function renderCompletionCard(data) {
           <span class="badge-mini">AI Sizing & Assessment</span>
           <h3 class="result-title">Pre-Approved Eligibility: $${(data.eligibility.max_eligible_amount || 0).toLocaleString()}</h3>
         </div>
-        <span class="tier-pill tier-tiera">${data.risk_tier}</span>
+        <span class="tier-pill tier-tiera">${data.risk_tier || 'Prime Approved'}</span>
       </div>
 
       <div class="advisor-packages-grid">
@@ -440,11 +596,11 @@ function renderCompletionCard(data) {
       </div>
 
       <div class="advisor-actions-row">
-        <a href="/result/${data.lead_id}" class="btn-primary">
-          <i data-lucide="check-circle-2"></i> View Full Underwriting Memo
+        <a href="/memo/${data.lead_id || 1}" class="btn-primary">
+          <i data-lucide="file-text"></i> View Underwriting Memo
         </a>
         <a href="/console" class="btn-secondary">
-          <i data-lucide="layout-grid"></i> Open Management Console
+          <i data-lucide="layout-grid"></i> Open Loan Console
         </a>
       </div>
     </div>

@@ -1094,6 +1094,162 @@ input[type="range"] {
   }
 }
 
+
+/* ─────────────────────────────────────────────────────────────
+   HIGH-CONTRAST SOLID OPAQUE CHATBOT MODAL & WHITE TEXT FIX
+   ───────────────────────────────────────────────────────────── */
+.advisor-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  z-index: 9999 !important;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.advisor-modal-overlay.active {
+  display: flex !important;
+}
+
+.advisor-modal-container {
+  width: 100% !important;
+  max-width: 680px !important;
+  height: 85vh !important;
+  max-height: 720px !important;
+  background: #081126 !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.95) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.advisor-header {
+  padding: 16px 20px !important;
+  background: #0c1938 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.modal-title-text {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
+.advisor-messages-area {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  background: #081126 !important;
+}
+
+.msg-bubble {
+  max-width: 82% !important;
+  padding: 12px 16px !important;
+  border-radius: 14px !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.bubble-bot {
+  background: #14244a !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+  border-bottom-left-radius: 3px !important;
+}
+
+.bubble-bot strong {
+  color: #38bdf8 !important;
+}
+
+.bubble-user {
+  background: linear-gradient(135deg, #0284c7, #4f46e5) !important;
+  color: #ffffff !important;
+  border-bottom-right-radius: 3px !important;
+  font-weight: 600 !important;
+}
+
+.advisor-options-area {
+  padding: 8px 20px 12px !important;
+  display: flex !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  background: #081126 !important;
+}
+
+.quick-option-chip {
+  background: #0e2448 !important;
+  border: 1px solid #0284c7 !important;
+  color: #38bdf8 !important;
+  padding: 7px 14px !important;
+  border-radius: 20px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+}
+
+.quick-option-chip:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+.advisor-input-bar {
+  padding: 14px 20px !important;
+  background: #0c1938 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  gap: 10px !important;
+}
+
+.advisor-input-bar input {
+  flex: 1 !important;
+  background: #081126 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  color: #ffffff !important;
+  padding: 11px 16px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  outline: none !important;
+}
+
+.advisor-input-bar input::placeholder {
+  color: #64748b !important;
+}
+
+.advisor-input-bar input:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
+}
+
+.rec-package-card {
+  background: #0c1938 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+}
+
+.package-highlight {
+  border-color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.08) !important;
+}
+
+.pkg-name, .pkg-stat-item strong, .result-title {
+  color: #ffffff !important;
+}
+
   </style>
   {% block extra_css %}{% endblock %}
 </head>

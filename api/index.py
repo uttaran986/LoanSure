@@ -12,16 +12,25 @@ class VercelPathFixMiddleware:
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        matched_path = environ.get('HTTP_X_MATCHED_PATH') or environ.get('HTTP_X_FORWARDED_URI')
-        path_info = environ.get('PATH_INFO', '')
+        # Extract original requested URI from all possible Vercel headers
+        raw_uri = (
+            environ.get('HTTP_X_MATCHED_PATH') or
+            environ.get('HTTP_X_FORWARDED_URI') or
+            environ.get('RAW_URI') or
+            environ.get('REQUEST_URI') or
+            environ.get('PATH_INFO', '')
+        )
+        
+        # Remove query parameters if present
+        if '?' in raw_uri:
+            raw_uri = raw_uri.split('?')[0]
 
-        if path_info.startswith('/api/index'):
-            if matched_path and not matched_path.startswith('/api/index'):
-                environ['PATH_INFO'] = matched_path
-            else:
-                rest = path_info[len('/api/index'):]
-                environ['PATH_INFO'] = rest if rest else '/'
-        elif not path_info or path_info == '':
+        if raw_uri.startswith('/api/index'):
+            rest = raw_uri[len('/api/index'):]
+            environ['PATH_INFO'] = rest if rest else '/'
+        elif raw_uri and raw_uri != '':
+            environ['PATH_INFO'] = raw_uri
+        else:
             environ['PATH_INFO'] = '/'
 
         return self.wsgi_app(environ, start_response)

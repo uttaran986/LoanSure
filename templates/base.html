@@ -16,39 +16,39 @@
 
   <style>
     :root {
-      --color-forest-dark: #07231c;
-      --color-forest-deep: #051a15;
-      --color-forest-card: #0c2e26;
-      --color-forest-surface: #0f362c;
+      --color-forest-dark: #063F3B;
+      --color-forest-deep: #042E2B;
+      --color-forest-card: #084D48;
+      --color-forest-surface: #0B5C56;
       --color-forest-border: rgba(255, 255, 255, 0.12);
-      --color-lime: #9fe870;
-      --color-lime-hover: #8de05a;
-      --color-lime-dim: rgba(159, 232, 112, 0.15);
-      --color-cream-bg: #faf8f3;
-      --color-cream-card: #ffffff;
-      --color-text-dark: #0f172a;
-      --color-text-muted: #64748b;
-      --color-text-light: #f8fafc;
-      --color-text-dim: #94a3b8;
+      --color-lime: #A8F45A;
+      --color-lime-hover: #96E04A;
+      --color-lime-dim: rgba(168, 244, 90, 0.16);
+      --color-cream-bg: #F7F7F0;
+      --color-cream-card: #FFFFFF;
+      --color-text-dark: #092F2D;
+      --color-text-muted: #52706E;
+      --color-text-light: #F8FAFC;
+      --color-text-dim: #8EABA9;
       --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
 
       /* Internal application theme variables */
-      --bg-dark: #07231c;
-      --bg-card: #0c2e26;
-      --bg-card-solid: #0c2e26;
-      --bg-panel: #0f362c;
-      --border-subtle: rgba(255, 255, 255, 0.12);
-      --border-focus: #9fe870;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --cyan-primary: #9fe870;
-      --indigo-primary: #10b981;
-      --green-accent: #9fe870;
-      --red-accent: #ef4444;
-      --amber-accent: #f59e0b;
+      --bg-dark: #F7F7F0;
+      --bg-card: #FFFFFF;
+      --bg-card-solid: #FFFFFF;
+      --bg-panel: #F1F5F9;
+      --border-subtle: #E2E8F0;
+      --border-focus: #063F3B;
+      --text-main: #092F2D;
+      --text-muted: #52706E;
+      --text-dim: #8EABA9;
+      --cyan-primary: #063F3B;
+      --indigo-primary: #063F3B;
+      --green-accent: #15803D;
+      --red-accent: #DC2626;
+      --amber-accent: #D97706;
     }
 
     *, *::before, *::after {
@@ -59,7 +59,7 @@
 
     body {
       font-family: var(--font-main);
-      background: #ffffff;
+      background: #FFFFFF;
       color: var(--color-text-dark);
       min-height: 100vh;
       line-height: 1.5;
@@ -68,17 +68,17 @@
 
     /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #07231c; }
-    ::-webkit-scrollbar-thumb { background: rgba(159, 232, 112, 0.35); border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: #063F3B; }
+    ::-webkit-scrollbar-thumb { background: rgba(168, 244, 90, 0.4); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--color-lime); }
 
-    /* Top Announcement Bar */
+    /* Top Announcement Bar (Lime Green) */
     .top-announcement-bar {
       background: var(--color-lime);
       color: var(--color-forest-deep);
       font-size: 13px;
-      font-weight: 600;
-      padding: 8px 36px;
+      font-weight: 700;
+      padding: 9px 36px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     }
 
@@ -95,7 +95,7 @@
     .announcement-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
@@ -106,14 +106,14 @@
     }
 
     .announcement-left svg {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
     }
 
     .announcement-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     .announcement-right a {
@@ -130,23 +130,24 @@
     }
 
     .announcement-right svg {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
     }
 
-    /* Main Navigation Bar */
+    /* Main Navigation Bar (Clean White / Modern Light Background) */
     .nav {
-      background: var(--color-forest-dark);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: #FFFFFF;
+      border-bottom: 1px solid #E5E7EB;
       position: sticky;
       top: 0;
       z-index: 1000;
       backdrop-filter: blur(12px);
       padding: 0 36px;
-      height: 76px;
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
     }
 
     .nav-brand {
@@ -157,8 +158,8 @@
     }
 
     .brand-logo-svg-wrap {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -167,14 +168,14 @@
     .nav-brand-name {
       font-family: var(--font-heading);
       font-size: 24px;
-      font-weight: 800;
-      color: #ffffff;
+      font-weight: 900;
+      color: var(--color-forest-dark);
       letter-spacing: -0.5px;
     }
 
     .brand-sure {
-      color: var(--color-lime);
-      font-weight: 800;
+      color: #15803D;
+      font-weight: 900;
     }
 
     .nav-links {
@@ -187,24 +188,24 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.82);
-      padding: 8px 14px;
+      color: var(--color-text-muted);
+      padding: 8px 16px;
       border-radius: 9999px;
       text-decoration: none;
       transition: all 0.2s ease;
     }
 
     .nav-link:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.08);
+      color: var(--color-forest-dark);
+      background: #F1F5F9;
     }
 
     .nav-link.active {
       color: var(--color-forest-deep);
       background: var(--color-lime);
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .nav-link svg {
@@ -222,10 +223,10 @@
       background: var(--color-lime);
       color: var(--color-forest-deep);
       border: none;
-      padding: 10px 22px;
+      padding: 11px 24px;
       border-radius: 9999px;
       font-family: var(--font-main);
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
@@ -233,13 +234,13 @@
       gap: 8px;
       text-decoration: none;
       transition: all 0.25s ease;
-      box-shadow: 0 4px 14px rgba(159, 232, 112, 0.25);
+      box-shadow: 0 4px 14px rgba(168, 244, 90, 0.35);
     }
 
     .btn-nav-cta:hover {
       background: var(--color-lime-hover);
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(159, 232, 112, 0.4);
+      box-shadow: 0 6px 20px rgba(168, 244, 90, 0.5);
     }
 
     .btn-nav-cta svg {
@@ -249,41 +250,41 @@
 
     /* Base Layout */
     main {
-      min-height: calc(100vh - 76px);
+      min-height: calc(100vh - 80px);
       width: 100%;
     }
 
-    /* Global UI Utility Classes */
-    .btn-primary, .btn-biz-primary {
+    /* Global Buttons & Badges */
+    .btn-biz-primary, .btn-primary {
       background: var(--color-lime);
       color: var(--color-forest-deep);
       border: none;
-      padding: 12px 24px;
+      padding: 13px 28px;
       border-radius: 9999px;
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       text-decoration: none;
       transition: all 0.25s ease;
-      box-shadow: 0 4px 15px rgba(159, 232, 112, 0.25);
+      box-shadow: 0 6px 20px rgba(168, 244, 90, 0.35);
     }
 
-    .btn-primary:hover, .btn-biz-primary:hover {
+    .btn-biz-primary:hover, .btn-primary:hover {
       background: var(--color-lime-hover);
       transform: translateY(-2px);
-      box-shadow: 0 6px 22px rgba(159, 232, 112, 0.4);
+      box-shadow: 0 8px 25px rgba(168, 244, 90, 0.5);
     }
 
-    .btn-secondary, .btn-biz-secondary {
+    .btn-biz-secondary, .btn-secondary {
       background: rgba(255, 255, 255, 0.08);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 11px 20px;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 12px 24px;
       border-radius: 9999px;
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -293,8 +294,8 @@
       transition: all 0.2s ease;
     }
 
-    .btn-secondary:hover, .btn-biz-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
+    .btn-biz-secondary:hover, .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.16);
       border-color: var(--color-lime);
       color: var(--color-lime);
     }
@@ -304,21 +305,21 @@
       align-items: center;
       gap: 6px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: var(--color-lime);
-      background: rgba(159, 232, 112, 0.12);
-      border: 1px solid rgba(159, 232, 112, 0.3);
-      padding: 4px 12px;
+      color: var(--color-forest-dark);
+      background: rgba(6, 63, 59, 0.08);
+      border: 1px solid rgba(6, 63, 59, 0.16);
+      padding: 5px 14px;
       border-radius: 9999px;
       margin-bottom: 14px;
     }
 
-    .tag-dark {
-      color: #07231c;
-      background: rgba(7, 35, 28, 0.08);
-      border-color: rgba(7, 35, 28, 0.18);
+    .tag-lime {
+      color: var(--color-forest-deep);
+      background: var(--color-lime);
+      border-color: var(--color-lime);
     }
 
     /* Common App Containers (Console, Admin, Apply, Dashboard) */
@@ -360,13 +361,13 @@
 
     .header-actions .btn-secondary {
       color: var(--color-forest-dark);
-      background: #f1f5f9;
-      border-color: #cbd5e1;
+      background: #F1F5F9;
+      border-color: #CBD5E1;
     }
 
     .header-actions .btn-secondary:hover {
       background: var(--color-forest-dark);
-      color: #ffffff;
+      color: #FFFFFF;
     }
 
     /* KPI Cards */
@@ -378,8 +379,8 @@
     }
 
     .kpi-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
       border-radius: 18px;
       padding: 22px;
       display: flex;
@@ -397,9 +398,9 @@
       justify-content: center;
     }
 
-    .icon-cyan, .icon-emerald { background: rgba(159, 232, 112, 0.2); color: #07231c; }
-    .icon-indigo { background: rgba(99, 102, 241, 0.15); color: #4f46e5; }
-    .icon-amber { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+    .icon-cyan, .icon-emerald { background: rgba(168, 244, 90, 0.25); color: #063F3B; }
+    .icon-indigo { background: rgba(6, 63, 59, 0.12); color: #063F3B; }
+    .icon-amber { background: rgba(245, 158, 11, 0.15); color: #D97706; }
 
     .kpi-label {
       font-size: 12px;
@@ -425,13 +426,13 @@
       gap: 4px;
     }
 
-    .kpi-trend.positive { color: #16a34a; }
-    .kpi-trend.neutral { color: #64748b; }
+    .kpi-trend.positive { color: #15803D; }
+    .kpi-trend.neutral { color: #64748B; }
 
     /* Panels & Tables */
     .console-panel {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
       border-radius: 20px;
       padding: 24px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
@@ -446,7 +447,7 @@
       gap: 16px;
       margin-bottom: 20px;
       padding-bottom: 16px;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 1px solid #F1F5F9;
     }
 
     .panel-title {
@@ -472,10 +473,10 @@
 
     .search-input, .select-filter {
       padding: 8px 14px;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #CBD5E1;
       border-radius: 10px;
       font-size: 13px;
-      background: #ffffff;
+      background: #FFFFFF;
       color: var(--color-text-dark);
       outline: none;
     }
@@ -494,18 +495,18 @@
 
     .loans-table th {
       padding: 12px 14px;
-      background: #f8fafc;
+      background: #F8FAFC;
       color: var(--color-text-muted);
       font-weight: 700;
       text-transform: uppercase;
       font-size: 11px;
       letter-spacing: 0.5px;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid #E2E8F0;
     }
 
     .loans-table td {
       padding: 14px;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 1px solid #F1F5F9;
       color: var(--color-text-dark);
     }
 
@@ -519,7 +520,7 @@
       width: 32px;
       height: 32px;
       border-radius: 8px;
-      background: #07231c;
+      background: #063F3B;
       color: var(--color-lime);
       font-weight: 800;
       font-size: 12px;
@@ -532,9 +533,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(159, 232, 112, 0.15);
-      color: #07231c;
-      border: 1px solid rgba(159, 232, 112, 0.35);
+      background: rgba(168, 244, 90, 0.2);
+      color: #063F3B;
+      border: 1px solid rgba(168, 244, 90, 0.4);
       font-size: 11.5px;
       font-weight: 700;
       padding: 4px 10px;
@@ -544,7 +545,7 @@
     .badge-mini {
       font-size: 11px;
       color: var(--color-text-muted);
-      background: #f1f5f9;
+      background: #F1F5F9;
       padding: 3px 8px;
       border-radius: 6px;
     }
@@ -557,15 +558,15 @@
       display: inline-block;
     }
 
-    .status-approved { background: #dcfce7; color: #15803d; }
-    .status-review { background: #fef3c7; color: #b45309; }
-    .status-denied { background: #fee2e2; color: #b91c1c; }
+    .status-approved { background: #DCFCE7; color: #15803D; }
+    .status-review { background: #FEF3C7; color: #B45309; }
+    .status-denied { background: #FEE2E2; color: #B91C1C; }
 
     /* High-contrast solid dark Chatbot Modal */
     .advisor-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(3, 14, 11, 0.88);
+      background: rgba(4, 46, 43, 0.88);
       backdrop-filter: blur(12px);
       z-index: 9999;
       display: none;
@@ -583,19 +584,19 @@
       max-width: 680px;
       height: 85vh;
       max-height: 720px;
-      background: #08231c;
-      border: 1px solid rgba(159, 232, 112, 0.35);
+      background: #063F3B;
+      border: 1px solid rgba(168, 244, 90, 0.35);
       border-radius: 20px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       box-shadow: 0 30px 100px rgba(0, 0, 0, 0.9);
-      color: #ffffff;
+      color: #FFFFFF;
     }
 
     .advisor-header {
       padding: 16px 22px;
-      background: #061d17;
+      background: #042E2B;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
@@ -612,8 +613,8 @@
       width: 38px;
       height: 38px;
       border-radius: 10px;
-      background: rgba(159, 232, 112, 0.15);
-      border: 1px solid rgba(159, 232, 112, 0.3);
+      background: rgba(168, 244, 90, 0.15);
+      border: 1px solid rgba(168, 244, 90, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -622,7 +623,7 @@
     .modal-title-text {
       font-size: 15px;
       font-weight: 800;
-      color: #ffffff;
+      color: #FFFFFF;
     }
 
     .status-online {
@@ -650,7 +651,7 @@
     .btn-icon {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #ffffff;
+      color: #FFFFFF;
       width: 32px;
       height: 32px;
       border-radius: 8px;
@@ -686,7 +687,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      background: #08231c;
+      background: #063F3B;
     }
 
     .msg-row {
@@ -706,9 +707,9 @@
     }
 
     .bubble-bot {
-      background: #0f362c;
+      background: #084D48;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #ffffff;
+      color: #FFFFFF;
       border-bottom-left-radius: 4px;
     }
 
@@ -729,7 +730,7 @@
     }
 
     .typing-bubble {
-      background: #0f362c;
+      background: #084D48;
       border: 1px solid rgba(255, 255, 255, 0.12);
       padding: 8px 14px;
       border-radius: 12px;
@@ -759,12 +760,12 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      background: #08231c;
+      background: #063F3B;
     }
 
     .quick-option-chip {
-      background: rgba(159, 232, 112, 0.12);
-      border: 1px solid rgba(159, 232, 112, 0.35);
+      background: rgba(168, 244, 90, 0.12);
+      border: 1px solid rgba(168, 244, 90, 0.35);
       color: var(--color-lime);
       padding: 7px 14px;
       border-radius: 9999px;
@@ -782,7 +783,7 @@
 
     .advisor-input-bar {
       padding: 14px 20px;
-      background: #061d17;
+      background: #042E2B;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       gap: 10px;
@@ -790,9 +791,9 @@
 
     .advisor-input-bar input {
       flex: 1;
-      background: #08231c;
+      background: #063F3B;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #ffffff;
+      color: #FFFFFF;
       padding: 11px 16px;
       border-radius: 10px;
       font-size: 14px;
@@ -801,11 +802,11 @@
 
     .advisor-input-bar input:focus {
       border-color: var(--color-lime);
-      box-shadow: 0 0 10px rgba(159, 232, 112, 0.2);
+      box-shadow: 0 0 10px rgba(168, 244, 90, 0.2);
     }
 
     .advisor-input-bar input::placeholder {
-      color: #64748b;
+      color: #8EABA9;
     }
 
     .btn-send {
@@ -845,7 +846,7 @@
     .result-title {
       font-size: 16px;
       font-weight: 800;
-      color: #ffffff;
+      color: #FFFFFF;
       margin-top: 2px;
     }
 
@@ -856,7 +857,7 @@
     }
 
     .rec-package-card {
-      background: #0b2f25;
+      background: #084D48;
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
       padding: 14px;
@@ -864,7 +865,7 @@
 
     .package-highlight {
       border-color: var(--color-lime);
-      background: rgba(159, 232, 112, 0.08);
+      background: rgba(168, 244, 90, 0.08);
     }
 
     .pkg-header {
@@ -886,7 +887,7 @@
     .pkg-name {
       font-size: 14px;
       font-weight: 800;
-      color: #ffffff;
+      color: #FFFFFF;
     }
 
     .pkg-stats {
@@ -904,7 +905,7 @@
 
     .pkg-stat-item strong {
       font-size: 13px;
-      color: #ffffff;
+      color: #FFFFFF;
       font-weight: 800;
     }
 
@@ -920,12 +921,12 @@
       margin-top: 8px;
     }
 
-    /* Modern Footer */
+    /* Modern Footer (Dark Forest Green) */
     .biz-footer {
       background: var(--color-forest-dark);
       color: rgba(255, 255, 255, 0.75);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 60px 36px 30px;
+      padding: 70px 36px 36px;
     }
 
     .footer-inner {
@@ -939,18 +940,18 @@
 
     .footer-brand h3 {
       font-family: var(--font-heading);
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 12px;
+      color: #FFFFFF;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
     .footer-brand p {
-      font-size: 13.5px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.65;
       color: var(--color-text-dim);
       max-width: 320px;
     }
@@ -958,7 +959,7 @@
     .footer-col h4 {
       font-size: 14px;
       font-weight: 700;
-      color: #ffffff;
+      color: #FFFFFF;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       margin-bottom: 16px;
@@ -974,7 +975,7 @@
     .footer-col a {
       color: var(--color-text-dim);
       text-decoration: none;
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 500;
       transition: color 0.2s;
     }
@@ -986,14 +987,14 @@
     .footer-bottom {
       max-width: 1320px;
       margin: 0 auto;
-      padding-top: 24px;
+      padding-top: 28px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 16px;
-      font-size: 12.5px;
+      font-size: 13px;
       color: var(--color-text-dim);
     }
 
@@ -1019,7 +1020,7 @@
 <div class="top-announcement-bar">
   <div class="announcement-inner">
     <div class="announcement-left">
-      <span><i data-lucide="check-circle-2"></i> We're a top-rated AI loan underwriting &amp; credit intelligence platform</span>
+      <span><i data-lucide="check-circle-2"></i> AI-Powered Loan Underwriting &amp; Decisioning Platform</span>
       <span>&bull;</span>
       <span><i data-lucide="mail"></i> advisor@loansure.ai</span>
     </div>
@@ -1033,13 +1034,13 @@
   </div>
 </div>
 
-<!-- Main Navigation (Forest Green) -->
+<!-- Main Navigation (Clean White / Modern Light Background) -->
 <nav class="nav">
   <a href="/" class="nav-brand">
     <div class="brand-logo-svg-wrap">
       <!-- Monogram Triple-Striped L with $ Dollar Sign -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="38" height="38">
-        <g fill="#9fe870">
+        <g fill="#15803D">
           <path d="M 50 115 L 68 90 L 68 248 L 220 248 L 195 266 L 50 266 Z" />
           <path d="M 78 145 L 96 120 L 96 220 L 190 220 L 165 238 L 78 238 Z" />
           <path d="M 106 175 L 124 150 L 124 192 L 160 192 L 135 210 L 106 210 Z" />
@@ -1088,13 +1089,13 @@
   {% block content %}{% endblock %}
 </main>
 
-<!-- Footer (Forest Green) -->
+<!-- Modern Footer (Dark Forest Green) -->
 <footer class="biz-footer">
   <div class="footer-inner">
     <div class="footer-brand">
       <h3>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="28" height="28">
-          <g fill="#9fe870">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="30" height="30">
+          <g fill="#A8F45A">
             <path d="M 50 115 L 68 90 L 68 248 L 220 248 L 195 266 L 50 266 Z" />
             <path d="M 78 145 L 96 120 L 96 220 L 190 220 L 165 238 L 78 238 Z" />
             <path d="M 106 175 L 124 150 L 124 192 L 160 192 L 135 210 L 106 210 Z" />
@@ -1103,9 +1104,9 @@
             <rect x="142" y="117" width="76" height="6.5" rx="2" />
           </g>
         </svg>
-        <span>Loan<span style="color:#9fe870;">Sure</span></span>
+        <span>Loan<span style="color:#A8F45A;">Sure</span></span>
       </h3>
-      <p>Next-generation AI-powered loan underwriting, credit assessment, and portfolio intelligence platform built for modern financial institutions and lenders.</p>
+      <p>Next-generation AI-powered loan underwriting, credit assessment, and portfolio intelligence platform built for modern lenders and financial institutions.</p>
     </div>
 
     <div class="footer-col">

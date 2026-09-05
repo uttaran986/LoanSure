@@ -5,25 +5,25 @@
 {% block extra_css %}
 <style>
   /* ─────────────────────────────────────────────────────────────
-     LANDING TEMPLATE STYLES (MATCHING REFERENCE DESIGN)
+     LANDING TEMPLATE STYLES (BIZTOP-STYLE STRUCTURE & THEME)
      ───────────────────────────────────────────────────────────── */
 
-  /* HERO SECTION */
+  /* 1. HERO SECTION */
   .biz-hero-section {
     background: var(--color-forest-dark);
-    padding: 70px 36px 80px;
+    padding: 80px 36px 100px;
     position: relative;
     overflow: hidden;
   }
 
-  .biz-hero-section::after {
+  .biz-hero-section::before {
     content: '';
     position: absolute;
-    top: -20%;
-    right: -10%;
+    top: -100px;
+    right: -100px;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(159, 232, 112, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(168, 244, 90, 0.12) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -32,7 +32,7 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1.15fr 1fr;
-    gap: 48px;
+    gap: 50px;
     align-items: center;
   }
 
@@ -48,37 +48,37 @@
     align-items: center;
     gap: 8px;
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 6px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 6px 16px;
     border-radius: 9999px;
     margin-bottom: 24px;
-    color: #ffffff;
+    color: #FFFFFF;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .rating-badge-pill .score-num {
-    font-weight: 800;
     color: var(--color-lime);
+    font-weight: 800;
   }
 
   .rating-badge-pill .stars {
-    color: #facc15;
+    color: #FACC15;
     letter-spacing: 2px;
     font-size: 12px;
   }
 
   .rating-badge-pill .reviews-count {
-    color: var(--color-text-dim);
+    color: rgba(255, 255, 255, 0.75);
   }
 
   .biz-hero-title {
     font-family: var(--font-heading);
-    font-size: 54px;
+    font-size: 58px;
     font-weight: 900;
-    line-height: 1.08;
+    line-height: 1.05;
     letter-spacing: -1.5px;
-    color: #ffffff;
+    color: #FFFFFF;
     margin-bottom: 22px;
   }
 
@@ -87,9 +87,9 @@
   }
 
   .biz-hero-desc {
-    font-size: 16px;
+    font-size: 16.5px;
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.82);
     max-width: 540px;
     margin-bottom: 36px;
   }
@@ -106,18 +106,25 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    text-decoration: none;
   }
 
   .call-icon-circle {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     background: var(--color-lime);
     color: var(--color-forest-deep);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 14px rgba(159, 232, 112, 0.3);
+    box-shadow: 0 4px 14px rgba(168, 244, 90, 0.35);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .call-icon-circle:hover {
+    transform: scale(1.08);
   }
 
   .call-icon-circle svg {
@@ -127,7 +134,7 @@
 
   .call-label {
     display: block;
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--color-text-dim);
     letter-spacing: 0.8px;
@@ -137,37 +144,46 @@
     display: block;
     font-size: 15px;
     font-weight: 800;
-    color: #ffffff;
+    color: #FFFFFF;
   }
 
-  /* Right Column: Interactive Real-Time Loan Sizing Card */
+  /* Right Column: High-Tech Underwriting Visual Collage */
   .biz-hero-visual {
     display: flex;
     justify-content: center;
   }
 
-  .visual-card-wrapper {
+  .hero-visual-card {
     width: 100%;
-    max-width: 520px;
-    background: #0c2e26;
-    border: 1px solid rgba(159, 232, 112, 0.25);
-    border-radius: 24px;
+    max-width: 540px;
+    background: #084D48;
+    border: 1px solid rgba(168, 244, 90, 0.25);
+    border-radius: 26px;
     padding: 28px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
     position: relative;
+    color: #FFFFFF;
   }
 
-  .visual-header-tag {
+  .visual-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .visual-engine-tag {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 12px;
     font-weight: 700;
     color: var(--color-lime);
-    margin-bottom: 20px;
   }
 
-  .pulsing-circle {
+  .pulsing-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -178,133 +194,115 @@
 
   @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(0.85); opacity: 0.6; }
+    50% { transform: scale(0.8); opacity: 0.5; }
   }
 
-  .hero-calc-heading {
-    font-family: var(--font-heading);
-    font-size: 20px;
-    font-weight: 800;
-    color: #ffffff;
-    margin-bottom: 20px;
+  .visual-score-banner {
+    background: #042E2B;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
-  }
-
-  .hero-calc-heading svg {
-    width: 20px;
-    height: 20px;
-    color: var(--color-lime);
-  }
-
-  .slider-field {
+    justify-content: space-between;
     margin-bottom: 18px;
   }
 
-  .slider-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.75);
-  }
-
-  .slider-info strong {
-    color: #ffffff;
-    font-size: 14px;
+  .score-gauge-left span {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
     font-weight: 700;
+    display: block;
   }
 
-  input[type="range"] {
-    width: 100%;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 3px;
-    outline: none;
-    accent-color: var(--color-lime);
-    cursor: pointer;
+  .score-gauge-left strong {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--color-lime);
+    line-height: 1.1;
   }
 
-  .hero-calc-results {
+  .decision-badge-approved {
+    background: rgba(168, 244, 90, 0.15);
+    border: 1px solid var(--color-lime);
+    color: var(--color-lime);
+    font-size: 12px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .visual-metrics-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin: 22px 0 20px;
+    margin-bottom: 20px;
   }
 
-  .calc-box-item {
-    background: #08231c;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  .visual-mini-stat {
+    background: #0B5C56;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
-    padding: 14px 16px;
+    padding: 14px;
   }
 
-  .highlight-box {
-    border-color: rgba(159, 232, 112, 0.35);
-    background: rgba(159, 232, 112, 0.06);
-  }
-
-  .box-lbl {
-    display: block;
+  .visual-mini-stat span {
     font-size: 11px;
     color: var(--color-text-dim);
+    display: block;
     text-transform: uppercase;
     font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
   }
 
-  .box-val {
-    font-size: 20px;
+  .visual-mini-stat strong {
+    font-size: 18px;
     font-weight: 800;
-    color: #ffffff;
+    color: #FFFFFF;
+    margin-top: 2px;
+    display: block;
   }
 
-  .text-lime {
-    color: var(--color-lime) !important;
-  }
-
-  .btn-calc-launch {
-    width: 100%;
-    background: var(--color-lime);
-    color: var(--color-forest-deep);
-    border: none;
-    padding: 13px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
+  .visual-floating-pills {
     display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .float-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    color: #FFFFFF;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.25s ease;
+    gap: 6px;
   }
 
-  .btn-calc-launch:hover {
-    background: var(--color-lime-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(159, 232, 112, 0.4);
-  }
-
-  .btn-calc-launch svg {
-    width: 18px;
-    height: 18px;
+  .float-pill svg {
+    width: 13px;
+    height: 13px;
+    color: var(--color-lime);
   }
 
   /* ─────────────────────────────────────────────────────────────
-     2. ESSENTIAL FEATURES SECTION (Cream Background)
+     2. FEATURE / APPROACH SECTION (Light Cream Background)
      ───────────────────────────────────────────────────────────── */
   .features-block-section {
     background: var(--color-cream-bg);
-    padding: 90px 36px;
+    padding: 95px 36px;
   }
 
   .features-header-row {
     max-width: 1320px;
-    margin: 0 auto 50px;
+    margin: 0 auto 55px;
     display: grid;
     grid-template-columns: 1.2fr 1fr;
     gap: 40px;
@@ -313,15 +311,15 @@
 
   .features-main-title {
     font-family: var(--font-heading);
-    font-size: 42px;
+    font-size: 44px;
     font-weight: 900;
-    line-height: 1.15;
+    line-height: 1.12;
     letter-spacing: -1px;
     color: var(--color-text-dark);
   }
 
   .feat-heading-right p {
-    font-size: 15.5px;
+    font-size: 16px;
     line-height: 1.65;
     color: var(--color-text-muted);
   }
@@ -336,11 +334,11 @@
 
   .biz-feature-card {
     border-radius: 24px;
-    padding: 36px 32px;
+    padding: 40px 34px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 320px;
+    min-height: 330px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
@@ -348,12 +346,12 @@
 
   .biz-feature-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.09);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.09);
   }
 
   /* Card 1: White Card */
   .card-style-white {
-    background: #ffffff;
+    background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
@@ -362,11 +360,11 @@
     font-size: 24px;
     font-weight: 800;
     color: var(--color-text-dark);
-    margin: 20px 0 12px;
+    margin: 22px 0 12px;
   }
 
   .card-style-white .card-description {
-    font-size: 14.5px;
+    font-size: 15px;
     line-height: 1.6;
     color: var(--color-text-muted);
   }
@@ -375,13 +373,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13.5px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 800;
     color: var(--color-forest-dark);
     margin-top: 28px;
   }
 
-  /* Card 2: Lime Green Card */
+  /* Card 2: Light Lime Green Card */
   .card-style-lime {
     background: var(--color-lime);
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -392,26 +390,26 @@
     font-size: 24px;
     font-weight: 800;
     color: var(--color-forest-deep);
-    margin: 20px 0 12px;
+    margin: 22px 0 12px;
   }
 
   .card-style-lime .card-description {
-    font-size: 14.5px;
+    font-size: 15px;
     line-height: 1.6;
-    color: rgba(5, 26, 21, 0.85);
+    color: rgba(4, 46, 43, 0.88);
   }
 
   .card-style-lime .card-footer-action {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13.5px;
+    font-size: 14px;
     font-weight: 800;
     color: var(--color-forest-deep);
     margin-top: 28px;
   }
 
-  /* Card 3: Deep Forest Dark Card */
+  /* Card 3: Dark Green Card */
   .card-style-dark {
     background: var(--color-forest-dark);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -421,62 +419,51 @@
     font-family: var(--font-heading);
     font-size: 24px;
     font-weight: 800;
-    color: #ffffff;
-    margin: 20px 0 12px;
+    color: #FFFFFF;
+    margin: 22px 0 12px;
   }
 
   .card-style-dark .card-description {
-    font-size: 14.5px;
+    font-size: 15px;
     line-height: 1.6;
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255, 255, 255, 0.78);
   }
 
   .card-style-dark .card-footer-action {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13.5px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 800;
     color: var(--color-lime);
     margin-top: 28px;
   }
 
   /* Icon Boxes */
   .card-icon-box {
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
     border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .icon-box-gray {
-    background: #f1f5f9;
-    color: var(--color-forest-dark);
-  }
-
-  .icon-box-dark {
-    background: var(--color-forest-deep);
-    color: var(--color-lime);
-  }
-
-  .icon-box-lime {
-    background: rgba(159, 232, 112, 0.15);
-    color: var(--color-lime);
-  }
+  .icon-box-gray { background: #F1F5F9; color: var(--color-forest-dark); }
+  .icon-box-dark { background: var(--color-forest-deep); color: var(--color-lime); }
+  .icon-box-lime { background: rgba(168, 244, 90, 0.18); color: var(--color-lime); }
 
   .card-icon-box svg {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
   }
 
   /* ─────────────────────────────────────────────────────────────
-     3. COMPREHENSIVE SOLUTION / VALUE SECTION (White Background)
+     3. TWO-COLUMN LOANSURE SOLUTION SECTION (White Background)
      ───────────────────────────────────────────────────────────── */
   .solution-stats-section {
-    background: #ffffff;
-    padding: 90px 36px;
+    background: #FFFFFF;
+    padding: 95px 36px;
   }
 
   .solution-grid {
@@ -508,14 +495,14 @@
   }
 
   .white-stat-box {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
   }
 
   .skills-stat-box {
     grid-column: 1 / -1;
-    background: #08231c;
-    color: #ffffff;
+    background: #063F3B;
+    color: #FFFFFF;
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
@@ -535,12 +522,12 @@
 
   .stat-caption {
     font-size: 13.5px;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.4;
   }
 
   .stars-gold {
-    color: #f59e0b;
+    color: #F59E0B;
     font-size: 16px;
     letter-spacing: 2px;
   }
@@ -560,11 +547,11 @@
   }
 
   .skill-tag {
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 800;
     background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    padding: 6px 12px;
+    color: #FFFFFF;
+    padding: 6px 14px;
     border-radius: 9999px;
     letter-spacing: 0.6px;
   }
@@ -572,7 +559,7 @@
   /* Right Content Column */
   .solution-main-title {
     font-family: var(--font-heading);
-    font-size: 40px;
+    font-size: 42px;
     font-weight: 900;
     line-height: 1.15;
     letter-spacing: -1px;
@@ -581,10 +568,34 @@
   }
 
   .solution-paragraph {
-    font-size: 15.5px;
+    font-size: 16px;
     line-height: 1.65;
     color: var(--color-text-muted);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
+  }
+
+  .solution-points-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 34px;
+  }
+
+  .solution-points-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--color-forest-dark);
+  }
+
+  .solution-points-list svg {
+    color: #15803D;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
   }
 
   .solution-author-row {
@@ -601,8 +612,8 @@
   }
 
   .exec-avatar {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     background: var(--color-forest-dark);
     color: var(--color-lime);
@@ -610,7 +621,7 @@
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .exec-name {
@@ -622,8 +633,315 @@
 
   .exec-role {
     display: block;
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--color-text-muted);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     4. TRUST / STATISTICS CARDS SECTION
+     ───────────────────────────────────────────────────────────── */
+  .trust-stats-section {
+    background: #FFFFFF;
+    padding: 0 36px 90px;
+  }
+
+  .trust-stats-grid {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .trust-stat-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.2s;
+  }
+
+  .trust-stat-box:hover {
+    transform: translateY(-4px);
+    border-color: #063F3B;
+  }
+
+  .trust-stat-box .box-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(168, 244, 90, 0.25);
+    color: #063F3B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .trust-stat-box .box-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .trust-stat-box h4 {
+    font-family: var(--font-heading);
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--color-forest-dark);
+  }
+
+  .trust-stat-box p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     5. SERVICES / FEATURES SECTION (Light Cream Background)
+     ───────────────────────────────────────────────────────────── */
+  .services-block-section {
+    background: var(--color-cream-bg);
+    padding: 95px 36px;
+  }
+
+  .services-header-center {
+    max-width: 760px;
+    margin: 0 auto 55px;
+    text-align: center;
+  }
+
+  .services-main-title {
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: var(--color-text-dark);
+    margin: 12px 0 14px;
+  }
+
+  .services-subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .services-grid-six {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .service-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  }
+
+  .service-card:hover {
+    transform: translateY(-5px);
+    border-color: #063F3B;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  }
+
+  .service-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .service-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #F1F5F9;
+    color: var(--color-forest-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .service-icon-wrap svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .service-arrow {
+    color: var(--color-text-muted);
+    transition: transform 0.2s;
+  }
+
+  .service-card:hover .service-arrow {
+    transform: translateX(4px);
+    color: #063F3B;
+  }
+
+  .service-card h3 {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--color-forest-dark);
+    margin-bottom: 10px;
+  }
+
+  .service-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     6. LOAN SIZING ESTIMATOR COMPONENT (Dedicated Premium Card)
+     ───────────────────────────────────────────────────────────── */
+  .estimator-block-section {
+    background: #FFFFFF;
+    padding: 95px 36px 110px;
+  }
+
+  .estimator-header-center {
+    max-width: 760px;
+    margin: 0 auto 45px;
+    text-align: center;
+  }
+
+  .estimator-main-title {
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: var(--color-text-dark);
+    margin: 12px 0 14px;
+  }
+
+  .estimator-subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .estimator-card-centered {
+    max-width: 920px;
+    margin: 0 auto;
+    background: #063F3B;
+    border: 1px solid rgba(168, 244, 90, 0.25);
+    border-radius: 28px;
+    padding: 44px;
+    box-shadow: 0 24px 70px rgba(6, 63, 59, 0.25);
+    color: #FFFFFF;
+  }
+
+  .estimator-inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-bottom: 36px;
+  }
+
+  .estimator-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .estimator-field-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .estimator-field-label strong {
+    font-size: 16px;
+    font-weight: 800;
+    color: #FFFFFF;
+  }
+
+  .estimator-field input[type="range"] {
+    width: 100%;
+    height: 7px;
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 4px;
+    outline: none;
+    accent-color: var(--color-lime);
+    cursor: pointer;
+    margin-top: 6px;
+  }
+
+  .estimator-results-box {
+    background: #042E2B;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .res-item-wrap span {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-text-dim);
+    letter-spacing: 0.5px;
+    display: block;
+  }
+
+  .res-item-wrap strong {
+    font-family: var(--font-heading);
+    font-size: 36px;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .res-item-wrap strong.text-lime {
+    color: var(--color-lime);
+  }
+
+  .btn-estimator-action {
+    width: 100%;
+    background: var(--color-lime);
+    color: var(--color-forest-deep);
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(168, 244, 90, 0.35);
+  }
+
+  .btn-estimator-action:hover {
+    background: var(--color-lime-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(168, 244, 90, 0.5);
+  }
+
+  .btn-estimator-action svg {
+    width: 20px;
+    height: 20px;
   }
 
   /* Responsive Rules */
@@ -632,13 +950,19 @@
     .features-header-row { grid-template-columns: 1fr; }
     .three-cards-grid { grid-template-columns: 1fr; }
     .solution-grid { grid-template-columns: 1fr; }
-    .biz-hero-title { font-size: 40px; }
+    .trust-stats-grid { grid-template-columns: 1fr 1fr; }
+    .services-grid-six { grid-template-columns: 1fr 1fr; }
+    .estimator-inputs-grid { grid-template-columns: 1fr; }
+    .biz-hero-title { font-size: 42px; }
   }
 
   @media (max-width: 640px) {
-    .biz-hero-section, .features-block-section, .solution-stats-section { padding: 50px 20px; }
-    .biz-hero-title { font-size: 32px; }
+    .biz-hero-section, .features-block-section, .solution-stats-section, .services-block-section, .estimator-block-section { padding: 50px 20px; }
+    .biz-hero-title { font-size: 34px; }
     .stats-cards-matrix { grid-template-columns: 1fr; }
+    .trust-stats-grid { grid-template-columns: 1fr; }
+    .services-grid-six { grid-template-columns: 1fr; }
+    .estimator-results-box { grid-template-columns: 1fr; text-align: center; }
   }
 </style>
 {% endblock %}
@@ -653,19 +977,19 @@
       <!-- Hero Left Column -->
       <div class="biz-hero-content">
         <div class="rating-badge-pill">
-          <span class="score-num">4.9</span>
+          <span class="score-num">★ 4.9</span>
           <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <span class="reviews-count">5K+ Reviews</span>
+          <span class="reviews-count">AI-POWERED LOAN UNDERWRITING</span>
         </div>
 
         <h1 class="biz-hero-title">
           NEXT &mdash; GEN<br>
-          AI-POWERED LOAN<br>
-          <span class="highlight-lime">UNDERWRITING</span>
+          AI-POWERED<br>
+          <span class="highlight-lime">LENDING</span>
         </h1>
 
         <p class="biz-hero-desc">
-          AI-powered loan underwriting and financial intelligence designed to help lenders make faster, smarter and more responsible credit decisions.
+          Make faster, smarter and more responsible lending decisions with AI-powered underwriting and financial intelligence.
         </p>
 
         <div class="biz-hero-actions">
@@ -675,7 +999,7 @@
           </a>
 
           <div class="call-advisor-badge">
-            <div class="call-icon-circle" onclick="openAdvisorModal()" style="cursor:pointer;" title="Click to chat with AI">
+            <div class="call-icon-circle" onclick="openAdvisorModal()" title="Click to chat with AI">
               <i data-lucide="phone-call"></i>
             </div>
             <div>
@@ -686,55 +1010,50 @@
         </div>
       </div>
 
-      <!-- Hero Right Column: Interactive Advisor & Calculator Card -->
+      <!-- Hero Right Column: High-Tech Underwriting Visual Collage -->
       <div class="biz-hero-visual">
-        <div class="visual-card-wrapper">
-          <div class="visual-header-tag">
-            <div class="pulsing-circle"></div>
-            <span>FinBERT Underwriting Engine &bull; Live</span>
+        <div class="hero-visual-card">
+          <div class="visual-top-bar">
+            <div class="visual-engine-tag">
+              <div class="pulsing-dot"></div>
+              <span>FinBERT Underwriting Engine &bull; Live</span>
+            </div>
+            <span class="badge-mini" style="background:rgba(255,255,255,0.1); color:#FFFFFF;">v2.4.0 Multi-Task</span>
           </div>
 
-          <div class="hero-calc-container">
-            <h3 class="hero-calc-heading"><i data-lucide="calculator"></i> Real-Time Loan Sizing Estimator</h3>
-            
-            <div class="slider-field">
-              <div class="slider-info">
-                <span>Requested Amount</span>
-                <strong id="dispAmount">$45,000</strong>
-              </div>
-              <input type="range" id="sliderAmount" min="5000" max="250000" step="1000" value="45000" oninput="updateQuickCalc()">
+          <div class="visual-score-banner">
+            <div class="score-gauge-left">
+              <span>Risk Scoring &bull; Prime</span>
+              <strong>782 <small style="font-size:16px; color:#8EABA9;">/ 850</small></strong>
             </div>
-
-            <div class="slider-field">
-              <div class="slider-info">
-                <span>Interest Rate (APR)</span>
-                <strong id="dispRate">9.50%</strong>
-              </div>
-              <input type="range" id="sliderRate" min="5.0" max="24.0" step="0.25" value="9.5" oninput="updateQuickCalc()">
+            <div class="decision-badge-approved">
+              <i data-lucide="check-circle-2"></i> Sub-Second Decision
             </div>
+          </div>
 
-            <div class="slider-field">
-              <div class="slider-info">
-                <span>Repayment Tenure</span>
-                <strong id="dispTenure">48 Mos (4.0 Yrs)</strong>
-              </div>
-              <input type="range" id="sliderTenure" min="12" max="120" step="6" value="48" oninput="updateQuickCalc()">
+          <div class="visual-metrics-grid">
+            <div class="visual-mini-stat">
+              <span>FOIR Affordability</span>
+              <strong>38.2% <small style="font-size:12px; color:#A8F45A;">(Safe)</small></strong>
             </div>
-
-            <div class="hero-calc-results">
-              <div class="calc-box-item highlight-box">
-                <span class="box-lbl">Estimated Monthly EMI</span>
-                <h2 class="box-val text-lime" id="dispEmi">$1,130.84</h2>
-              </div>
-              <div class="calc-box-item">
-                <span class="box-lbl">Total Interest Payable</span>
-                <h3 class="box-val" id="dispInterest">$9,280.32</h3>
-              </div>
+            <div class="visual-mini-stat">
+              <span>Monthly Capacity</span>
+              <strong>$4,250 <small style="font-size:12px; color:#8EABA9;">/ mo</small></strong>
             </div>
+            <div class="visual-mini-stat">
+              <span>Interest Reduction</span>
+              <strong>-$1,480 <small style="font-size:12px; color:#A8F45A;">Optimized</small></strong>
+            </div>
+            <div class="visual-mini-stat">
+              <span>Fair Lending Parity</span>
+              <strong>100% <small style="font-size:12px; color:#A8F45A;">Audit Passed</small></strong>
+            </div>
+          </div>
 
-            <button class="btn-calc-launch" onclick="openAdvisorModal()">
-              <i data-lucide="bot"></i> Pre-Qualify with AI Loan Advisor
-            </button>
+          <div class="visual-floating-pills">
+            <span class="float-pill"><i data-lucide="zap"></i> Sub-Second Decisioning</span>
+            <span class="float-pill"><i data-lucide="shield-check"></i> Demographic Parity</span>
+            <span class="float-pill"><i data-lucide="lock"></i> FCRA Compliant</span>
           </div>
         </div>
       </div>
@@ -742,15 +1061,14 @@
     </div>
   </section>
 
-  <!-- 2. ESSENTIAL FEATURES 3-CARD SECTION (Light Cream Background matching reference) -->
+  <!-- 2. FEATURE / APPROACH SECTION (Light Cream Background matching reference) -->
   <section class="features-block-section">
     <div class="features-header-row">
       <div class="feat-heading-left">
-        <span class="section-tag-asterisk tag-dark">&#10038; Our Approach</span>
+        <span class="section-tag-asterisk">&#10038; Our Approach</span>
         <h2 class="features-main-title">
-          Essential features for<br>
-          modern lending<br>
-          success
+          Intelligent tools for<br>
+          modern lending
         </h2>
       </div>
       <div class="feat-heading-right">
@@ -758,7 +1076,7 @@
       </div>
     </div>
 
-    <!-- 3 Distinctly Styled Cards from Reference Template -->
+    <!-- 3 Large Rounded Cards from Reference Template -->
     <div class="three-cards-grid">
       
       <!-- Card 1: Crisp Clean White Card -->
@@ -768,7 +1086,7 @@
         </div>
         <div>
           <h3 class="card-title">AI Loan Underwriting</h3>
-          <p class="card-description">Evaluate borrower risk using intelligent underwriting workflows and multi-task machine learning scoring.</p>
+          <p class="card-description">Analyze borrower information and assess credit risk with intelligent underwriting.</p>
         </div>
         <div class="card-footer-action">
           <span>Explore More</span>
@@ -776,14 +1094,14 @@
         </div>
       </div>
 
-      <!-- Card 2: Vibrant Lime Green Card -->
-      <div class="biz-feature-card card-style-lime" onclick="window.location.href='/console'">
+      <!-- Card 2: Light Lime Green Card -->
+      <div class="biz-feature-card card-style-lime" onclick="document.getElementById('loan-sizing-estimator').scrollIntoView({behavior:'smooth'});">
         <div class="card-icon-box icon-box-dark">
           <i data-lucide="trending-up"></i>
         </div>
         <div>
-          <h3 class="card-title">Real-Time Loan Analysis</h3>
-          <p class="card-description">Estimate loan sizing, EMI, interest and repayment scenarios instantly across prime and subprime credit bands.</p>
+          <h3 class="card-title">Real-Time Loan Intelligence</h3>
+          <p class="card-description">Estimate loan sizing, EMI, repayment and affordability instantly.</p>
         </div>
         <div class="card-footer-action">
           <span>Explore More</span>
@@ -791,14 +1109,14 @@
         </div>
       </div>
 
-      <!-- Card 3: Deep Forest Green Card -->
+      <!-- Card 3: Deep Dark Green Card -->
       <div class="biz-feature-card card-style-dark" onclick="window.location.href='/bias-audit'">
         <div class="card-icon-box icon-box-lime">
           <i data-lucide="scale"></i>
         </div>
         <div>
-          <h3 class="card-title">Fair Lending Intelligence</h3>
-          <p class="card-description">Monitor lending decisions for consistency and responsible credit practices with automated demographic parity auditing.</p>
+          <h3 class="card-title">Fair Lending</h3>
+          <p class="card-description">Monitor lending decisions and identify potential fairness issues.</p>
         </div>
         <div class="card-footer-action">
           <span>Explore More</span>
@@ -809,28 +1127,28 @@
     </div>
   </section>
 
-  <!-- 3. COMPREHENSIVE SOLUTION GRID & STATS SECTION (White Background) -->
+  <!-- 3. TWO-COLUMN LOANSURE SOLUTION SECTION (White Background) -->
   <section class="solution-stats-section">
     <div class="solution-grid">
       
-      <!-- Left Visual & Badges Grid -->
+      <!-- Left Visual & Badges Grid Matrix -->
       <div class="solution-visuals-col">
         <div class="stats-cards-matrix">
           
           <div class="stat-highlight-card lime-stat-box">
             <div class="stat-check-icon"><i data-lucide="check-circle-2"></i></div>
-            <h2 class="stat-big-num">10K+</h2>
-            <p class="stat-caption">Total Completed Loan Approvals</p>
+            <h2 class="stat-big-num">AI-Powered</h2>
+            <p class="stat-caption">Underwriting Intelligence</p>
           </div>
 
           <div class="stat-highlight-card white-stat-box">
             <div class="stars-gold">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
             <h2 class="stat-big-num">4.9<span class="stat-denom">/5.0</span></h2>
-            <p class="stat-caption">Avg. Borrower Satisfaction Rating</p>
+            <p class="stat-caption">Decision Consistency Rating</p>
           </div>
 
           <div class="stat-highlight-card skills-stat-box">
-            <h4 class="skills-title">Premium Capabilities</h4>
+            <h4 class="skills-title">Premium Platform Capabilities</h4>
             <div class="skills-tags-wrap">
               <span class="skill-tag">ADVISOR</span>
               <span class="skill-tag">UNDERWRITING</span>
@@ -846,14 +1164,20 @@
 
       <!-- Right Content Details -->
       <div class="solution-content-col">
-        <span class="section-tag-asterisk tag-dark">&#10038; Who We Are?</span>
+        <span class="section-tag-asterisk">&#10038; Who We Are?</span>
         <h2 class="solution-main-title">
           Smarter decisions for<br>
           modern lending
         </h2>
         <p class="solution-paragraph">
-          Discover innovative underwriting strategies and AI decisioning that help institutions improve loan performance, maximize borrower satisfaction, and navigate competitive credit markets with confidence.
+          LoanSure combines AI-powered underwriting, financial analysis and portfolio intelligence into one modern lending platform.
         </p>
+
+        <ul class="solution-points-list">
+          <li><i data-lucide="check-circle-2"></i> Automated multi-task credit risk classification and explainable scoring</li>
+          <li><i data-lucide="check-circle-2"></i> Real-time FOIR affordability assessment &amp; amortization headroom sizing</li>
+          <li><i data-lucide="check-circle-2"></i> FCRA-compliant fair lending demographic parity &amp; disparate impact auditing</li>
+        </ul>
 
         <div class="solution-author-row">
           <a href="/apply" class="btn-biz-primary">
@@ -874,6 +1198,184 @@
     </div>
   </section>
 
+  <!-- 4. TRUST / STATISTICS CARDS SECTION -->
+  <section class="trust-stats-section">
+    <div class="trust-stats-grid">
+      
+      <div class="trust-stat-box">
+        <div class="box-icon"><i data-lucide="cpu"></i></div>
+        <h4>AI-Powered Underwriting</h4>
+        <p>Multi-task FinBERT risk assessment engine sizing prime and subprime credit headroom.</p>
+      </div>
+
+      <div class="trust-stat-box">
+        <div class="box-icon"><i data-lucide="calculator"></i></div>
+        <h4>Real-Time Loan Analysis</h4>
+        <p>Instant reducing-balance EMI estimation and dynamic 12-to-120 month amortization schedules.</p>
+      </div>
+
+      <div class="trust-stat-box">
+        <div class="box-icon"><i data-lucide="line-chart"></i></div>
+        <h4>Portfolio Intelligence</h4>
+        <p>Active loan tracking, recovery monitoring, and proactive default defense analytics.</p>
+      </div>
+
+      <div class="trust-stat-box">
+        <div class="box-icon"><i data-lucide="scale"></i></div>
+        <h4>Fair Lending Monitoring</h4>
+        <p>Automated demographic parity and disparate impact checks ensuring ethical compliance.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. SERVICES / FEATURES SECTION (Light Cream Background) -->
+  <section class="services-block-section">
+    <div class="services-header-center">
+      <span class="section-tag-asterisk">&#10038; Our Services</span>
+      <h2 class="services-main-title">Everything you need for smarter lending</h2>
+      <p class="services-subtitle">Comprehensive end-to-end tooling designed for underwriters, portfolio managers, and modern credit institutions.</p>
+    </div>
+
+    <div class="services-grid-six">
+      
+      <!-- Service 1 -->
+      <a href="/apply" class="service-card">
+        <div class="service-card-top">
+          <div class="service-icon-wrap"><i data-lucide="file-plus-2"></i></div>
+          <i data-lucide="arrow-up-right" class="service-arrow"></i>
+        </div>
+        <div>
+          <h3>Loan Underwriting</h3>
+          <p>Assess borrower eligibility, calculate risk scores, and generate automated underwriting memos instantly.</p>
+        </div>
+      </a>
+
+      <!-- Service 2 -->
+      <a href="/console" class="service-card">
+        <div class="service-card-top">
+          <div class="service-icon-wrap"><i data-lucide="layout-grid"></i></div>
+          <i data-lucide="arrow-up-right" class="service-arrow"></i>
+        </div>
+        <div>
+          <h3>Loan Console</h3>
+          <p>Manage active loan pipelines, approve disbursements, track KYC status, and monitor repayment ledgers.</p>
+        </div>
+      </a>
+
+      <!-- Service 3 -->
+      <a href="/dashboard" class="service-card">
+        <div class="service-card-top">
+          <div class="service-icon-wrap"><i data-lucide="line-chart"></i></div>
+          <i data-lucide="arrow-up-right" class="service-arrow"></i>
+        </div>
+        <div>
+          <h3>Portfolio Analytics</h3>
+          <p>Visualize portfolio health KPIs, delinquency distributions, recovery trends, and yield projections.</p>
+        </div>
+      </a>
+
+      <!-- Service 4 -->
+      <a href="/batch" class="service-card">
+        <div class="service-card-top">
+          <div class="service-icon-wrap"><i data-lucide="layers"></i></div>
+          <i data-lucide="arrow-up-right" class="service-arrow"></i>
+        </div>
+        <div>
+          <h3>Batch CSV Analysis</h3>
+          <p>Bulk-upload borrower spreadsheets for high-throughput automated batch underwriting and scoring.</p>
+        </div>
+      </a>
+
+      <!-- Service 5 -->
+      <a href="/bias-audit" class="service-card">
+        <div class="service-card-top">
+          <div class="service-icon-wrap"><i data-lucide="scale"></i></div>
+          <i data-lucide="arrow-up-right" class="service-arrow"></i>
+        </div>
+        <div>
+          <h3>Fair Lending Audit</h3>
+          <p>Demographic parity and bias audit dashboard ensuring equal credit opportunity compliance.</p>
+        </div>
+      </a>
+
+      <!-- Service 6 -->
+      <div class="service-card" onclick="openAdvisorModal()" style="cursor:pointer;">
+        <div class="service-card-top">
+          <div class="service-icon-wrap"><i data-lucide="bot"></i></div>
+          <i data-lucide="arrow-up-right" class="service-arrow"></i>
+        </div>
+        <div>
+          <h3>AI Loan Advisor</h3>
+          <p>Guided conversational credit counselor with 10-step dynamic intake and instant pre-qualification packages.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 6. REDESIGNED PREMIUM LOAN SIZING ESTIMATOR COMPONENT -->
+  <section class="estimator-block-section" id="loan-sizing-estimator">
+    <div class="estimator-header-center">
+      <span class="section-tag-asterisk">&#10038; Interactive Sizing</span>
+      <h2 class="estimator-main-title">Real-Time Loan Sizing Estimator</h2>
+      <p class="estimator-subtitle">Adjust requested amount, interest rate, and tenure to calculate instant EMI, total interest, and repayment headroom.</p>
+    </div>
+
+    <div class="estimator-card-centered">
+      
+      <div class="estimator-inputs-grid">
+        
+        <!-- Slider 1: Amount -->
+        <div class="estimator-field">
+          <div class="estimator-field-label">
+            <span>Requested Amount</span>
+            <strong id="dispAmount">$45,000</strong>
+          </div>
+          <input type="range" id="sliderAmount" min="5000" max="250000" step="1000" value="45000" oninput="updateQuickCalc()">
+        </div>
+
+        <!-- Slider 2: Rate -->
+        <div class="estimator-field">
+          <div class="estimator-field-label">
+            <span>Interest Rate (APR)</span>
+            <strong id="dispRate">9.50%</strong>
+          </div>
+          <input type="range" id="sliderRate" min="5.0" max="24.0" step="0.25" value="9.5" oninput="updateQuickCalc()">
+        </div>
+
+        <!-- Slider 3: Tenure -->
+        <div class="estimator-field">
+          <div class="estimator-field-label">
+            <span>Repayment Tenure</span>
+            <strong id="dispTenure">48 Mos (4.0 Yrs)</strong>
+          </div>
+          <input type="range" id="sliderTenure" min="12" max="120" step="6" value="48" oninput="updateQuickCalc()">
+        </div>
+
+      </div>
+
+      <!-- Results Display -->
+      <div class="estimator-results-box">
+        <div class="res-item-wrap">
+          <span>Estimated Monthly EMI</span>
+          <strong class="text-lime" id="dispEmi">$1,130.84</strong>
+        </div>
+        <div class="res-item-wrap">
+          <span>Total Interest Payable</span>
+          <strong id="dispInterest">$9,280.32</strong>
+        </div>
+      </div>
+
+      <!-- Launch CTA -->
+      <button class="btn-estimator-action" onclick="openAdvisorModal()">
+        <i data-lucide="bot"></i>
+        <span>Pre-Qualify with AI Loan Advisor</span>
+      </button>
+
+    </div>
+  </section>
+
 </div>
 
 <!-- ─────────────────────────────────────────────────────────────
@@ -887,7 +1389,7 @@
       <div class="advisor-brand">
         <div class="advisor-avatar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="26" height="26">
-            <g fill="#9fe870">
+            <g fill="#A8F45A">
               <path d="M 50 115 L 68 90 L 68 248 L 220 248 L 195 266 L 50 266 Z" />
               <path d="M 78 145 L 96 120 L 96 220 L 190 220 L 165 238 L 78 238 Z" />
               <path d="M 106 175 L 124 150 L 124 192 L 160 192 L 135 210 L 106 210 Z" />

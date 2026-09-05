@@ -1,4 +1,4 @@
-﻿# app.py — LoanSure AI: Enterprise Loan Management & Conversational NLP Underwriting Platform
+# app.py — LoanSure AI: Enterprise Loan Management & Conversational NLP Underwriting Platform
 
 import os
 import io
@@ -209,6 +209,8 @@ def seed_demo_data():
 # ── Web Application Routes ───────────────────────────────────────────────────
 
 @app.route('/')
+@app.route('/api/index')
+@app.route('/api/index/')
 def index():
     """Landing Page with Hero, Features, Quick Calculator & 'Chat with AI Loan Advisor' CTA."""
     seed_demo_data()

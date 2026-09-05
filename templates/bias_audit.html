@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Fair Lending & Bias Audit — LoanBERT 2.0{% endblock %}
+
+{% block extra_css %}
+<style>
+.compliance-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.05));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.audit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.audit-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 12px;
+}
+.audit-table th, .audit-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.audit-table th {
+  background: rgba(2, 6, 23, 0.5);
+  color: #94a3b8;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.rule-pass-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.rule-fail-badge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="badge-pill"><i data-lucide="scale"></i> Regulatory Compliance & Fair Lending Suite</div>
+  <h1 style="font-size: 28px; font-weight: 800; margin: 8px 0; color: #f8fafc;">Fair Lending & Demographic Parity Audit</h1>
+  <p style="color: #94a3b8; font-size: 14px; margin: 0;">Automated statistical bias testing adhering to CFPB Equal Credit Opportunity Act (ECOA) standards & the 80% Disparate Impact Adverse Impact Rule.</p>
+</div>
+
+{% if has_data %}
+<div class="compliance-banner">
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(16, 185, 129, 0.2); color: #10b981; display: flex; align-items: center; justify-content: center;">
+      <i data-lucide="shield-check" style="width: 26px; height: 26px;"></i>
+    </div>
+    <div>
+      <h3 style="font-size: 16px; font-weight: 800; color: #f8fafc; margin: 0;">{{ overall.fair_lending_verdict }}</h3>
+      <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0;">Evaluated across {{ overall.total_audited|int }} historical loan applications. Overall benchmark approval rate: {{ overall.overall_approval_rate }}%.</p>
+    </div>
+  </div>
+  <div style="text-align: right;">
+    <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Demographic Parity Score</div>
+    <div style="font-size: 22px; font-weight: 800; color: #10b981;">{{ overall.demographic_parity_score }}</div>
+  </div>
+</div>
+
+<div class="audit-grid">
+  <!-- Age Audit -->
+  <div class="audit-card">
+    <h3 style="font-size: 15px; font-weight: 700; color: #f8fafc; margin: 0 0 4px;">1. Age Cohort Disparate Impact (DIR)</h3>
+    <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px;">Auditing approval rates across age brackets to ensure fair lending non-discrimination.</p>
+    
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>Age Cohort</th>
+          <th>Sample Count</th>
+          <th>Approval Rate</th>
+          <th>Disparate Impact (DIR)</th>
+          <th>80% Rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in age_audit %}
+        <tr>
+          <td style="font-weight: 600; color: #f8fafc;">{{ row.age_group }}</td>
+          <td>{{ row.count }}</td>
+          <td>{{ row.approval_rate }}%</td>
+          <td style="font-weight: 700; color: #38bdf8;">{{ row.disparate_impact_ratio }}</td>
+          <td>
+            {% if row.compliant_80_rule %}
+            <span class="rule-pass-badge">Passed (&ge;0.80)</span>
+            {% else %}
+            <span class="rule-fail-badge">Flagged</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Employment Audit -->
+  <div class="audit-card">
+    <h3 style="font-size: 15px; font-weight: 700; color: #f8fafc; margin: 0 0 4px;">2. Employment Category Parity</h3>
+    <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px;">Approval distribution across wage-earners, entrepreneurs, and retirees.</p>
+
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>Employment Class</th>
+          <th>Sample Count</th>
+          <th>Approval Rate</th>
+          <th>DIR Ratio</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in emp_audit %}
+        <tr>
+          <td style="font-weight: 600; color: #f8fafc;">{{ row.employment_status }}</td>
+          <td>{{ row.count }}</td>
+          <td>{{ row.approval_rate }}%</td>
+          <td style="font-weight: 700; color: #38bdf8;">{{ row.disparate_impact_ratio }}</td>
+          <td>
+            {% if row.compliant_80_rule %}
+            <span class="rule-pass-badge">In Tolerance</span>
+            {% else %}
+            <span class="rule-fail-badge">Review Required</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Loan Purpose Distribution Card -->
+<div class="audit-card">
+  <h3 style="font-size: 15px; font-weight: 700; color: #f8fafc; margin: 0 0 4px;">3. Loan Purpose Approval Equity</h3>
+  <table class="audit-table">
+    <thead>
+      <tr>
+        <th>Loan Purpose Category</th>
+        <th>Total Applicants</th>
+        <th>Approval Rate (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in purp_audit %}
+      <tr>
+        <td style="font-weight: 600; color: #f8fafc;">{{ row.loan_purpose }}</td>
+        <td>{{ row.count }}</td>
+        <td>{{ row.approval_rate }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 40px; text-align: center; color: #94a3b8;">
+  <p>No historical dataset found. Run <code>python generate_data.py</code> to initialize audit records.</p>
+</div>
+{% endif %}
+{% endblock %}

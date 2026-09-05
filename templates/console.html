@@ -1,0 +1,512 @@
+﻿{% extends "base.html" %}
+
+{% block title %}LoanSure — Enterprise Loan Management Software{% endblock %}
+
+{% block content %}
+<div class="console-wrapper">
+
+  <!-- Header Section -->
+  <div class="console-header">
+    <div class="header-left">
+      <div class="badge-pill">
+        <i data-lucide="shield-check"></i> Enterprise Banking System
+      </div>
+      <h1 class="console-title">Loan Management Software</h1>
+      <p class="console-subtitle">Loans &bull; EMI Schedules &bull; Payment Approvals &bull; Borrower Risk Intelligence &bull; Reports</p>
+    </div>
+    <div class="header-actions">
+      <a href="/apply" class="btn-primary">
+        <i data-lucide="plus-circle"></i> New Loan Application
+      </a>
+      <a href="/batch" class="btn-secondary">
+        <i data-lucide="upload-cloud"></i> Batch Underwrite
+      </a>
+      <a href="/bias-audit" class="btn-secondary">
+        <i data-lucide="scale"></i> Fair Lending Audit
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI Metrics Row -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-cyan">
+        <i data-lucide="banknote"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Disbursed</span>
+        <h2 class="kpi-value">${{ "{:,.0f}".format(stats.total_disbursed) }}</h2>
+        <span class="kpi-trend positive"><i data-lucide="trending-up"></i> +14.2% MoM volume</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-emerald">
+        <i data-lucide="wallet"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Repaid</span>
+        <h2 class="kpi-value">${{ "{:,.0f}".format(stats.total_repaid) }}</h2>
+        <span class="kpi-trend positive"><i data-lucide="check-circle-2"></i> 98.6% On-time recovery</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-indigo">
+        <i data-lucide="users"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Active Portfolios</span>
+        <h2 class="kpi-value">{{ stats.active_loans }} Loans</h2>
+        <span class="kpi-trend neutral"><i data-lucide="clock"></i> {{ stats.under_review }} under review</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-amber">
+        <i data-lucide="alert-triangle"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">NPA / Default Rate</span>
+        <h2 class="kpi-value">{{ stats.npa_pct }}%</h2>
+        <span class="kpi-trend positive"><i data-lucide="shield"></i> Safe (&lt; 4.0% baseline)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main 2-Column Console Layout -->
+  <div class="console-main-grid">
+
+    <!-- Left Main Column (Table, Payment Tracking, KYC) -->
+    <div class="console-col-left">
+
+      <!-- Loan Application Management Table -->
+      <div class="console-panel">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title"><i data-lucide="folder-kanban"></i> Loan Applications & Management</h3>
+            <p class="panel-desc">Real-time borrower underwriting, approval queue & credit risk assessment</p>
+          </div>
+          <div class="panel-filters">
+            <input type="text" id="tableSearch" placeholder="Search applicant..." class="search-input" onkeyup="filterLoanTable()">
+            <select id="statusFilter" class="select-filter" onchange="filterLoanTable()">
+              <option value="all">All Statuses</option>
+              <option value="Approved">Approved</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Denied">Denied / Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="loans-table" id="loansTable">
+            <thead>
+              <tr>
+                <th>Applicant / ID</th>
+                <th>Amount & Term</th>
+                <th>Credit Score</th>
+                <th>Risk Tier</th>
+                <th>Monthly EMI</th>
+                <th>KYC</th>
+                <th>Decision</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for loan in loans %}
+              <tr class="loan-row" data-status="{{ loan.decision_status }}" data-name="{{ loan.applicant_name | lower }}">
+                <td>
+                  <div class="applicant-cell">
+                    <div class="applicant-avatar">{{ loan.applicant_name[:2].upper() }}</div>
+                    <div>
+                      <strong class="applicant-name">{{ loan.applicant_name }}</strong>
+                      <span class="applicant-sub">#LN-{{ "%04d" % loan.id }} &bull; {{ loan.loan_purpose }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="amt-cell">
+                    <strong>${{ "{:,.0f}".format(loan.loan_amount) }}</strong>
+                    <span>{{ loan.loan_term_months }} mos @ {{ loan.recommended_apr }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="score-badge {% if loan.credit_score >= 720 %}score-high{% elif loan.credit_score >= 640 %}score-mid{% else %}score-low{% endif %}">
+                    {{ loan.credit_score }}
+                  </span>
+                </td>
+                <td>
+                  <span class="tier-pill tier-{{ loan.risk_tier[:6] | lower | replace(' ', '') }}">
+                    {{ loan.risk_tier.split(' ')[1] if ' ' in loan.risk_tier else loan.risk_tier }}
+                  </span>
+                </td>
+                <td>
+                  <strong class="emi-text">${{ "{:,.2f}".format(loan.monthly_emi) }}</strong>
+                </td>
+                <td>
+                  <span class="kyc-tag {% if loan.kyc_status == 'Verified' %}kyc-ok{% else %}kyc-pending{% endif %}">
+                    <i data-lucide="{% if loan.kyc_status == 'Verified' %}check{% else %}clock{% endif %}"></i> {{ loan.kyc_status }}
+                  </span>
+                </td>
+                <td>
+                  <span class="status-badge status-{{ loan.decision_status | lower | replace(' ', '-') }}">
+                    {{ loan.decision_status }}
+                  </span>
+                </td>
+                <td>
+                  <a href="/memo/{{ loan.id }}" class="action-btn" title="View Underwriting Credit Memo">
+                    <i data-lucide="file-text"></i> Memo
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Payment Tracking & Approvals -->
+      <div class="console-panel">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title"><i data-lucide="badge-dollar-sign"></i> Payment Tracking & Transaction Approvals</h3>
+            <p class="panel-desc">Real-time incoming EMI collections, settlement ledger and one-click reconciliation</p>
+          </div>
+          <button class="btn-sm-primary" onclick="alert('All verified payments reconciled successfully!')">
+            <i data-lucide="check-check"></i> Reconcile All
+          </button>
+        </div>
+
+        <div class="payments-list">
+          <div class="payment-item">
+            <div class="payment-info">
+              <div class="payment-icon icon-emerald"><i data-lucide="arrow-down-left"></i></div>
+              <div>
+                <strong>Eleanor Vance &bull; #LN-0001</strong>
+                <span class="text-muted">EMI Installment #4 &bull; ACH Direct Debit &bull; Today, 10:45 AM</span>
+              </div>
+            </div>
+            <div class="payment-meta">
+              <span class="payment-amt">+$845.00</span>
+              <span class="status-badge status-approved">Settled</span>
+            </div>
+          </div>
+
+          <div class="payment-item">
+            <div class="payment-info">
+              <div class="payment-icon icon-cyan"><i data-lucide="arrow-down-left"></i></div>
+              <div>
+                <strong>Marcus Thorne &bull; #LN-0002</strong>
+                <span class="text-muted">EMI Installment #2 &bull; FedNow Wire Transfer &bull; Today, 09:12 AM</span>
+              </div>
+            </div>
+            <div class="payment-meta">
+              <span class="payment-amt">+$780.00</span>
+              <span class="status-badge status-approved">Settled</span>
+            </div>
+          </div>
+
+          <div class="payment-item">
+            <div class="payment-info">
+              <div class="payment-icon icon-amber"><i data-lucide="clock"></i></div>
+              <div>
+                <strong>Sophia Chen &bull; #LN-0003</strong>
+                <span class="text-muted">EMI Installment #1 &bull; Debit Card Pre-auth &bull; Pending Verification</span>
+              </div>
+            </div>
+            <div class="payment-meta">
+              <span class="payment-amt">+$1,120.00</span>
+              <div class="btn-group-sm">
+                <button class="btn-approve-sm" onclick="this.innerText='Approved'; this.style.background='#10b981';"><i data-lucide="check"></i> Approve</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KYC Document Workflow & Progression Timeline -->
+      <div class="console-panel">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title"><i data-lucide="file-check"></i> KYC Verification & Automated Loan Workflow</h3>
+            <p class="panel-desc">Real-time anti-fraud compliance, document inspection & underwriting stage gates</p>
+          </div>
+        </div>
+
+        <div class="workflow-steps">
+          <div class="wf-step completed">
+            <div class="wf-circle"><i data-lucide="check"></i></div>
+            <div class="wf-content">
+              <strong>1. Application Ingestion</strong>
+              <span>NLP token parsing & DTI calculation</span>
+            </div>
+          </div>
+          <div class="wf-line completed"></div>
+          <div class="wf-step completed">
+            <div class="wf-circle"><i data-lucide="check"></i></div>
+            <div class="wf-content">
+              <strong>2. FinBERT Scoring</strong>
+              <span>Risk tier & APR calibration</span>
+            </div>
+          </div>
+          <div class="wf-line active"></div>
+          <div class="wf-step active">
+            <div class="wf-circle"><i data-lucide="scan"></i></div>
+            <div class="wf-content">
+              <strong>3. KYC & Anti-Fraud</strong>
+              <span>Government ID & Income verification</span>
+            </div>
+          </div>
+          <div class="wf-line"></div>
+          <div class="wf-step">
+            <div class="wf-circle">4</div>
+            <div class="wf-content">
+              <strong>4. Disbursement</strong>
+              <span>ACH transfer & ledger registration</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="kyc-docs-grid">
+          <div class="doc-card verified">
+            <i data-lucide="shield-check" class="doc-status-icon"></i>
+            <div class="doc-info">
+              <strong>Identity Document (Passport/SSN)</strong>
+              <span>Verified &bull; 99.8% Biometric Confidence</span>
+            </div>
+            <span class="doc-check"><i data-lucide="check"></i></span>
+          </div>
+
+          <div class="doc-card verified">
+            <i data-lucide="shield-check" class="doc-status-icon"></i>
+            <div class="doc-info">
+              <strong>Income Verification (W-2 / Paystubs)</strong>
+              <span>Verified &bull; Annual Income $115,000 confirmed</span>
+            </div>
+            <span class="doc-check"><i data-lucide="check"></i></span>
+          </div>
+
+          <div class="doc-card verified">
+            <i data-lucide="shield-check" class="doc-status-icon"></i>
+            <div class="doc-info">
+              <strong>Bank Statement & Cashflow Audit</strong>
+              <span>Verified &bull; Average Balance $34,200</span>
+            </div>
+            <span class="doc-check"><i data-lucide="check"></i></span>
+          </div>
+
+          <div class="doc-card verified">
+            <i data-lucide="shield-check" class="doc-status-icon"></i>
+            <div class="doc-info">
+              <strong>Anti-Money Laundering (AML/OFAC)</strong>
+              <span>Passed &bull; Zero adverse media matches</span>
+            </div>
+            <span class="doc-check"><i data-lucide="check"></i></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Sidebar Column (Speedometer Risk Gauge, EMI Calendar, Overdue Alerts, Portfolio Chart) -->
+    <div class="console-col-right">
+
+      <!-- Speedometer Risk Gauge Panel -->
+      <div class="console-panel gauge-panel">
+        <div class="panel-header">
+          <h3 class="panel-title"><i data-lucide="gauge"></i> Borrower Risk Speedometer</h3>
+        </div>
+
+        <div class="speedometer-container">
+          <div class="speedometer-gauge">
+            <svg viewBox="0 0 200 110" class="gauge-svg">
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="18" stroke-linecap="round" />
+              <!-- Green Arc (Prime) -->
+              <path d="M 20 100 A 80 80 0 0 1 75 35" fill="none" stroke="#10b981" stroke-width="18" stroke-linecap="round" />
+              <!-- Yellow Arc (Moderate) -->
+              <path d="M 75 35 A 80 80 0 0 1 125 35" fill="none" stroke="#f59e0b" stroke-width="18" />
+              <!-- Red Arc (Subprime) -->
+              <path d="M 125 35 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" stroke-width="18" stroke-linecap="round" />
+              <!-- Needle Pointer -->
+              <polygon points="100,95 97,30 103,30" fill="#38bdf8" transform="rotate(-40, 100, 100)" class="gauge-needle" />
+              <circle cx="100" cy="100" r="8" fill="#ffffff" />
+            </svg>
+            <div class="gauge-value-display">
+              <span class="gauge-score">785</span>
+              <span class="gauge-tier-label">Tier A &bull; Prime Borrower</span>
+            </div>
+          </div>
+
+          <div class="gauge-legend">
+            <div class="legend-item"><span class="legend-dot green"></span> Prime (720+)</div>
+            <div class="legend-item"><span class="legend-dot yellow"></span> Moderate (640-719)</div>
+            <div class="legend-item"><span class="legend-dot red"></span> Subprime (&lt;640)</div>
+          </div>
+        </div>
+
+        <div class="active-profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar">EV</div>
+            <div>
+              <h4>Eleanor Vance</h4>
+              <span class="text-muted">Lead Underwriting Assessment</span>
+            </div>
+          </div>
+          <div class="profile-metrics">
+            <div class="pm-box">
+              <span class="pm-label">Debt-to-Income</span>
+              <strong class="pm-val text-green">18.0%</strong>
+            </div>
+            <div class="pm-box">
+              <span class="pm-label">Default Risk</span>
+              <strong class="pm-val text-green">1.8%</strong>
+            </div>
+            <div class="pm-box">
+              <span class="pm-label">Offered APR</span>
+              <strong class="pm-val text-cyan">6.5%</strong>
+            </div>
+            <div class="pm-box">
+              <span class="pm-label">Collateral</span>
+              <strong class="pm-val">Property</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMI Schedules & Calendar Widget -->
+      <div class="console-panel">
+        <div class="panel-header">
+          <h3 class="panel-title"><i data-lucide="calendar-days"></i> EMI Calendar & Collection</h3>
+          <span class="badge-mini">October 2026</span>
+        </div>
+
+        <!-- Mini Calendar Grid -->
+        <div class="mini-calendar">
+          <div class="cal-days-header">
+            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+          </div>
+          <div class="cal-grid">
+            <span class="cal-day muted">27</span><span class="cal-day muted">28</span><span class="cal-day muted">29</span><span class="cal-day muted">30</span>
+            <span class="cal-day">1</span><span class="cal-day">2</span><span class="cal-day">3</span>
+            <span class="cal-day">4</span><span class="cal-day">5</span><span class="cal-day">6</span><span class="cal-day has-emi">7</span><span class="cal-day">8</span><span class="cal-day">9</span><span class="cal-day">10</span>
+            <span class="cal-day">11</span><span class="cal-day">12</span><span class="cal-day">13</span><span class="cal-day">14</span><span class="cal-day has-emi">15</span><span class="cal-day">16</span><span class="cal-day">17</span>
+            <span class="cal-day">18</span><span class="cal-day">19</span><span class="cal-day">20</span><span class="cal-day">21</span><span class="cal-day">22</span><span class="cal-day">23</span><span class="cal-day">24</span>
+            <span class="cal-day">25</span><span class="cal-day">26</span><span class="cal-day">27</span><span class="cal-day has-emi active-today">28</span><span class="cal-day">29</span><span class="cal-day has-emi">30</span><span class="cal-day">31</span>
+          </div>
+        </div>
+
+        <!-- Upcoming Repayments -->
+        <h4 class="sub-section-title">Upcoming EMI Dues</h4>
+        <div class="upcoming-list">
+          {% for item in upcoming %}
+          <div class="upcoming-item">
+            <div>
+              <strong>{{ item.borrower }}</strong>
+              <span class="text-muted"><i data-lucide="calendar"></i> {{ item.due_date }}</span>
+            </div>
+            <div class="upcoming-meta">
+              <strong>{{ item.amount }}</strong>
+              <span class="badge-status {{ item.cls }}">{{ item.status }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Overdue Loans & Default Alerts -->
+      <div class="console-panel overdue-panel">
+        <div class="panel-header">
+          <h3 class="panel-title text-amber"><i data-lucide="alert-circle"></i> Overdue Alerts & NPA Watch</h3>
+        </div>
+
+        <div class="overdue-list">
+          {% for alert in overdue %}
+          <div class="overdue-item">
+            <div class="overdue-left">
+              <strong>{{ alert.borrower }}</strong>
+              <span class="text-red"><i data-lucide="clock"></i> {{ alert.days }} overdue &bull; Outstanding {{ alert.amount }}</span>
+            </div>
+            <button class="btn-remind" onclick="this.innerHTML='<i data-lucide=check></i> Sent'; this.style.background='#10b981'; if(window.lucide) lucide.createIcons();">
+              <i data-lucide="send"></i> Send Reminder
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Portfolio Distribution Mini Chart -->
+      <div class="console-panel">
+        <div class="panel-header">
+          <h3 class="panel-title"><i data-lucide="pie-chart"></i> Risk Tier Distribution</h3>
+        </div>
+        <div class="chart-box">
+          <canvas id="tierMiniChart" height="170"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter table rows
+function filterLoanTable() {
+  const search = document.getElementById('tableSearch').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  const rows = document.querySelectorAll('#loansTable tbody tr');
+
+  rows.forEach(row => {
+    const name = row.getAttribute('data-name') || '';
+    const rowStatus = row.getAttribute('data-status') || '';
+    
+    const matchSearch = name.includes(search);
+    const matchStatus = (status === 'all') || (rowStatus === status);
+
+    if (matchSearch && matchStatus) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+// Mini Doughnut Chart
+document.addEventListener('DOMContentLoaded', () => {
+  const ctx = document.getElementById('tierMiniChart');
+  if (ctx) {
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Tier A (Prime)', 'Tier B (Near-Prime)', 'Tier C (Subprime)', 'Tier D (High Risk)'],
+        datasets: [{
+          data: [58, 26, 12, 4],
+          backgroundColor: ['#10b981', '#38bdf8', '#f59e0b', '#ef4444'],
+          borderWidth: 0,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#94a3b8',
+              font: { size: 11, family: 'Inter' },
+              padding: 12,
+              boxWidth: 10
+            }
+          }
+        },
+        cutout: '68%'
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

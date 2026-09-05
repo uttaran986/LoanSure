@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Underwriting Credit Appraisal Memo #{{ loan.id }}{% endblock %}
+
+{% block extra_css %}
+<style>
+@media print {
+  nav, .memo-actions, .version-tag { display: none !important; }
+  body { background: white !important; color: black !important; font-size: 11pt; }
+  .memo-sheet { border: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; background: white !important; color: black !important; }
+  .memo-meta-cell { border: 1px solid #cbd5e1 !important; background: #f8fafc !important; color: black !important; }
+  .memo-meta-val { color: black !important; }
+}
+.memo-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.memo-sheet {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: #f8fafc;
+}
+.memo-header {
+  border-bottom: 2px solid rgba(56, 189, 248, 0.3);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.memo-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #f8fafc;
+  margin: 0;
+}
+.memo-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+.memo-meta-cell {
+  background: rgba(2, 6, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+.memo-meta-lbl {
+  color: #94a3b8;
+  font-size: 11px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.memo-meta-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+.memo-section {
+  margin-bottom: 24px;
+}
+.memo-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #38bdf8;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+}
+.memo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.memo-table th, .memo-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.memo-table th {
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  background: rgba(2, 6, 23, 0.4);
+}
+.sign-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+.sign-line {
+  border-bottom: 1px solid #94a3b8;
+  height: 40px;
+  margin-bottom: 6px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="memo-actions">
+  <a href="/result/{{ loan.id }}" class="btn-secondary"><i data-lucide="arrow-left"></i> Back to Decision</a>
+  <button onclick="window.print()" class="btn-secondary" style="background: #0284c7; color: white; border-color: #0284c7;">
+    <i data-lucide="printer"></i> Print Official PDF Memo
+  </button>
+</div>
+
+<div class="memo-sheet">
+  <div class="memo-header">
+    <div>
+      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #38bdf8; font-weight: 700;">Commercial & Consumer Underwriting Memo</div>
+      <h1 class="memo-title">Credit Facility Decision Dossier</h1>
+      <p style="font-size: 12px; color: #94a3b8; margin: 4px 0 0;">LoanBERT AI Risk Engine &bull; Automated Underwriting System</p>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-size: 12px; color: #94a3b8;">Reference Code</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #38bdf8; font-size: 15px;">LN-{{ loan.id }}-2026</div>
+      <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">{{ loan.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+    </div>
+  </div>
+
+  <div class="memo-meta-grid">
+    <div class="memo-meta-cell">
+      <div class="memo-meta-lbl">Applicant Name</div>
+      <div class="memo-meta-val">{{ loan.applicant_name }}</div>
+    </div>
+    <div class="memo-meta-cell">
+      <div class="memo-meta-lbl">Final Underwriting Status</div>
+      <div class="memo-meta-val" style="color: {% if loan.decision_status == 'Approved' %}#10b981{% elif loan.decision_status == 'Conditional Approval' %}#f59e0b{% else %}#ef4444{% endif %};">
+        {{ loan.decision_status }} ({{ loan.confidence }}% Confidence)
+      </div>
+    </div>
+    <div class="memo-meta-cell">
+      <div class="memo-meta-lbl">Risk Grade & Tier</div>
+      <div class="memo-meta-val" style="color: #38bdf8;">{{ loan.risk_tier }}</div>
+    </div>
+    <div class="memo-meta-cell">
+      <div class="memo-meta-lbl">Recommended Pricing (APR)</div>
+      <div class="memo-meta-val" style="color: #10b981;">{{ loan.recommended_apr }}% Fixed APR</div>
+    </div>
+  </div>
+
+  <div class="memo-section">
+    <div class="memo-section-title">1. Executive Facility Summary</div>
+    <table class="memo-table">
+      <thead>
+        <tr><th>Metric</th><th>Applicant Stated</th><th>Model Evaluated / Approved</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Principal Amount</td><td>${{ "{:,}".format(loan.loan_amount) }}</td><td><strong>${{ "{:,}".format(loan.loan_amount) }}</strong></td></tr>
+        <tr><td>Max Credit Capacity</td><td>N/A</td><td><strong>${{ "{:,}".format(loan.max_approved_amount) }}</strong></td></tr>
+        <tr><td>Amortization Horizon</td><td>{{ loan.loan_term_months }} Months</td><td>{{ loan.loan_term_months }} Months</td></tr>
+        <tr><td>Debt Purpose</td><td>{{ loan.loan_purpose }}</td><td>Verified Eligible Category</td></tr>
+        <tr><td>Security / Collateral</td><td>{{ loan.collateral }}</td><td>{{ loan.collateral }} Backed</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="memo-section">
+    <div class="memo-section-title">2. Financial Risk & Leverage Ratios</div>
+    <table class="memo-table">
+      <thead>
+        <tr><th>Underwriting Metric</th><th>Value</th><th>Guideline Threshold</th><th>Assessment</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>FICO Credit Score</td><td><strong>{{ loan.credit_score }}</strong></td><td>&ge; 680 (Prime)</td><td>{% if loan.credit_score >= 680 %}<span style="color:#10b981;">Pass</span>{% else %}<span style="color:#ef4444;">Subprime Review</span>{% endif %}</td></tr>
+        <tr><td>Annual Gross Cashflow</td><td><strong>${{ "{:,}".format(loan.annual_income) }}</strong></td><td>&ge; $35,000</td><td><span style="color:#10b981;">Satisfactory</span></td></tr>
+        <tr><td>Debt-To-Income Ratio</td><td><strong>{{ "%.2f"|format(loan.debt_to_income) }}</strong></td><td>&le; 0.40</td><td>{% if loan.debt_to_income <= 0.40 %}<span style="color:#10b981;">In Tolerance</span>{% else %}<span style="color:#f59e0b;">Elevated</span>{% endif %}</td></tr>
+        <tr><td>Revolving Card Utilization</td><td><strong>{{ (loan.revolving_utilization * 100)|int }}%</strong></td><td>&le; 45%</td><td>{% if loan.revolving_utilization <= 0.45 %}<span style="color:#10b981;">Low Risk</span>{% else %}<span style="color:#ef4444;">High Usage</span>{% endif %}</td></tr>
+        <tr><td>Probability of Default (PD)</td><td><strong>{{ loan.default_prob }}%</strong></td><td>&le; 12.5%</td><td>{% if loan.default_prob <= 12.5 %}<span style="color:#10b981;">Prime Grade</span>{% else %}<span style="color:#f59e0b;">Monitored</span>{% endif %}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="memo-section">
+    <div class="memo-section-title">3. Natural Language Underwriting Audit Trail</div>
+    <div style="background: rgba(2, 6, 23, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 14px; font-size: 13px; line-height: 1.6; color: #cbd5e1; font-family: 'JetBrains Mono', monospace;">
+      {{ loan.description }}
+    </div>
+  </div>
+
+  <div class="sign-grid">
+    <div>
+      <div class="sign-line"></div>
+      <div style="font-size: 12px; font-weight: 700; color: #f8fafc;">Senior Underwriting Officer</div>
+      <div style="font-size: 11px; color: #94a3b8;">AI Decision Validation & Compliance</div>
+    </div>
+    <div>
+      <div class="sign-line"></div>
+      <div style="font-size: 12px; font-weight: 700; color: #f8fafc;">Chief Risk Officer (CRO)</div>
+      <div style="font-size: 11px; color: #94a3b8;">Portfolio Quality Assurance</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

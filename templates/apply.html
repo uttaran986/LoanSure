@@ -1,402 +1,648 @@
 {% extends "base.html" %}
-{% block title %}Apply — LoanIQ{% endblock %}
+{% block title %}Loan Underwriting Studio — LoanBERT 2.0{% endblock %}
 
-{% block extra_css %}<style>
-.apply-wrap { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
-.form-stack { display: flex; flex-direction: column; gap: 16px; }
-.sidebar    { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 90px; }
-
-/* form section card */
-.fsec { padding: 22px 24px; }
-.fsec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-.step-title { font-size: 15px; font-weight: 700; color: var(--white); }
-.step-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.col-full { grid-column: 1 / -1; }
-.form-divider {
-  font-size: 10px; font-weight: 700; color: rgba(107,176,255,0.4);
-  text-transform: uppercase; letter-spacing: 1.2px;
-  border-top: 1px solid var(--border); padding-top: 14px;
-  margin: 4px 0 14px;
+{% block extra_css %}
+<style>
+.apply-container {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
 }
-
-/* credit bar */
-.credit-bar-wrap { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; margin-top: 6px; }
-.credit-bar      { height: 100%; border-radius: 2px; transition: width 0.4s, background 0.4s; width: 0; }
-.credit-tag      { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 10px; margin-top: 5px; }
-
-/* range */
-.range-group   { display: flex; align-items: center; gap: 12px; }
-.range-group input[type=range] { flex: 1; accent-color: var(--cyan); cursor: pointer; height: 4px; }
-.range-readout { font-size: 13px; font-weight: 700; color: var(--cyan); font-family: 'JetBrains Mono', monospace; min-width: 72px; text-align: right; }
-
-/* NLP box */
-.nlp-box {
-  background: rgba(3,8,20,0.85); border: 1px solid var(--border); border-radius: 10px;
-  padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
-  color: var(--muted); line-height: 1.75; min-height: 76px;
+.persona-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
 }
-.nlp-hl { color: var(--cyan); font-weight: 500; }
-
-/* sidebar score ring */
-.score-wrap    { padding: 18px 16px 10px; text-align: center; }
-.score-caption { font-size: 11px; color: var(--muted); margin-top: 8px; }
-.ring-svg-wrap { position: relative; display: inline-block; }
-.ring-center {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  text-align: center; pointer-events: none;
+.persona-btn {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
 }
-.ring-num { font-size: 28px; font-weight: 800; color: var(--cyan); letter-spacing: -1px; display: block; }
-.ring-lbl { font-size: 10px; color: var(--muted); display: block; margin-top: 1px; }
-
-.meter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 14px 14px; }
-.meter-item { background: rgba(5,13,26,0.7); border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px; }
-.meter-lbl  { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
-.meter-track { height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
-.meter-fill  { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(.4,0,.2,1); width: 0; }
-.meter-pct   { font-size: 11px; font-weight: 700; margin-top: 5px; }
-
-/* tips */
-.tips-body { padding: 16px 18px; }
-.tip-row { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; color: var(--muted); line-height: 1.55; margin-bottom: 8px; }
-.tip-row:last-child { margin-bottom: 0; }
-.tip-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-</style>{% endblock %}
+.persona-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+.form-section-card {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.step-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.field-group {
+  margin-bottom: 16px;
+}
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+.field-input, .field-select, .field-textarea {
+  width: 100%;
+  background: rgba(2, 6, 23, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #f8fafc;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+.field-input:focus, .field-select:focus, .field-textarea:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+.range-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.range-slider-row input[type="range"] {
+  flex: 1;
+  accent-color: #38bdf8;
+  cursor: pointer;
+}
+.range-readout {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #38bdf8;
+  min-width: 68px;
+  text-align: right;
+  font-size: 13px;
+}
+.nlp-preview-box {
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px dashed rgba(56, 189, 248, 0.4);
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+}
+.nlp-highlight {
+  color: #38bdf8;
+  font-weight: 600;
+}
+.sidebar-sticky {
+  position: sticky;
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.score-gauge-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+.gauge-svg-wrap {
+  position: relative;
+  display: inline-block;
+  margin: 12px 0;
+}
+.gauge-center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.gauge-score-val {
+  font-size: 32px;
+  font-weight: 800;
+  color: #38bdf8;
+  line-height: 1;
+}
+.gauge-score-lbl {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.tier-pill {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+.meter-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #94a3b8;
+}
+.meter-bar-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.meter-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+.btn-submit-app {
+  width: 100%;
+  background: linear-gradient(135deg, #0284c7, #4f46e5);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.35);
+}
+.btn-submit-app:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(79, 70, 229, 0.5);
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="page-header fade-up">
-  <div class="page-label">BERT · AI Decision Engine</div>
-  <h1>New Loan Application</h1>
-  <p>Your profile is analyzed by a fine-tuned DistilBERT model trained on thousands of loan records</p>
+<div class="page-header">
+  <div class="badge-pill"><i data-lucide="sparkles"></i> NLP Transformer Decision Engine</div>
+  <h1 style="font-size: 28px; font-weight: 800; margin: 8px 0; color: #f8fafc;">New Loan Application & Underwriting</h1>
+  <p style="color: #94a3b8; font-size: 14px; margin: 0;">FinBERT converts structured applicant financial profiles + underwriter narratives into deep semantic vectors for risk classification.</p>
 </div>
 
-<div class="apply-wrap">
-  <form class="form-stack" method="POST" action="/apply" id="loanForm">
+<!-- Persona Presets -->
+<div class="persona-presets">
+  <span style="font-size: 13px; color: #94a3b8; align-self: center; margin-right: 4px;"><i data-lucide="user-check"></i> Load Persona:</span>
+  <button type="button" class="persona-btn" onclick="loadPersona('prime')">
+    <span>✨</span> Prime Homebuyer ($115k, 785 FICO)
+  </button>
+  <button type="button" class="persona-btn" onclick="loadPersona('business')">
+    <span>🏢</span> Small Business Founder ($140k, 740 FICO)
+  </button>
+  <button type="button" class="persona-btn" onclick="loadPersona('tech')">
+    <span>⚡</span> Near-Prime Tech Worker ($85k, 675 FICO)
+  </button>
+  <button type="button" class="persona-btn" onclick="loadPersona('subprime')">
+    <span>🛡️</span> Subprime Consolidation ($42k, 580 FICO)
+  </button>
+</div>
 
-    <!-- Step 1 -->
-    <div class="card3d fade-up-1">
-      <div class="fsec">
-        <div class="fsec-head">
-          <div class="step-num"><span>1</span></div>
-          <div><div class="step-title">Personal information</div><div class="step-sub">Basic applicant details</div></div>
+<div class="apply-container">
+  <!-- Left Column Form Stack -->
+  <form id="underwritingForm" method="POST" action="/apply">
+    
+    <!-- Section 1: Demographics & Income -->
+    <div class="form-section-card">
+      <div class="form-section-header">
+        <div class="step-badge">1</div>
+        <div>
+          <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0;">Applicant Background & Cashflow</h3>
+          <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0;">Personal identifiers and income stability</p>
         </div>
-        <div class="grid-2">
-          <div class="field col-full">
-            <label class="field-label">Full name <span class="req">*</span></label>
-            <input type="text" name="applicant_name" class="field-input" placeholder="e.g. Rahul Sharma" required>
-          </div>
-          <div class="field">
-            <label class="field-label">Age <span class="req">*</span></label>
-            <input type="number" name="age" class="field-input" placeholder="34" min="18" max="80" required>
-          </div>
-          <div class="field">
-            <label class="field-label">Employment status <span class="req">*</span></label>
-            <select name="employment_status" class="field-input">
-              <option value="Employed">Employed</option>
-              <option value="Self-Employed">Self-Employed</option>
-              <option value="Business Owner">Business Owner</option>
-              <option value="Retired">Retired</option>
-              <option value="Student">Student</option>
-              <option value="Unemployed">Unemployed</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="field-label">Annual income <span class="req">*</span></label>
-            <div class="prefix-wrap">
-              <span class="prefix-sym">$</span>
-              <input type="number" name="annual_income" class="field-input" placeholder="75000" min="0" required>
-            </div>
-            <span class="field-hint">Gross income before taxes</span>
-          </div>
+      </div>
+      
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label class="field-label">Applicant Full Name *</label>
+          <input type="text" name="applicant_name" id="applicant_name" class="field-input" placeholder="e.g. Eleanor Vance" required value="Eleanor Vance">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Age *</label>
+          <input type="number" name="age" id="age" class="field-input" min="18" max="80" required value="34">
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="field-group">
+          <label class="field-label">Employment Status *</label>
+          <select name="employment_status" id="employment_status" class="field-select">
+            <option value="Employed">Employed</option>
+            <option value="Self-Employed">Self-Employed</option>
+            <option value="Business Owner">Business Owner</option>
+            <option value="Freelancer">Freelancer</option>
+            <option value="Retired">Retired</option>
+            <option value="Student">Student</option>
+            <option value="Unemployed">Unemployed</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Tenure (Years) *</label>
+          <input type="number" step="0.5" name="employment_years" id="employment_years" class="field-input" min="0" max="40" required value="5.5">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Annual Gross Income ($) *</label>
+          <input type="number" name="annual_income" id="annual_income" class="field-input" min="10000" max="1000000" step="1000" required value="115000">
         </div>
       </div>
     </div>
 
-    <!-- Step 2 -->
-    <div class="card3d fade-up-2">
-      <div class="fsec">
-        <div class="fsec-head">
-          <div class="step-num"><span>2</span></div>
-          <div><div class="step-title">Loan details</div><div class="step-sub">What you're requesting</div></div>
+    <!-- Section 2: Credit Facility Request -->
+    <div class="form-section-card">
+      <div class="form-section-header">
+        <div class="step-badge">2</div>
+        <div>
+          <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0;">Facility Request & Collateral</h3>
+          <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0;">Loan amount, purpose, and pledged security</p>
         </div>
-        <div class="grid-2">
-          <div class="field">
-            <label class="field-label">Loan purpose <span class="req">*</span></label>
-            <select name="loan_purpose" class="field-input">
-              <option value="Home Purchase">Home Purchase</option>
-              <option value="Debt Consolidation">Debt Consolidation</option>
-              <option value="Business Expansion">Business Expansion</option>
-              <option value="Education">Education</option>
-              <option value="Medical">Medical</option>
-              <option value="Vehicle Purchase">Vehicle Purchase</option>
-              <option value="Home Improvement">Home Improvement</option>
-              <option value="Personal">Personal</option>
-            </select>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label class="field-label">Loan Purpose *</label>
+          <select name="loan_purpose" id="loan_purpose" class="field-select">
+            <option value="Home Purchase">Home Purchase</option>
+            <option value="Debt Consolidation">Debt Consolidation</option>
+            <option value="Business Expansion">Business Expansion</option>
+            <option value="Home Improvement" selected>Home Improvement</option>
+            <option value="Vehicle Purchase">Vehicle Purchase</option>
+            <option value="Education">Education</option>
+            <option value="Medical">Medical</option>
+            <option value="Green Energy & Solar">Green Energy & Solar</option>
+            <option value="Personal">Personal</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Requested Loan Amount ($) *</label>
+          <input type="number" name="loan_amount" id="loan_amount" class="field-input" min="2000" max="500000" step="1000" required value="45000">
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label class="field-label">Repayment Horizon: <span id="termReadout" style="color: #38bdf8;">60 Months (5 yrs)</span></label>
+          <div class="range-slider-row">
+            <input type="range" name="loan_term_months" id="loan_term_months" min="12" max="360" step="12" value="60">
+            <span class="range-readout" id="termVal">60 mo</span>
           </div>
-          <div class="field">
-            <label class="field-label">Loan amount <span class="req">*</span></label>
-            <div class="prefix-wrap">
-              <span class="prefix-sym">$</span>
-              <input type="number" name="loan_amount" class="field-input" placeholder="50000" min="1000" required id="loanAmountInput">
-            </div>
-          </div>
-          <div class="field col-full">
-            <label class="field-label">Loan term &nbsp;<span id="termLabel" style="color:var(--cyan);font-weight:700">5 years</span></label>
-            <div class="range-group">
-              <input type="range" min="12" max="360" value="60" step="12" id="termSlider" name="loan_term_months">
-              <span class="range-readout" id="termOut">60 mo</span>
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label">Collateral</label>
-            <select name="collateral" class="field-input">
-              <option value="None">None</option>
-              <option value="Property">Property</option>
-              <option value="Vehicle">Vehicle</option>
-              <option value="Investments">Investments</option>
-              <option value="Equipment">Equipment</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="field-label">Existing active loans</label>
-            <input type="number" name="existing_loans" class="field-input" placeholder="0" min="0" max="20" value="0">
-          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Asset Collateral Pledged</label>
+          <select name="collateral" id="collateral" class="field-select">
+            <option value="Property / Real Estate" selected>Property / Real Estate</option>
+            <option value="Vehicle">Vehicle</option>
+            <option value="Investment Portfolio">Investment Portfolio</option>
+            <option value="Commercial Equipment">Commercial Equipment</option>
+            <option value="Cash Reserve">Cash Reserve</option>
+            <option value="None">None (Unsecured)</option>
+          </select>
         </div>
       </div>
     </div>
 
-    <!-- Step 3 -->
-    <div class="card3d fade-up-3">
-      <div class="fsec">
-        <div class="fsec-head">
-          <div class="step-num"><span>3</span></div>
-          <div><div class="step-title">Financial profile</div><div class="step-sub">Credit history & obligations</div></div>
+    <!-- Section 3: Credit History & Risk Metrics -->
+    <div class="form-section-card">
+      <div class="form-section-header">
+        <div class="step-badge">3</div>
+        <div>
+          <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0;">Credit History & Risk Profile</h3>
+          <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0;">FICO credit score, leverage, and payment records</p>
         </div>
-        <div class="grid-2">
-          <div class="field">
-            <label class="field-label">Credit score <span class="req">*</span></label>
-            <input type="number" name="credit_score" class="field-input" placeholder="700" min="300" max="850" required id="creditInput">
-            <div class="credit-bar-wrap"><div class="credit-bar" id="creditBar"></div></div>
-            <span class="credit-tag" id="creditTag"></span>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label class="field-label">FICO Credit Score (300 - 850) *</label>
+          <input type="number" name="credit_score" id="credit_score" class="field-input" min="300" max="850" required value="785">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Debt-To-Income (DTI Ratio): <span id="dtiReadout" style="color: #38bdf8;">0.22</span></label>
+          <div class="range-slider-row">
+            <input type="range" id="dtiSlider" min="5" max="150" value="22" step="1">
+            <span class="range-readout" id="dtiVal">22%</span>
           </div>
-          <div class="field">
-            <label class="field-label">Debt-to-income &nbsp;<span id="dtiLabel" style="color:var(--cyan);font-weight:700">0.30</span></label>
-            <div class="range-group">
-              <input type="range" min="0" max="100" value="30" step="1" id="dtiSlider" style="margin-top:6px">
-              <span class="range-readout" id="dtiOut">30%</span>
-            </div>
-            <input type="hidden" name="debt_to_income" id="dtiHidden" value="0.30">
-            <span class="field-hint">Monthly debt ÷ monthly income</span>
+          <input type="hidden" name="debt_to_income" id="debt_to_income" value="0.22">
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="field-group">
+          <label class="field-label">Active Existing Loans</label>
+          <input type="number" name="existing_loans" id="existing_loans" class="field-input" min="0" max="10" value="0">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Credit Card Utilization</label>
+          <div class="range-slider-row">
+            <input type="range" id="utilSlider" min="0" max="100" value="15" step="1">
+            <span class="range-readout" id="utilVal">15%</span>
           </div>
+          <input type="hidden" name="revolving_utilization" id="revolving_utilization" value="0.15">
         </div>
-        <div class="form-divider">Additional context</div>
-        <div class="field">
-          <label class="field-label">Description <span style="color:var(--w30);font-weight:400">(optional)</span></label>
-          <textarea name="description" class="field-input" rows="2" placeholder="Any additional context for the loan officer..."></textarea>
+        <div class="field-group">
+          <label class="field-label">Delinquency Count (2 yrs)</label>
+          <input type="number" name="delinquencies" id="delinquencies" class="field-input" min="0" max="5" value="0">
         </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Underwriter Observations & Notes <span style="font-weight:400; color:#64748b;">(NLP Context)</span></label>
+        <textarea name="underwriter_notes" id="underwriter_notes" class="field-textarea" rows="2" placeholder="Optional loan officer commentary e.g. 'Strong cash reserves, steady employment'..."></textarea>
       </div>
     </div>
 
-    <!-- BERT Preview -->
-    <div class="card3d fade-up-4">
-      <div class="fsec">
-        <div class="fsec-head">
-          <div class="step-num" style="background:linear-gradient(135deg,#071428,#1A6FE8);font-size:10px"><span>AI</span></div>
-          <div><div class="step-title">BERT input preview</div><div class="step-sub">Natural language text sent to the model</div></div>
+    <!-- Section 4: Live NLP Dossier Preview -->
+    <div class="form-section-card">
+      <div class="form-section-header">
+        <div class="step-badge" style="background: linear-gradient(135deg, #10b981, #06b6d4);"><i data-lucide="bot" style="width:18px;height:18px;"></i></div>
+        <div>
+          <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0;">FinBERT Context Narrative Preview</h3>
+          <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0;">Natural language string synthesized dynamically for transformer embeddings</p>
         </div>
-        <div class="nlp-box" id="nlpPreview">Fill in the form above to preview the text that DistilBERT will analyze…</div>
       </div>
+      <div class="nlp-preview-box" id="nlpPreview">Loading NLP preview...</div>
     </div>
 
-    <!-- Submit -->
-    <button type="submit" id="submitBtn" class="btn-primary btn-primary-full fade-up-5" style="padding:16px">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <circle cx="9" cy="9" r="8" stroke="white" stroke-width="1.5" opacity="0.5"/>
-        <path d="M5.5 9l3 3L13 5.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span id="submitTxt">Analyze with BERT</span>
+    <!-- Submit Button -->
+    <button type="submit" class="btn-submit-app" id="submitBtn">
+      <i data-lucide="shield-check"></i> Run FinBERT Underwriting & Risk Evaluation
     </button>
-
   </form>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-
-    <!-- Risk ring -->
-    <div class="card3d fade-up-1">
-      <div class="score-wrap">
-        <div class="sec-label" style="text-align:center;margin-bottom:12px">Live risk score</div>
-        <div class="ring-svg-wrap">
-          <svg width="136" height="136" viewBox="0 0 136 136">
-            <circle cx="68" cy="68" r="58" fill="none" stroke="rgba(59,143,255,0.12)" stroke-width="11"/>
-            <circle cx="68" cy="68" r="58" fill="none" stroke="url(#rg)" stroke-width="11"
-              stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="364.4"
-              transform="rotate(-90 68 68)" id="scoreArc"/>
-            <defs>
-              <linearGradient id="rg" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#1A6FE8"/>
-                <stop offset="100%" stop-color="#2DD4FF"/>
-              </linearGradient>
-            </defs>
-          </svg>
-          <div class="ring-center">
-            <span class="ring-num" id="scoreNum">—</span>
-            <span class="ring-lbl">confidence</span>
-          </div>
+  <!-- Right Sticky Sidebar: Real-time Gauges -->
+  <div class="sidebar-sticky">
+    <div class="score-gauge-card">
+      <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; font-weight: 700;">Live Estimated Health Index</div>
+      <div class="gauge-svg-wrap">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="62" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12"/>
+          <circle cx="75" cy="75" r="62" fill="none" stroke="url(#sidebarGaugeGrad)" stroke-width="12"
+                  stroke-linecap="round" stroke-dasharray="389.5" stroke-dashoffset="60"
+                  transform="rotate(-90 75 75)" id="gaugeCircle"/>
+          <defs>
+            <linearGradient id="sidebarGaugeGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="gauge-center-text">
+          <div class="gauge-score-val" id="gaugeVal">92</div>
+          <div class="gauge-score-lbl">Health Score</div>
         </div>
-        <div class="score-caption">Updates as you fill the form</div>
       </div>
-      <div class="meter-grid">
-        <div class="meter-item">
-          <div class="meter-lbl">Credit rating</div>
-          <div class="meter-track"><div class="meter-fill" id="mCredit" style="background:#2DD4FF"></div></div>
-          <div class="meter-pct" id="mCreditLbl" style="color:#2DD4FF">—</div>
-        </div>
-        <div class="meter-item">
-          <div class="meter-lbl">Income</div>
-          <div class="meter-track"><div class="meter-fill" id="mIncome" style="background:#22D3A5"></div></div>
-          <div class="meter-pct" id="mIncomeLbl" style="color:#22D3A5">—</div>
-        </div>
-        <div class="meter-item">
-          <div class="meter-lbl">DTI risk</div>
-          <div class="meter-track"><div class="meter-fill" id="mDti" style="background:#FBBF24"></div></div>
-          <div class="meter-pct" id="mDtiLbl" style="color:#FBBF24">—</div>
-        </div>
-        <div class="meter-item">
-          <div class="meter-lbl">Employment</div>
-          <div class="meter-track"><div class="meter-fill" id="mEmp" style="background:#22D3A5"></div></div>
-          <div class="meter-pct" id="mEmpLbl" style="color:#22D3A5">—</div>
-        </div>
+      <div class="tier-pill" id="tierPill" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
+        Tier A+ (Exceptional Prime)
+      </div>
+      <div style="font-size: 13px; color: #94a3b8; margin-top: 12px;">
+        Estimated APR: <strong id="estApr" style="color:#38bdf8;">6.85%</strong>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.08); margin: 18px 0;">
+
+      <!-- Sub Metric Bars -->
+      <div>
+        <div class="meter-row"><span>Credit Standing</span><strong id="mCreditLbl">Excellent</strong></div>
+        <div class="meter-bar-track"><div class="meter-bar-fill" id="mCreditBar" style="width: 88%; background: #38bdf8;"></div></div>
+
+        <div class="meter-row"><span>Income Capacity</span><strong id="mIncomeLbl">High</strong></div>
+        <div class="meter-bar-track"><div class="meter-bar-fill" id="mIncomeBar" style="width: 80%; background: #10b981;"></div></div>
+
+        <div class="meter-row"><span>Debt Leverage (DTI)</span><strong id="mDtiLbl">Low Risk</strong></div>
+        <div class="meter-bar-track"><div class="meter-bar-fill" id="mDtiBar" style="width: 85%; background: #10b981;"></div></div>
       </div>
     </div>
 
-    <!-- Tips -->
-    <div class="card3d fade-up-2">
-      <div class="tips-body">
-        <div class="sec-label">Approval tips</div>
-        <div class="tip-row"><div class="tip-dot" style="background:#22D3A5"></div>Credit score above 700 strongly improves your approval chances</div>
-        <div class="tip-row"><div class="tip-dot" style="background:#22D3A5"></div>Keep debt-to-income ratio below 0.40 for best results</div>
-        <div class="tip-row"><div class="tip-dot" style="background:#FBBF24"></div>Offering collateral significantly reduces lender risk</div>
-        <div class="tip-row"><div class="tip-dot" style="background:#F87171"></div>More than 3 existing loans may flag as high risk</div>
-      </div>
+    <!-- Underwriting Checklist Card -->
+    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; font-size: 13px; color: #94a3b8;">
+      <h4 style="color: #f8fafc; margin: 0 0 10px; font-size: 14px;"><i data-lucide="check-circle-2" style="width:16px;height:16px;vertical-align:middle;color:#10b981;"></i> Underwriting Standards</h4>
+      <ul style="margin: 0; padding-left: 18px; line-height: 1.6;">
+        <li>FICO &ge; 680 qualifies for Tier A Prime pricing.</li>
+        <li>DTI &le; 36% achieves highest debt-service rating.</li>
+        <li>Pledged asset collateral reduces credit spread by ~1.50%.</li>
+        <li>Zero delinquencies past 24 months required for auto-approval.</li>
+      </ul>
     </div>
-
   </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}<script>
-const termSlider = document.getElementById('termSlider');
-const termOut    = document.getElementById('termOut');
-const termLabel  = document.getElementById('termLabel');
-const dtiSlider  = document.getElementById('dtiSlider');
-const dtiOut     = document.getElementById('dtiOut');
-const dtiLabel   = document.getElementById('dtiLabel');
-const dtiHidden  = document.getElementById('dtiHidden');
-const creditInp  = document.getElementById('creditInput');
-const creditBar  = document.getElementById('creditBar');
-const creditTag  = document.getElementById('creditTag');
-const scoreArc   = document.getElementById('scoreArc');
-const scoreNum   = document.getElementById('scoreNum');
+{% block extra_js %}
+<script>
+// Persona presets
+const personas = {
+  prime: {
+    name: 'Eleanor Vance', age: 34, emp: 'Employed', emp_yr: 6.5, income: 115000,
+    purpose: 'Home Improvement', amount: 45000, term: 60, coll: 'Property / Real Estate',
+    cs: 785, dti: 18, exist: 0, util: 12, delinq: 0,
+    notes: 'Exemplary liquid reserves with consistent salary progression.'
+  },
+  business: {
+    name: 'Sophia Chen', age: 45, emp: 'Business Owner', emp_yr: 12.0, income: 140000,
+    purpose: 'Business Expansion', amount: 75000, term: 84, coll: 'Investment Portfolio',
+    cs: 740, dti: 24, exist: 1, util: 22, delinq: 0,
+    notes: 'Established commercial enterprise with high verified operating cash flow.'
+  },
+  tech: {
+    name: 'Marcus Thorne', age: 29, emp: 'Employed', emp_yr: 3.5, income: 85000,
+    purpose: 'Debt Consolidation', amount: 35000, term: 48, coll: 'None',
+    cs: 675, dti: 38, exist: 2, util: 45, delinq: 0,
+    notes: 'Stable software engineering position; consolidating multiple credit cards.'
+  },
+  subprime: {
+    name: 'David Miller', age: 24, emp: 'Freelancer', emp_yr: 1.0, income: 42000,
+    purpose: 'Vehicle Purchase', amount: 18000, term: 36, coll: 'Vehicle',
+    cs: 580, dti: 58, exist: 3, util: 82, delinq: 1,
+    notes: 'Variable freelance earnings with high credit card utilization.'
+  }
+};
+
+function loadPersona(key) {
+  const p = personas[key];
+  if (!p) return;
+  document.getElementById('applicant_name').value = p.name;
+  document.getElementById('age').value = p.age;
+  document.getElementById('employment_status').value = p.emp;
+  document.getElementById('employment_years').value = p.emp_yr;
+  document.getElementById('annual_income').value = p.income;
+  document.getElementById('loan_purpose').value = p.purpose;
+  document.getElementById('loan_amount').value = p.amount;
+  document.getElementById('loan_term_months').value = p.term;
+  document.getElementById('collateral').value = p.coll;
+  document.getElementById('credit_score').value = p.cs;
+  document.getElementById('dtiSlider').value = p.dti;
+  document.getElementById('existing_loans').value = p.exist;
+  document.getElementById('utilSlider').value = p.util;
+  document.getElementById('delinquencies').value = p.delinq;
+  document.getElementById('underwriter_notes').value = p.notes;
+  updateAll();
+}
+
+// Sliders and readouts
+const termSlider = document.getElementById('loan_term_months');
+const termVal = document.getElementById('termVal');
+const termReadout = document.getElementById('termReadout');
 
 termSlider.addEventListener('input', () => {
   const mo = parseInt(termSlider.value);
-  const yrs = Math.round(mo / 12);
-  termOut.textContent  = mo + ' mo';
-  termLabel.textContent = yrs + (yrs === 1 ? ' year' : ' years');
+  const yrs = (mo / 12).toFixed(mo % 12 === 0 ? 0 : 1);
+  termVal.textContent = mo + ' mo';
+  termReadout.textContent = `${mo} Months (${yrs} yrs)`;
   updateAll();
 });
+
+const dtiSlider = document.getElementById('dtiSlider');
+const dtiVal = document.getElementById('dtiVal');
+const dtiReadout = document.getElementById('dtiReadout');
+const dtiHidden = document.getElementById('debt_to_income');
 
 dtiSlider.addEventListener('input', () => {
-  const v = (dtiSlider.value / 100).toFixed(2);
-  dtiOut.textContent   = dtiSlider.value + '%';
-  dtiLabel.textContent = v;
-  dtiHidden.value      = v;
+  const pct = parseInt(dtiSlider.value);
+  const ratio = (pct / 100).toFixed(2);
+  dtiVal.textContent = pct + '%';
+  dtiReadout.textContent = ratio;
+  dtiHidden.value = ratio;
   updateAll();
 });
 
-creditInp.addEventListener('input', () => {
-  const v = parseInt(creditInp.value);
-  if (!v) { creditBar.style.width='0'; creditTag.textContent=''; return; }
-  const pct = Math.min(100, Math.max(0, ((v-300)/550)*100));
-  creditBar.style.width = pct + '%';
-  if      (v >= 750) { set(creditBar,'#22D3A5'); setTag(creditTag,'Excellent','#22D3A5','rgba(34,211,165,0.12)','rgba(34,211,165,0.3)','✦ Excellent'); }
-  else if (v >= 700) { set(creditBar,'#2DD4FF'); setTag(creditTag,'Good','#2DD4FF','rgba(45,212,255,0.12)','rgba(45,212,255,0.3)','◈ Good'); }
-  else if (v >= 650) { set(creditBar,'#FBBF24'); setTag(creditTag,'Fair','#FBBF24','rgba(251,191,36,0.12)','rgba(251,191,36,0.3)','◇ Fair'); }
-  else               { set(creditBar,'#F87171'); setTag(creditTag,'Poor','#F87171','rgba(248,113,113,0.12)','rgba(248,113,113,0.3)','✕ Poor'); }
+const utilSlider = document.getElementById('utilSlider');
+const utilVal = document.getElementById('utilVal');
+const utilHidden = document.getElementById('revolving_utilization');
+
+utilSlider.addEventListener('input', () => {
+  const pct = parseInt(utilSlider.value);
+  utilVal.textContent = pct + '%';
+  utilHidden.value = (pct / 100).toFixed(2);
   updateAll();
 });
 
-function set(el, color) { el.style.background = color; }
-function setTag(el, _, color, bg, border, txt) {
-  el.textContent = txt;
-  el.style.cssText = `color:${color};background:${bg};border:1px solid ${border};padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;`;
+function updateAll() {
+  updateNLP();
+  updateGauges();
 }
-
-function getVal(name) { const e = document.querySelector('[name='+name+']'); return e ? e.value : ''; }
-
-function updateAll() { updateNLP(); updateMeters(); }
 
 function updateNLP() {
-  const name    = getVal('applicant_name') || 'The applicant';
-  const age     = getVal('age') || '?';
-  const emp     = (getVal('employment_status') || 'employed').toLowerCase();
-  const income  = parseInt(getVal('annual_income') || 0);
-  const amount  = parseInt(getVal('loan_amount')   || 0);
-  const term    = termSlider.value;
-  const purpose = (getVal('loan_purpose') || 'personal use').toLowerCase();
-  const coll    = getVal('collateral') || 'None';
-  const cs      = creditInp.value || '?';
-  const dti     = dtiHidden.value || '0.30';
-  const exist   = getVal('existing_loans') || '0';
-  const collTxt = coll !== 'None' ? ` with ${coll.toLowerCase()} as collateral` : ' with no collateral';
-  const existTxt = parseInt(exist) > 0 ? ` ${name.split(' ')[0]} has ${exist} existing loan(s).` : '';
-  document.getElementById('nlpPreview').textContent =
-    `${name} is a ${age}-year-old ${emp} requesting $${amount.toLocaleString()} for ${purpose} over ${term} months${collTxt}. Annual income is $${income.toLocaleString()} with a credit score of ${cs}. Debt-to-income ratio is ${dti}.${existTxt}`;
+  const name = document.getElementById('applicant_name').value || 'Applicant';
+  const age = document.getElementById('age').value || 30;
+  const emp = document.getElementById('employment_status').value.toLowerCase();
+  const emp_yr = document.getElementById('employment_years').value || 3;
+  const inc = parseInt(document.getElementById('annual_income').value || 0).toLocaleString();
+  const purp = document.getElementById('loan_purpose').value.toLowerCase();
+  const amt = parseInt(document.getElementById('loan_amount').value || 0).toLocaleString();
+  const term = termSlider.value;
+  const coll = document.getElementById('collateral').value;
+  const cs = document.getElementById('credit_score').value || 680;
+  const dti = dtiHidden.value;
+  const exist = document.getElementById('existing_loans').value || 0;
+  const util = utilSlider.value;
+  const delinq = document.getElementById('delinquencies').value || 0;
+  const notes = document.getElementById('underwriter_notes').value.trim();
+
+  const collStr = coll !== 'None' ? ` secured by <span class="nlp-highlight">${coll.toLowerCase()}</span>` : ` without asset collateral`;
+  const exStr = exist > 0 ? `<span class="nlp-highlight">${exist} active loan(s)</span>` : `no existing debt obligations`;
+  const delinqStr = delinq > 0 ? `<span class="nlp-highlight">${delinq} past delinquency flag(s)</span>` : `zero delinquencies`;
+  const notesStr = notes ? ` Underwriting assessment: <span class="nlp-highlight">${notes}</span>` : '';
+
+  document.getElementById('nlpPreview').innerHTML = 
+    `Applicant is a <span class="nlp-highlight">${age}-year-old</span> ${emp} professional (${emp_yr} yrs experience) requesting a <span class="nlp-highlight">$${amt}</span> credit facility for ${purp} over ${term} months${collStr}. Declared annual income is <span class="nlp-highlight">$${inc}</span> against a credit score of <span class="nlp-highlight">${cs}</span> and DTI ratio of <span class="nlp-highlight">${dti}</span>. Credit file shows ${exStr}, ${util}% revolving utilization, and ${delinqStr}.${notesStr}`;
 }
 
-function updateMeters() {
-  const cs     = parseInt(creditInp.value) || 0;
-  const income = parseInt(getVal('annual_income')) || 0;
-  const dti    = parseFloat(dtiHidden.value) || 0;
-  const emp    = getVal('employment_status') || '';
+function updateGauges() {
+  const cs = parseInt(document.getElementById('credit_score').value) || 680;
+  const inc = parseInt(document.getElementById('annual_income').value) || 50000;
+  const dti = parseFloat(dtiHidden.value) || 0.35;
+  const delinq = parseInt(document.getElementById('delinquencies').value) || 0;
 
-  const cPct   = cs     ? Math.min(100, Math.round(((cs-300)/550)*100)) : 0;
-  const iPct   = income ? Math.min(100, Math.round((income/200000)*100)) : 0;
-  const dtiPct = Math.round((1-Math.min(1,dti/0.8))*100);
-  const ePct   = ['Employed','Self-Employed','Business Owner'].includes(emp) ? 90 : emp==='Retired' ? 70 : 30;
+  // Approximate health index
+  let score = (cs - 300) / 550 * 50 + Math.min(inc / 150000, 1) * 25 + Math.max(0, (1 - dti / 0.8)) * 25 - delinq * 10;
+  score = Math.max(5, Math.min(98, Math.round(score)));
 
-  setMeter('mCredit','mCreditLbl', cPct,   cs ? cs+'' : '—',    '#2DD4FF');
-  setMeter('mIncome','mIncomeLbl', iPct,   income ? '$'+(income/1000).toFixed(0)+'k' : '—', '#22D3A5');
-  const dtiColor = dti>0.5?'#F87171':dti>0.35?'#FBBF24':'#22D3A5';
-  setMeter('mDti',   'mDtiLbl',    dtiPct, (dti*100).toFixed(0)+'%', dtiColor);
-  setMeter('mEmp',   'mEmpLbl',    ePct,   ePct>=70?'Stable':'At risk', ePct>=70?'#22D3A5':'#F87171');
+  document.getElementById('gaugeVal').textContent = score;
+  const circumference = 389.5;
+  const offset = circumference * (1 - score / 100);
+  document.getElementById('gaugeCircle').style.strokeDashoffset = offset;
 
-  const overall = Math.round(cPct*0.4 + iPct*0.25 + dtiPct*0.25 + ePct*0.1);
-  if (cs || income) {
-    scoreArc.style.strokeDashoffset = 364.4*(1-overall/100);
-    scoreNum.textContent = overall + '%';
+  const tierPill = document.getElementById('tierPill');
+  const estApr = document.getElementById('estApr');
+  const apr = (5.25 + (100 - score) * 0.2).toFixed(2);
+  estApr.textContent = apr + '%';
+
+  if (score >= 80) {
+    tierPill.textContent = 'Tier A+ (Exceptional Prime)';
+    tierPill.style.cssText = 'background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);';
+  } else if (score >= 65) {
+    tierPill.textContent = 'Tier A (Prime)';
+    tierPill.style.cssText = 'background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);';
+  } else if (score >= 48) {
+    tierPill.textContent = 'Tier B (Near-Prime)';
+    tierPill.style.cssText = 'background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3);';
+  } else if (score >= 32) {
+    tierPill.textContent = 'Tier C (Subprime)';
+    tierPill.style.cssText = 'background:rgba(249,115,22,0.15); color:#f97316; border:1px solid rgba(249,115,22,0.3);';
+  } else {
+    tierPill.textContent = 'Tier D (High Risk)';
+    tierPill.style.cssText = 'background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3);';
   }
 }
 
-function setMeter(barId, lblId, pct, txt, color) {
-  const bar = document.getElementById(barId);
-  const lbl = document.getElementById(lblId);
-  bar.style.width = pct + '%';
-  bar.style.background = color;
-  lbl.textContent = txt;
-  lbl.style.color = color;
-}
-
-document.querySelectorAll('.field-input').forEach(el => {
-  el.addEventListener('input',  updateAll);
+document.querySelectorAll('.field-input, .field-select, .field-textarea').forEach(el => {
+  el.addEventListener('input', updateAll);
   el.addEventListener('change', updateAll);
 });
 
-document.getElementById('loanForm').addEventListener('submit', () => {
-  document.getElementById('submitTxt').textContent = 'Analyzing…';
-  document.getElementById('submitBtn').disabled = true;
+// Initial run
+updateAll();
+
+document.getElementById('underwritingForm').addEventListener('submit', () => {
+  const btn = document.getElementById('submitBtn');
+  btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Processing FinBERT Semantic Embeddings...';
+  btn.disabled = true;
+  if (window.lucide) lucide.createIcons();
 });
-</script>{% endblock %}
+</script>
+{% endblock %}
+

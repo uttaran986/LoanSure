@@ -1,57 +1,81 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}LoanIQ{% endblock %}</title>
+  <title>{% block title %}LoanSure — AI Underwriting & Enterprise Loan Management{% endblock %}</title>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons & Chart.js -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
 
 <nav class="nav">
-  <a href="/" class="nav-brand">
-    <!-- 3D Logo Mark — fully inline, no file needed -->
-    <div style="width:40px;height:40px;border-radius:11px;overflow:hidden;flex-shrink:0;box-shadow:0 0 22px rgba(45,212,255,0.35),0 4px 14px rgba(26,111,232,0.5);">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <a href="/console" class="nav-brand">
+    <div class="brand-badge-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="38" height="38">
         <defs>
-          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#1A6FE8"/>
-            <stop offset="100%" stop-color="#2DD4FF"/>
+          <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="50%" stop-color="#0284c7"/>
+            <stop offset="100%" stop-color="#6366f1"/>
+          </linearGradient>
+          <linearGradient id="shieldFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0f172a"/>
+            <stop offset="100%" stop-color="#020617"/>
           </linearGradient>
         </defs>
-        <!-- Background -->
-        <rect width="40" height="40" rx="10" fill="url(#lg1)"/>
-        <!-- Top shine -->
-        <rect width="40" height="20" rx="10" fill="rgba(255,255,255,0.18)"/>
-        <!-- Top-left block -->
-        <rect x="7" y="7" width="11" height="11" rx="2.5" fill="white" opacity="0.95"/>
-        <!-- Top-right block (dim) -->
-        <rect x="22" y="7" width="11" height="11" rx="2.5" fill="white" opacity="0.45"/>
-        <!-- Bottom lines -->
-        <rect x="7" y="22" width="26" height="3" rx="1.5" fill="white" opacity="0.85"/>
-        <rect x="7" y="28" width="16" height="3" rx="1.5" fill="white" opacity="0.55"/>
-        <rect x="7" y="34" width="20" height="3" rx="1.5" fill="white" opacity="0.35"/>
+        <!-- Outer Rounded Shield -->
+        <rect width="40" height="40" rx="10" fill="url(#goldGrad)"/>
+        <rect x="2" y="2" width="36" height="36" rx="8" fill="url(#shieldFill)"/>
+        <!-- Shield Icon Graphic -->
+        <path d="M20 7 L31 12 V21 C31 27 26 32 20 34 C14 32 9 27 9 21 V12 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2.2" stroke-linejoin="round"/>
+        <!-- Inner Check & Node Motif -->
+        <path d="M15 20 L18.5 23.5 L25 17" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <span class="nav-brand-name">Loan<strong>IQ</strong></span>
+    <span class="nav-brand-name">Loan<strong>Sure</strong> <span class="version-tag">ENTERPRISE</span></span>
   </a>
 
   <div class="nav-links">
-    <a href="/apply"      class="nav-link {% if request.endpoint == 'apply'      %}active{% endif %}">Apply</a>
-    <a href="/dashboard"  class="nav-link {% if request.endpoint == 'dashboard'  %}active{% endif %}">Dashboard</a>
-    <a href="/model-info" class="nav-link {% if request.endpoint == 'model_info' %}active{% endif %}">Model Info</a>
+    <a href="/console" class="nav-link {% if request.endpoint == 'console' or request.endpoint == 'index' %}active{% endif %}">
+      <i data-lucide="layout-grid"></i> Loan Console
+    </a>
+    <a href="/apply" class="nav-link {% if request.endpoint == 'apply' %}active{% endif %}">
+      <i data-lucide="file-plus-2"></i> Apply & Underwrite
+    </a>
+    <a href="/dashboard" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+      <i data-lucide="line-chart"></i> Portfolio Risk
+    </a>
+    <a href="/batch" class="nav-link {% if request.endpoint == 'batch' %}active{% endif %}">
+      <i data-lucide="layers"></i> Batch CSV
+    </a>
+    <a href="/bias-audit" class="nav-link {% if request.endpoint == 'bias_audit' %}active{% endif %}">
+      <i data-lucide="scale"></i> Fair Lending Audit
+    </a>
+    <a href="/model-info" class="nav-link {% if request.endpoint == 'model_info' %}active{% endif %}">
+      <i data-lucide="cpu"></i> Model & XAI
+    </a>
   </div>
 
   <div class="nav-right">
-    <span class="nav-badge">BERT · AI Powered</span>
-    <div class="nav-avatar">AO</div>
+    <span class="nav-badge"><span class="status-dot"></span> LoanSure FinBERT &bull; Live Engine</span>
   </div>
 </nav>
 
 <main>{% block content %}{% endblock %}</main>
 
+<script>
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+</script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% block extra_js %}{% endblock %}
 </body>

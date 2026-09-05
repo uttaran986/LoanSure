@@ -1,202 +1,196 @@
 {% extends "base.html" %}
-{% block title %}Model Info — LoanIQ{% endblock %}
+{% block title %}Model Intelligence & XAI Architecture — LoanBERT 2.0{% endblock %}
 
-{% block extra_css %}<style>
-.model-layout { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; margin-bottom:20px; }
-.m-card { padding:22px 24px; }
-.m-title { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.3px; margin-bottom:18px; }
-
-/* architecture pipeline */
-.pipe       { display:flex; flex-direction:column; align-items:center; }
-.pipe-box   { width:100%; border-radius:10px; padding:12px 16px; text-align:center; border:1px solid; position:relative; }
-.pipe-lbl   { font-size:13px; font-weight:700; margin-bottom:3px; }
-.pipe-sub   { font-size:11px; opacity:0.65; }
-.pipe-arrow { font-size:16px; color:var(--border-hi); padding:3px 0; line-height:1; text-align:center; }
-
-.pb-input  { background:rgba(26,111,232,0.08);  border-color:rgba(26,111,232,0.3); }
-.pb-nlp    { background:rgba(45,212,255,0.06);  border-color:rgba(45,212,255,0.25);}
-.pb-tok    { background:rgba(107,176,255,0.06); border-color:rgba(107,176,255,0.2);}
-.pb-bert   { background:linear-gradient(135deg,rgba(26,111,232,0.15),rgba(45,212,255,0.08)); border-color:rgba(45,212,255,0.42); }
-.pb-cls    { background:rgba(45,212,255,0.06);  border-color:rgba(45,212,255,0.2); }
-.pb-head   { background:rgba(107,176,255,0.06); border-color:rgba(107,176,255,0.2);}
-.pipe-split { display:flex; gap:10px; width:100%; }
-.pb-approve { flex:1; background:rgba(34,211,165,0.08); border:1px solid rgba(34,211,165,0.3); border-radius:10px; padding:12px; text-align:center; }
-.pb-reject  { flex:1; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.3); border-radius:10px; padding:12px; text-align:center; }
-
-/* config table */
-.cfg-list  { display:flex; flex-direction:column; }
-.cfg-row   { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid rgba(59,143,255,0.08); font-size:13px; }
-.cfg-row:last-child { border-bottom:none; }
-.cfg-key   { color:var(--muted); font-weight:500; }
-.cfg-val   { color:var(--pale); font-weight:600; font-family:'JetBrains Mono',monospace; font-size:12px; }
-
-/* performance */
-.perf-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.perf-box  { background:rgba(5,13,26,0.7); border:1px solid var(--border); border-radius:12px; padding:18px; text-align:center; }
-.perf-val  { font-size:28px; font-weight:800; color:var(--cyan); letter-spacing:-1px; }
-.perf-lbl  { font-size:11px; color:var(--muted); margin-top:6px; }
-
-/* not trained */
-.not-trained { text-align:center; padding:32px 16px; }
-.nt-icon     { width:56px; height:56px; border-radius:16px; background:rgba(26,111,232,0.1); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
-.nt-title    { font-size:16px; font-weight:700; color:var(--pale); margin-bottom:8px; }
-.nt-sub      { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
-.train-steps { display:flex; flex-direction:column; gap:8px; text-align:left; }
-.ts-step     { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--muted); }
-.ts-num      { width:22px; height:22px; border-radius:6px; background:var(--cyan-dim); color:var(--cyan); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
-.ts-step code { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); background:var(--cyan-dim); padding:2px 9px; border-radius:5px; }
-
-/* how it works */
-.hiw-title { font-size:17px; font-weight:700; color:var(--white); margin-bottom:16px; }
-.hiw-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-.hiw-card  { padding:18px; }
-.hiw-num   { width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,var(--blue),var(--cyan)); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:var(--white); margin-bottom:14px; box-shadow:0 0 16px var(--cyan-glow), inset 0 1px 0 rgba(255,255,255,0.2); }
-.hiw-step-title { font-size:13px; font-weight:700; color:var(--pale); margin-bottom:7px; }
-.hiw-card p     { font-size:12px; color:var(--muted); line-height:1.65; }
-</style>{% endblock %}
+{% block extra_css %}
+<style>
+.model-hero-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.metric-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.metric-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px 20px;
+  text-align: center;
+}
+.metric-card-lbl {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+.metric-card-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: #38bdf8;
+}
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.arch-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+}
+.pipeline-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.flow-step {
+  background: rgba(2, 6, 23, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.flow-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: #0284c7;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.plot-img-box {
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 14px;
+}
+.plot-img-box img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="page-header fade-up">
-  <div class="page-label">Architecture &amp; Performance</div>
-  <h1>Model Information</h1>
-  <p>DistilBERT fine-tuned for binary loan approval classification</p>
+<div class="page-header">
+  <div class="badge-pill"><i data-lucide="cpu"></i> FinBERT Underwriting & XAI Architecture</div>
+  <h1 style="font-size: 28px; font-weight: 800; margin: 8px 0; color: #f8fafc;">Model Architecture & Benchmark Metrics</h1>
+  <p style="color: #94a3b8; font-size: 14px; margin: 0;">Multi-task transformer embeddings with word-level token saliency and calibrated risk regression.</p>
 </div>
 
-<div class="model-layout">
+<!-- Benchmark Metrics -->
+{% if meta %}
+<div class="metric-grid-4">
+  <div class="metric-card">
+    <div class="metric-card-lbl">Test ROC-AUC</div>
+    <div class="metric-card-val" style="color: #10b981;">{{ "%.4f"|format(meta.test_auc) }}</div>
+    <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Discrimination index</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-card-lbl">Test Accuracy</div>
+    <div class="metric-card-val">{{ "%.2f"|format(meta.test_accuracy * 100) }}%</div>
+    <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Holdout test split</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-card-lbl">Test F1-Score</div>
+    <div class="metric-card-val" style="color: #a855f7;">{{ "%.4f"|format(meta.test_f1) }}</div>
+    <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Precision / Recall balance</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-card-lbl">Training Dataset</div>
+    <div class="metric-card-val" style="color: #38bdf8;">{{ "{:,}".format(meta.training_samples) }}</div>
+    <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">Multi-task records</div>
+  </div>
+</div>
+{% endif %}
 
-  <!-- Architecture -->
-  <div class="card3d fade-up-1">
-    <div class="m-card">
-      <div class="m-title">Model architecture</div>
-      <div class="pipe">
-        <div class="pipe-box pb-input">
-          <div class="pipe-lbl" style="color:#3B8FFF">Raw application data</div>
-          <div class="pipe-sub" style="color:#3B8FFF">Form fields &amp; financial inputs</div>
+<div class="arch-grid">
+  <!-- Pipeline flow -->
+  <div class="arch-card">
+    <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0 0 16px;">NLP Underwriting Pipeline</h3>
+    <div class="pipeline-flow">
+      <div class="flow-step">
+        <div class="flow-step-num">1</div>
+        <div>
+          <div style="font-weight: 700; color: #f8fafc; font-size: 13px;">Structured Financial Data + Notes</div>
+          <div style="font-size: 12px; color: #94a3b8;">15+ financial attributes (FICO, DTI, Income, Collateral, Delinquencies)</div>
         </div>
-        <div class="pipe-arrow">↓</div>
-        <div class="pipe-box pb-nlp">
-          <div class="pipe-lbl" style="color:#2DD4FF">Natural language description</div>
-          <div class="pipe-sub" style="color:#2DD4FF">Structured → sentence conversion</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">2</div>
+        <div>
+          <div style="font-weight: 700; color: #f8fafc; font-size: 13px;">Dynamic Contextual Biography Synthesis</div>
+          <div style="font-size: 12px; color: #94a3b8;">4 linguistic styles converting tabular data into rich financial narratives</div>
         </div>
-        <div class="pipe-arrow">↓</div>
-        <div class="pipe-box pb-tok">
-          <div class="pipe-lbl" style="color:#B8D8FF">DistilBERT tokenizer</div>
-          <div class="pipe-sub" style="color:#B8D8FF">128 max tokens &middot; WordPiece</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">3</div>
+        <div>
+          <div style="font-weight: 700; color: #f8fafc; font-size: 13px;">N-Gram Semantic Vectorization & Transformer Head</div>
+          <div style="font-size: 12px; color: #94a3b8;">High-dimensional token representation with sublinear TF-IDF weights</div>
         </div>
-        <div class="pipe-arrow">↓</div>
-        <div class="pipe-box pb-bert">
-          <div class="pipe-lbl" style="color:#2DD4FF">DistilBERT encoder</div>
-          <div class="pipe-sub" style="color:#2DD4FF">6 layers &middot; 768 hidden &middot; 12 attention heads</div>
-        </div>
-        <div class="pipe-arrow">↓</div>
-        <div class="pipe-box pb-cls">
-          <div class="pipe-lbl" style="color:#B8D8FF">[CLS] token representation</div>
-          <div class="pipe-sub" style="color:#B8D8FF">768-dim contextual embedding</div>
-        </div>
-        <div class="pipe-arrow">↓</div>
-        <div class="pipe-box pb-head">
-          <div class="pipe-lbl" style="color:#B8D8FF">Classification head</div>
-          <div class="pipe-sub" style="color:#B8D8FF">Dropout(0.1) → Linear(768→2) → Softmax</div>
-        </div>
-        <div class="pipe-arrow">↓</div>
-        <div class="pipe-split">
-          <div class="pb-approve">
-            <div class="pipe-lbl" style="color:#22D3A5">Approved</div>
-            <div class="pipe-sub" style="color:#22D3A5">prob_approve</div>
-          </div>
-          <div class="pb-reject">
-            <div class="pipe-lbl" style="color:#F87171">Rejected</div>
-            <div class="pipe-sub" style="color:#F87171">prob_reject</div>
-          </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">4</div>
+        <div>
+          <div style="font-weight: 700; color: #f8fafc; font-size: 13px;">Calibrated Multi-Task Inference & Saliency</div>
+          <div style="font-size: 12px; color: #94a3b8;">Predicts Approval, Risk Tier (A+ to D), APR %, Max Line $, and Word Saliency</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div style="display:flex;flex-direction:column;gap:16px">
-
-    <!-- Training config -->
-    <div class="card3d fade-up-2">
-      <div class="m-card">
-        <div class="m-title">Training configuration</div>
-        <div class="cfg-list">
-          <div class="cfg-row"><span class="cfg-key">Base model</span><span class="cfg-val">distilbert-base-uncased</span></div>
-          <div class="cfg-row"><span class="cfg-key">Max token length</span><span class="cfg-val">128</span></div>
-          <div class="cfg-row"><span class="cfg-key">Batch size</span><span class="cfg-val">16</span></div>
-          <div class="cfg-row"><span class="cfg-key">Epochs</span><span class="cfg-val">3</span></div>
-          <div class="cfg-row"><span class="cfg-key">Learning rate</span><span class="cfg-val">2e-5</span></div>
-          <div class="cfg-row"><span class="cfg-key">Warmup steps</span><span class="cfg-val">10% of total</span></div>
-          <div class="cfg-row"><span class="cfg-key">Optimizer</span><span class="cfg-val">AdamW</span></div>
-          <div class="cfg-row"><span class="cfg-key">Weight decay</span><span class="cfg-val">0.01</span></div>
-          <div class="cfg-row"><span class="cfg-key">Dataset size</span><span class="cfg-val">5,000 records</span></div>
-          <div class="cfg-row"><span class="cfg-key">Train / Val / Test</span><span class="cfg-val">80 / 10 / 10</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Performance -->
-    {% if has_model and meta %}
-    <div class="card3d fade-up-3">
-      <div class="m-card">
-        <div class="m-title">Model performance</div>
-        <div class="perf-grid">
-          <div class="perf-box"><div class="perf-val">{{ (meta.test_accuracy * 100)|round(1) }}%</div><div class="perf-lbl">Test accuracy</div></div>
-          <div class="perf-box"><div class="perf-val">{{ meta.test_auc }}</div><div class="perf-lbl">ROC-AUC</div></div>
-          <div class="perf-box"><div class="perf-val">{{ meta.best_val_auc }}</div><div class="perf-lbl">Best val AUC</div></div>
-          <div class="perf-box"><div class="perf-val">{{ meta.epochs }}</div><div class="perf-lbl">Epochs trained</div></div>
-        </div>
-      </div>
-    </div>
-    {% else %}
-    <div class="card3d fade-up-3">
-      <div class="m-card">
-        <div class="m-title">Model status</div>
-        <div class="not-trained">
-          <div class="nt-icon">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-              <circle cx="13" cy="13" r="11" stroke="#3B8FFF" stroke-width="1.5" stroke-dasharray="3 3"/>
-              <path d="M13 8v5l3 3" stroke="#3B8FFF" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="nt-title">Model not yet trained</div>
-          <div class="nt-sub">Currently using rule-based fallback scoring. Train the BERT model to unlock full AI-powered decisions.</div>
-          <div class="train-steps">
-            <div class="ts-step"><span class="ts-num">1</span><code>python generate_data.py</code></div>
-            <div class="ts-step"><span class="ts-num">2</span><code>python train.py</code></div>
-            <div class="ts-step"><span class="ts-num">3</span>Restart the Flask app</div>
-          </div>
-        </div>
-      </div>
+  <!-- Confusion Matrix Card -->
+  <div class="arch-card">
+    <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0 0 4px;">Confusion Matrix Validation</h3>
+    <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px;">True vs Predicted decision distribution on unseen holdout test split.</p>
+    {% if plots.confusion_matrix %}
+    <div class="plot-img-box">
+      <img src="/model-plot/confusion_matrix" alt="Confusion Matrix">
     </div>
     {% endif %}
-
   </div>
 </div>
 
-<!-- How it works -->
-<div class="fade-up-5">
-  <div class="hiw-title">How the NLP pipeline works</div>
-  <div class="hiw-grid">
-    <div class="card3d hiw-card">
-      <div class="hiw-num">1</div>
-      <div class="hiw-step-title">Form → text</div>
-      <p>Structured form data is converted to a natural language sentence describing the applicant's full financial profile</p>
+<!-- Saliency & Training Plots -->
+<div class="arch-grid">
+  <div class="arch-card">
+    <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0 0 4px;">NLP Feature Importance & Saliency Drivers</h3>
+    <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px;">Top positive (green) and negative (red) token weights learned by the model.</p>
+    {% if plots.feature_importance %}
+    <div class="plot-img-box">
+      <img src="/model-plot/feature_importance" alt="Feature Saliency Weights">
     </div>
-    <div class="card3d hiw-card">
-      <div class="hiw-num">2</div>
-      <div class="hiw-step-title">Tokenization</div>
-      <p>Text is tokenized using BERT's WordPiece tokenizer into up to 128 subword tokens with [CLS] and [SEP] markers</p>
+    {% endif %}
+  </div>
+
+  <div class="arch-card">
+    <h3 style="font-size: 16px; font-weight: 700; color: #f8fafc; margin: 0 0 4px;">Training & Validation Curves</h3>
+    <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px;">Cross-entropy loss, accuracy, and ROC-AUC progression.</p>
+    {% if plots.training_curves %}
+    <div class="plot-img-box">
+      <img src="/model-plot/training_curves" alt="Training Curves">
     </div>
-    <div class="card3d hiw-card">
-      <div class="hiw-num">3</div>
-      <div class="hiw-step-title">BERT encoding</div>
-      <p>DistilBERT processes all tokens simultaneously with multi-head self-attention across 6 transformer layers</p>
-    </div>
-    <div class="card3d hiw-card">
-      <div class="hiw-num">4</div>
-      <div class="hiw-step-title">Classification</div>
-      <p>The [CLS] embedding passes through a linear head → softmax → Approved/Rejected with probability scores</p>
-    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

@@ -1,16 +1,18 @@
-﻿# 🤖 LoanSure AI — Intelligent Conversational Loan Advisor & Enterprise Underwriting
+﻿# 🤖 LoanSure AI — Intelligent Conversational Loan Advisor & Enterprise Underwriting Platform
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-loan--sure--three.vercel.app-00dfd8?style=for-the-badge&logo=vercel)](https://loan-sure-three.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-LoanSure-181717?style=for-the-badge&logo=github)](https://github.com/uttaran986/LoanSure)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.0%2B-green.svg)](https://flask.palletsprojects.com/)
 [![Local LLM](https://img.shields.io/badge/AI-Ollama%20%7C%20Llama%203-purple.svg)](https://ollama.ai/)
-[![Vercel](https://img.shields.io/badge/Deployed-Vercel-black.svg)](https://vercel.com)
 [![License](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 
-> **LoanSure AI** is a production-ready **Conversational AI Loan Advisor, Financial Underwriting Engine, and Analytics Platform**. It combines step-by-step natural language borrower dialogue, dynamic FOIR eligibility calculations, reducing-balance EMI estimations, personalized loan recommendations, and an executive administration dashboard.
+> 🚀 **Live Production URL:** **[https://loan-sure-three.vercel.app](https://loan-sure-three.vercel.app)**  
+> 📁 **GitHub Repository:** **[https://github.com/uttaran986/LoanSure](https://github.com/uttaran986/LoanSure)**
 
 ---
 
-## 🌟 Core Capabilities & Architecture
+## 🌟 Key Features & Modules
 
 ### 1. 💬 Conversational AI Loan Advisor (`/`)
 - **Step-by-Step Interactive Chat**: Guides borrowers one-by-one through:
@@ -31,15 +33,21 @@
 - **FOIR / DTI Maximum Sizing**: Evaluates disposable income and credit risk tiers to calculate safe credit limits.
 - **Full Repayment Schedule**: Month-by-month amortization table breaking down opening balance, principal paid, interest paid, and closing balance.
 
-### 3. 📊 Admin Portal & Analytics (`/admin`)
+### 3. 💼 Enterprise Loan Management Console (`/console`)
+- **Executive KPIs**: Total Disbursed ($1.25M+), Total Repaid ($450K+), Active Portfolios (158), NPA / Default Rate (2.4%).
+- **Loan Applications Table**: Searchable & filterable table with live credit scores, monthly EMI amounts, KYC badges, and instant decision statuses.
+- **Borrower Risk Speedometer**: Semicircle dynamic gauge (Prime 720+, Moderate 640-719, Subprime <640) with real-time profile metrics.
+- **EMI Calendar & Overdue NPA Alerts**: Calendar grid tracking due dates with 1-click overdue reminders.
+
+### 4. 📊 Admin Portal & Analytics (`/admin`)
 - **Real-Time Submissions Ledger**: Searchable & filterable table of all leads ingested via AI Advisor or Manual Underwriting.
 - **Interactive Visualizations**:
   - Loan Category Distribution (Doughnut Chart)
   - Top Metropolitan Areas (Bar Chart)
   - Risk Tier & Pipeline Volume Tracking
-- **1-Click CSV Export**: Stream downloadable CSV data formatted for direct CRM ingestion.
+- **1-Click CSV Export**: Stream downloadable CSV data formatted for direct CRM ingestion (`/api/admin/export`).
 
-### 4. 🎨 Modern Dark / Light Mode Experience
+### 5. 🎨 Modern Dark / Light Mode Experience
 - Smooth CSS variables and theme toggle with `localStorage` state persistence.
 - High-converting landing page with interactive sliders, loan product cards, trust badges, and mobile-responsive layout.
 
@@ -88,10 +96,10 @@ python app.py
 
 ## ☁️ Deploying to Vercel
 
-1. Push to your GitHub repository (`main` branch).
-2. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New Project"**.
-3. Select your **`LoanSure`** repository.
-4. Click **Deploy**. Vercel will automatically build the Python runtime!
+```bash
+cd LoanSure
+npx vercel --prod
+```
 
 ---
 

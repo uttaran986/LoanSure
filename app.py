@@ -7,7 +7,7 @@ import json
 import re
 from datetime import datetime, timedelta
 import pandas as pd
-from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, Response, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, Response, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 
 from predictor import predict, counterfactual_simulation, build_description
@@ -21,7 +21,7 @@ from advisor_engine import (
     call_local_llm
 )
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 app.config['SECRET_KEY'] = 'loansure-enterprise-ai-secret-key-2026'
 
 # Support both local SQLite and Vercel serverless /tmp directory
@@ -207,6 +207,12 @@ def seed_demo_data():
 
 
 # ── Web Application Routes ───────────────────────────────────────────────────
+
+@app.route('/static/<path:filename>')
+def serve_static_file(filename):
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    return send_from_directory(os.path.join(root_dir, 'static'), filename)
+
 
 @app.route('/')
 @app.route('/api/index')

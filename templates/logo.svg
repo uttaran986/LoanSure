@@ -1,32 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1A6FE8"/>
-      <stop offset="100%" stop-color="#2DD4FF"/>
-    </linearGradient>
-    <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
-      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Outer rounded square background -->
-  <rect width="200" height="200" rx="44" fill="url(#bg)"/>
-
-  <!-- Top shine highlight -->
-  <rect width="200" height="100" rx="44" fill="url(#shine)"/>
-
-  <!-- Grid icon: top-left block -->
-  <rect x="36" y="36" width="52" height="52" rx="10" fill="white" opacity="0.95"/>
-
-  <!-- Grid icon: top-right block (dimmer) -->
-  <rect x="112" y="36" width="52" height="52" rx="10" fill="white" opacity="0.45"/>
-
-  <!-- Bottom horizontal lines (representing data/report) -->
-  <rect x="36" y="112" width="128" height="11" rx="5.5" fill="white" opacity="0.85"/>
-  <rect x="36" y="133" width="80" height="11" rx="5.5" fill="white" opacity="0.55"/>
-  <rect x="36" y="154" width="104" height="11" rx="5.5" fill="white" opacity="0.35"/>
-
-  <!-- Subtle border -->
-  <rect width="200" height="200" rx="44" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="100%" height="100%">
+  <!-- Triple-Striped Green L with Dollar Sign Motif (LoanSure Brand Mark) -->
+  <g fill="#0f8a28">
+    <!-- Outer Stripe of L -->
+    <path d="M 50 115 L 68 90 L 68 248 L 220 248 L 195 266 L 50 266 Z" />
+    
+    <!-- Middle Stripe of L -->
+    <path d="M 78 145 L 96 120 L 96 220 L 190 220 L 165 238 L 78 238 Z" />
+    
+    <!-- Inner Stripe of L -->
+    <path d="M 106 175 L 124 150 L 124 192 L 160 192 L 135 210 L 106 210 Z" />
+    
+    <!-- Green Dollar Sign $ Motif in the quadrant of L -->
+    <!-- S Curve Body -->
+    <path d="M 180 148 C 172 148 164 144 164 136 C 164 128 172 125 182 123 C 196 120 206 116 206 104 C 206 92 194 86 180 86 C 168 86 156 90 152 98 L 164 104 C 166 99 172 96 180 96 C 187 96 193 99 193 104 C 193 110 186 112 176 115 C 163 118 152 123 152 136 C 152 149 164 157 180 157 C 194 157 206 151 210 142 L 197 136 C 194 143 187 148 180 148 Z" />
+    <!-- Vertical Dollar Line -->
+    <rect x="177" y="76" width="7" height="90" rx="2" />
+    <!-- Center Horizontal Cross Slash -->
+    <rect x="142" y="117" width="76" height="6.5" rx="2" />
+  </g>
 </svg>

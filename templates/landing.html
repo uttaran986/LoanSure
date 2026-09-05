@@ -1,177 +1,246 @@
 ﻿{% extends "base.html" %}
 
-{% block title %}LoanSure AI — Intelligent Conversational Loan Advisor & Analytics{% endblock %}
+{% block title %}LoanSure — Next-Gen Top Notch Financial Loan Solution{% endblock %}
 
 {% block content %}
-<div class="landing-wrapper">
+<div class="template-wrapper">
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-content">
-      <div class="badge-pill pulse-glow">
-        <i data-lucide="sparkles"></i> Next-Gen FinTech &bull; Conversational Underwriting
+  <!-- Top Announcement Bar -->
+  <div class="top-announcement-bar">
+    <div class="announcement-inner">
+      <div class="announcement-left">
+        <span><i data-lucide="check-circle-2"></i> We're a top-rated AI loan underwriting & financial consulting agency</span>
+        <span class="sep">&bull;</span>
+        <span><i data-lucide="mail"></i> advisor@loansure.com</span>
       </div>
-      <h1 class="hero-title">
-        Intelligent Loans.<br>
-        <span class="gradient-text">Instant AI Decisioning.</span>
-      </h1>
-      <p class="hero-subtitle">
-        Meet your 24/7 AI Loan Advisor. Get instant eligibility evaluations, reducing-balance EMI calculations, personalized repayment schedules, and risk-calibrated rates in under 2 minutes.
-      </p>
-
-      <div class="hero-cta-group">
-        <button class="btn-hero-primary" onclick="openAdvisorModal()">
-          <i data-lucide="bot"></i> Chat with AI Loan Advisor
-        </button>
-        <a href="/console" class="btn-hero-secondary">
-          <i data-lucide="layout-grid"></i> Enterprise Console
-        </a>
-        <a href="/admin" class="btn-hero-secondary">
-          <i data-lucide="shield"></i> Admin Portal
-        </a>
-      </div>
-
-      <!-- Trust Badges -->
-      <div class="trust-row">
-        <div class="trust-item"><i data-lucide="lock"></i> 256-Bit Bank Encryption</div>
-        <div class="trust-item"><i data-lucide="zap"></i> Instant AI Sizing</div>
-        <div class="trust-item"><i data-lucide="scale"></i> Fair Lending Compliant</div>
+      <div class="announcement-right">
+        <span>Follow Us &mdash;</span>
+        <a href="#"><i data-lucide="facebook"></i></a>
+        <a href="#"><i data-lucide="twitter"></i></a>
+        <a href="#"><i data-lucide="linkedin"></i></a>
+        <a href="#"><i data-lucide="instagram"></i></a>
       </div>
     </div>
+  </div>
 
-    <!-- Live Interactive Calculator Card -->
-    <div class="hero-calc-card">
-      <div class="calc-card-header">
-        <div class="calc-badge"><i data-lucide="calculator"></i> Quick EMI Estimator</div>
-        <span class="calc-live-tag">Live Engine</span>
-      </div>
-
-      <div class="calc-body">
-        <div class="input-slider-group">
-          <div class="slider-labels">
-            <span>Loan Amount</span>
-            <strong id="dispAmount">$45,000</strong>
-          </div>
-          <input type="range" id="sliderAmount" min="5000" max="200000" step="1000" value="45000" oninput="updateQuickCalc()">
+  <!-- Hero Section (Forest Green Palette matching reference template) -->
+  <section class="biz-hero-section">
+    <div class="biz-hero-grid">
+      
+      <!-- Hero Left Column -->
+      <div class="biz-hero-content">
+        <div class="rating-badge-pill">
+          <span class="score-num">4.9</span>
+          <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="reviews-count">5K+ Reviews</span>
         </div>
 
-        <div class="input-slider-group">
-          <div class="slider-labels">
-            <span>Interest Rate (APR)</span>
-            <strong id="dispRate">10.5%</strong>
-          </div>
-          <input type="range" id="sliderRate" min="5.0" max="24.0" step="0.25" value="10.5" oninput="updateQuickCalc()">
-        </div>
+        <h1 class="biz-hero-title">
+          NEXT &mdash; GEN TOP<br>
+          NOTCH <span class="highlight-lime">FINANCIAL LOAN</span><br>
+          SOLUTION
+        </h1>
 
-        <div class="input-slider-group">
-          <div class="slider-labels">
-            <span>Tenure (Months)</span>
-            <strong id="dispTenure">48 Mos (4 Yrs)</strong>
-          </div>
-          <input type="range" id="sliderTenure" min="12" max="120" step="6" value="48" oninput="updateQuickCalc()">
-        </div>
+        <p class="biz-hero-desc">
+          We provide expert AI loan underwriting & financial consulting services to help individuals and companies grow, optimize cash flow, and achieve sustainable credit.
+        </p>
 
-        <!-- Result Metrics Box -->
-        <div class="calc-result-box">
-          <div class="calc-res-item">
-            <span class="calc-res-label">Monthly EMI</span>
-            <h3 class="calc-res-val text-cyan" id="dispEmi">$1,153.25</h3>
-          </div>
-          <div class="calc-res-item">
-            <span class="calc-res-label">Total Interest</span>
-            <h3 class="calc-res-val" id="dispInterest">$10,356.00</h3>
+        <div class="biz-hero-actions">
+          <button class="btn-biz-primary" onclick="openAdvisorModal()">
+            <span>Chat with AI Advisor</span>
+            <i data-lucide="chevron-right" class="btn-arrow-icon"></i>
+          </button>
+
+          <div class="call-advisor-badge">
+            <div class="call-icon-circle">
+              <i data-lucide="phone-call"></i>
+            </div>
+            <div>
+              <span class="call-label">CALL US 24/7</span>
+              <strong class="call-number">+1 (800) 590-0153</strong>
+            </div>
           </div>
         </div>
-
-        <button class="btn-calc-cta" onclick="openAdvisorModal()">
-          <i data-lucide="message-square-plus"></i> Pre-Qualify with AI Advisor
-        </button>
       </div>
-    </div>
-  </section>
 
-  <!-- Loan Products Catalog -->
-  <section class="products-section">
-    <div class="section-heading text-center">
-      <span class="sub-badge">Tailored Financial Products</span>
-      <h2 class="section-title">Designed for Every Life Milestone</h2>
-      <p class="section-desc">Competitive interest rates, flexible repayment horizons, and zero hidden fees.</p>
-    </div>
+      <!-- Hero Right Column: Interactive Advisor & Calculator Card -->
+      <div class="biz-hero-visual">
+        <div class="visual-card-wrapper">
+          <div class="visual-header-tag">
+            <div class="pulsing-circle"></div>
+            <span>FinBERT Underwriting Engine &bull; Live</span>
+          </div>
 
-    <div class="products-grid">
-      <div class="product-card" onclick="openAdvisorWithProduct('Personal Loan')">
-        <div class="product-icon icon-cyan"><i data-lucide="user-check"></i></div>
-        <h3>Personal Loans</h3>
-        <p>Unsecured instant loans for travel, debt consolidation, and emergencies.</p>
-        <div class="product-meta">
-          <span>Rates from <strong>10.5% APR</strong></span>
-          <span>Up to <strong>$75,000</strong></span>
+          <div class="hero-calc-container">
+            <h3 class="hero-calc-heading"><i data-lucide="calculator"></i> Real-Time Loan Sizing Estimator</h3>
+            
+            <div class="slider-field">
+              <div class="slider-info">
+                <span>Requested Amount</span>
+                <strong id="dispAmount">$45,000</strong>
+              </div>
+              <input type="range" id="sliderAmount" min="5000" max="250000" step="1000" value="45000" oninput="updateQuickCalc()">
+            </div>
+
+            <div class="slider-field">
+              <div class="slider-info">
+                <span>Interest Rate (APR)</span>
+                <strong id="dispRate">9.50%</strong>
+              </div>
+              <input type="range" id="sliderRate" min="5.0" max="24.0" step="0.25" value="9.5" oninput="updateQuickCalc()">
+            </div>
+
+            <div class="slider-field">
+              <div class="slider-info">
+                <span>Repayment Tenure</span>
+                <strong id="dispTenure">48 Mos (4.0 Yrs)</strong>
+              </div>
+              <input type="range" id="sliderTenure" min="12" max="120" step="6" value="48" oninput="updateQuickCalc()">
+            </div>
+
+            <div class="hero-calc-results">
+              <div class="calc-box-item highlight-box">
+                <span class="box-lbl">Estimated Monthly EMI</span>
+                <h2 class="box-val text-lime" id="dispEmi">$1,130.84</h2>
+              </div>
+              <div class="calc-box-item">
+                <span class="box-lbl">Total Interest Payable</span>
+                <h3 class="box-val" id="dispInterest">$9,280.32</h3>
+              </div>
+            </div>
+
+            <button class="btn-calc-launch" onclick="openAdvisorModal()">
+              <i data-lucide="bot"></i> Pre-Qualify with AI Loan Advisor
+            </button>
+          </div>
         </div>
-        <button class="btn-product-apply">Apply with AI &rarr;</button>
       </div>
 
-      <div class="product-card" onclick="openAdvisorWithProduct('Home Loan')">
-        <div class="product-icon icon-emerald"><i data-lucide="home"></i></div>
-        <h3>Home Loans</h3>
-        <p>Affordable financing for purchasing, constructing, or renovating your home.</p>
-        <div class="product-meta">
-          <span>Rates from <strong>6.5% APR</strong></span>
-          <span>Up to <strong>$750,000</strong></span>
-        </div>
-        <button class="btn-product-apply">Apply with AI &rarr;</button>
-      </div>
-
-      <div class="product-card" onclick="openAdvisorWithProduct('Auto / Vehicle')">
-        <div class="product-icon icon-indigo"><i data-lucide="car"></i></div>
-        <h3>Auto & Vehicle</h3>
-        <p>Flexible car and electric vehicle financing with accelerated approval cycles.</p>
-        <div class="product-meta">
-          <span>Rates from <strong>7.2% APR</strong></span>
-          <span>Up to <strong>$90,000</strong></span>
-        </div>
-        <button class="btn-product-apply">Apply with AI &rarr;</button>
-      </div>
-
-      <div class="product-card" onclick="openAdvisorWithProduct('Business Loan')">
-        <div class="product-icon icon-amber"><i data-lucide="briefcase"></i></div>
-        <h3>Business Expansion</h3>
-        <p>Working capital, equipment purchase, and merchant growth facilities.</p>
-        <div class="product-meta">
-          <span>Rates from <strong>11.0% APR</strong></span>
-          <span>Up to <strong>$250,000</strong></span>
-        </div>
-        <button class="btn-product-apply">Apply with AI &rarr;</button>
-      </div>
     </div>
   </section>
 
-  <!-- How It Works Flow -->
-  <section class="how-section">
-    <div class="section-heading text-center">
-      <span class="sub-badge">Frictionless 3-Step Process</span>
-      <h2 class="section-title">From Conversation to Disbursal</h2>
+  <!-- Essential Features 3-Card Section (Light Cream Background matching reference) -->
+  <section class="features-block-section">
+    <div class="features-header-row">
+      <div class="feat-heading-left">
+        <span class="section-tag-asterisk">&#10038; Our Approach</span>
+        <h2 class="features-main-title">
+          Essential features for<br>
+          modern financial<br>
+          success
+        </h2>
+      </div>
+      <div class="feat-heading-right">
+        <p>Explore integrated AI underwriting approaches that improve approval rates, minimize total interest payments, and support sustainable credit growth for individuals and enterprises.</p>
+      </div>
     </div>
 
-    <div class="steps-container">
-      <div class="step-box">
-        <div class="step-num">1</div>
-        <h4>Chat with AI Advisor</h4>
-        <p>Answer a few quick conversational questions about your financial needs.</p>
+    <!-- 3 Distinctly Styled Cards from Reference Template -->
+    <div class="three-cards-grid">
+      
+      <!-- Card 1: Crisp Clean White Card -->
+      <div class="biz-feature-card card-style-white" onclick="openAdvisorWithProduct('Personal Loan')">
+        <div class="card-icon-box icon-box-gray">
+          <i data-lucide="cpu"></i>
+        </div>
+        <h3 class="card-title">Next-gen AI Underwriting</h3>
+        <p class="card-description">Instant natural language borrower risk sizing, multi-task scoring, and explainable decision transparency.</p>
+        <div class="card-footer-action">
+          <span>Explore More</span>
+          <i data-lucide="arrow-right"></i>
+        </div>
       </div>
-      <div class="step-arrow"><i data-lucide="chevron-right"></i></div>
 
-      <div class="step-box">
-        <div class="step-num">2</div>
-        <h4>Get Instant Sizing & Offers</h4>
-        <p>View real-time eligibility, reducing EMI, and 3 personalized package options.</p>
+      <!-- Card 2: Vibrant Lime Green Card -->
+      <div class="biz-feature-card card-style-lime" onclick="openAdvisorWithProduct('Business Expansion')">
+        <div class="card-icon-box icon-box-dark">
+          <i data-lucide="trending-up"></i>
+        </div>
+        <h3 class="card-title text-dark">Market growth &amp; Sizing</h3>
+        <p class="card-description text-dark-dim">Identify disposable income headroom and accelerate sustainable loan capital allocation.</p>
+        <div class="card-footer-action text-dark">
+          <span>Explore More</span>
+          <i data-lucide="arrow-right"></i>
+        </div>
       </div>
-      <div class="step-arrow"><i data-lucide="chevron-right"></i></div>
 
-      <div class="step-box">
-        <div class="step-num">3</div>
-        <h4>Instant Decision & Payout</h4>
-        <p>Review institutional credit memo, complete digital KYC, and get funded.</p>
+      <!-- Card 3: Deep Forest Green Card -->
+      <div class="biz-feature-card card-style-dark" onclick="openAdvisorWithProduct('Debt Consolidation')">
+        <div class="card-icon-box icon-box-lime">
+          <i data-lucide="handshake"></i>
+        </div>
+        <h3 class="card-title text-white">Financial process Improvement</h3>
+        <p class="card-description text-muted-light">Optimize repayment schedules to increase debt servicing efficiency and interest savings.</p>
+        <div class="card-footer-action text-lime">
+          <span>Explore More</span>
+          <i data-lucide="arrow-right"></i>
+        </div>
       </div>
+
+    </div>
+  </section>
+
+  <!-- Comprehensive Solution Grid & Stats Section -->
+  <section class="solution-stats-section">
+    <div class="solution-grid">
+      
+      <!-- Left Visual & Badges Grid -->
+      <div class="solution-visuals-col">
+        <div class="stats-cards-matrix">
+          
+          <div class="stat-highlight-card lime-stat-box">
+            <div class="stat-check-icon"><i data-lucide="check-circle-2"></i></div>
+            <h2 class="stat-big-num">10K+</h2>
+            <p class="stat-caption">Total Completed Loan Approvals</p>
+          </div>
+
+          <div class="stat-highlight-card white-stat-box">
+            <div class="stars-gold">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <h2 class="stat-big-num">4.9<span class="stat-denom">/5.0</span></h2>
+            <p class="stat-caption">Avg. Borrower Satisfaction Rating</p>
+          </div>
+
+          <div class="stat-highlight-card skills-stat-box">
+            <h4 class="skills-title">Premium Capabilities</h4>
+            <div class="skills-tags-wrap">
+              <span class="skill-tag">ADVISOR</span>
+              <span class="skill-tag">UNDERWRITING</span>
+              <span class="skill-tag">AMORTIZATION</span>
+              <span class="skill-tag">COMPLIANCE</span>
+              <span class="skill-tag">ANALYTICS</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Content Details -->
+      <div class="solution-content-col">
+        <span class="section-tag-asterisk">&#10038; Who We Are?</span>
+        <h2 class="solution-main-title">
+          Comprehensive solution for<br>
+          financial excellence
+        </h2>
+        <p class="solution-paragraph">
+          Discover innovative AI underwriting algorithms that help borrowers optimize monthly commitments, increase borrowing power, and achieve fair credit rates across diverse lending markets.
+        </p>
+
+        <div class="solution-author-row">
+          <button class="btn-biz-primary" onclick="openAdvisorModal()">
+            <span>More About Loans</span>
+            <i data-lucide="chevron-right"></i>
+          </button>
+
+          <div class="executive-profile-badge">
+            <div class="exec-avatar">EV</div>
+            <div>
+              <strong class="exec-name">Eleanor Vance</strong>
+              <span class="exec-role">Chief Underwriter &bull; LoanSure</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -186,9 +255,20 @@
     <!-- Modal Header -->
     <div class="advisor-header">
       <div class="advisor-brand">
-        <div class="advisor-avatar"><i data-lucide="bot"></i></div>
+        <div class="advisor-avatar">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="26" height="26">
+            <g fill="#4ade80">
+              <path d="M 50 115 L 68 90 L 68 248 L 220 248 L 195 266 L 50 266 Z" />
+              <path d="M 78 145 L 96 120 L 96 220 L 190 220 L 165 238 L 78 238 Z" />
+              <path d="M 106 175 L 124 150 L 124 192 L 160 192 L 135 210 L 106 210 Z" />
+              <path d="M 180 148 C 172 148 164 144 164 136 C 164 128 172 125 182 123 C 196 120 206 116 206 104 C 206 92 194 86 180 86 C 168 86 156 90 152 98 L 164 104 C 166 99 172 96 180 96 C 187 96 193 99 193 104 C 193 110 186 112 176 115 C 163 118 152 123 152 136 C 152 149 164 157 180 157 C 194 157 206 151 210 142 L 197 136 C 194 143 187 148 180 148 Z" />
+              <rect x="177" y="76" width="7" height="90" rx="2" />
+              <rect x="142" y="117" width="76" height="6.5" rx="2" />
+            </g>
+          </svg>
+        </div>
         <div>
-          <h3 class="modal-title-text">LoanSure AI Advisor</h3>
+          <h3 class="modal-title-text">LoanSure AI Loan Advisor</h3>
           <span class="status-online"><span class="status-dot"></span> Active &bull; Local Engine</span>
         </div>
       </div>
@@ -256,13 +336,13 @@ function updateQuickCalc() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// CLIENT-SIDE + SERVER SYNCED CONVERSATIONAL ENGINE
+// CONVERSATIONAL AI ADVISOR SCRIPT
 // ─────────────────────────────────────────────────────────────
 const QUESTIONS = [
   {
     key: 'loan_type',
     question: '👋 Hello! I am your <strong>LoanSure AI Advisor</strong>. Which type of loan are you looking for today?',
-    options: ['Personal Loan', 'Home Loan', 'Auto / Vehicle', 'Business Loan', 'Education Loan'],
+    options: ['Personal Loan', 'Home Loan', 'Auto / Vehicle', 'Business Expansion', 'Education Loan'],
     hint: 'Select or type your loan category'
   },
   {
@@ -316,7 +396,7 @@ const QUESTIONS = [
   {
     key: 'loan_purpose',
     question: 'Lastly, what is the primary purpose of this loan?',
-    options: ['Debt Consolidation', 'Home Renovation', 'Business Expansion', 'Medical / Emergency', 'Major Purchase'],
+    options: ['Debt Consolidation', 'Home Renovation', 'Business Growth', 'Medical / Emergency', 'Major Purchase'],
     hint: 'e.g. Debt Consolidation'
   }
 ];
@@ -488,7 +568,6 @@ function sendAdvisorMessage() {
 function calculateAndShowFinalOffer() {
   setTyping(true);
 
-  // Sync with Backend API to create database lead & fetch recommendations
   fetch('/api/advisor/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -504,7 +583,6 @@ function calculateAndShowFinalOffer() {
     renderCompletionCard(data);
   })
   .catch(err => {
-    // Client-side instant calculation fallback
     setTyping(false);
     const amount = parseFloat(chatState.answers['loan_amount_requested'] || 35000);
     const tenure = parseInt(chatState.answers['tenure_months'] || 48);
@@ -514,7 +592,6 @@ function calculateAndShowFinalOffer() {
     const r = (rate / 100) / 12;
     const factor = Math.pow(1 + r, tenure);
     const emi = (amount * r * factor) / (factor - 1);
-    const totalPayable = emi * tenure;
 
     const fallbackData = {
       lead_id: 1,
@@ -527,7 +604,7 @@ function calculateAndShowFinalOffer() {
           monthly_emi: Math.round(emi * 100) / 100,
           rate_pct: rate,
           tenure_months: tenure,
-          highlight: 'Best balance of monthly cashflow and low overall interest.'
+          highlight: 'Best balance of monthly cashflow and minimal total interest.'
         },
         {
           name: 'Lower Monthly Burden',
@@ -535,7 +612,7 @@ function calculateAndShowFinalOffer() {
           monthly_emi: Math.round((emi * 0.78) * 100) / 100,
           rate_pct: rate + 0.25,
           tenure_months: Math.min(84, Math.round(tenure * 1.5)),
-          highlight: 'Reduces your monthly EMI commitment.'
+          highlight: 'Reduces your monthly out-of-pocket EMI.'
         },
         {
           name: 'Fast Payoff Plan',
